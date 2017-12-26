@@ -19,12 +19,20 @@ import java.util.List;
 
 import static android.R.attr.start;
 import static com.example.fernando.controlekm.DatabaseHelper.DATABASE_TABLE;
+import static com.example.fernando.controlekm.DatabaseHelper.DATABASE_TABLE_USERS;
 import static com.example.fernando.controlekm.DatabaseHelper.KEY_DATA;
+import static com.example.fernando.controlekm.DatabaseHelper.KEY_FUNCAO;
+import static com.example.fernando.controlekm.DatabaseHelper.KEY_GERENCIA;
+import static com.example.fernando.controlekm.DatabaseHelper.KEY_ID_USERS;
 import static com.example.fernando.controlekm.DatabaseHelper.KEY_ITINERARIO;
 import static com.example.fernando.controlekm.DatabaseHelper.KEY_KM_FINAL;
 import static com.example.fernando.controlekm.DatabaseHelper.KEY_KM_INICIAL;
 import static com.example.fernando.controlekm.DatabaseHelper.KEY_KM_TOTAL;
+import static com.example.fernando.controlekm.DatabaseHelper.KEY_NOME;
+import static com.example.fernando.controlekm.DatabaseHelper.KEY_PLACA;
 import static com.example.fernando.controlekm.DatabaseHelper.KEY_ROWID;
+import static com.example.fernando.controlekm.DatabaseHelper.KEY_TIPO_VEICULO;
+import static com.example.fernando.controlekm.DatabaseHelper.KEY_UNIDADE;
 
 
 /**
@@ -54,7 +62,7 @@ public class DBAdapter {
         DBHelper.close();
     }
 
-    //    INSERINDO CONTATOS NO BANCO DE DADOS
+    //    INSERINDO quilometragem NO BANCO DE DADOS
     public long inserirKm(Km km) {
         ContentValues initialValues = new ContentValues();
         initialValues.put(DatabaseHelper.KEY_DATA, km.getData().getTime());
@@ -64,25 +72,35 @@ public class DBAdapter {
 //        initialValues.put(DatabaseHelper.KEY_KM_TOTAL, km.getKmTotal());
         return open().insert(DatabaseHelper.DATABASE_TABLE, null, initialValues);
     }
+
+    //    INSERINDO USUARIOS NO BANCO DE DADOS
     public long inserirUsuario(Usuario usuario) {
         ContentValues initialValues = new ContentValues();
         initialValues.put(DatabaseHelper.KEY_NOME, usuario.getNome());
         initialValues.put(DatabaseHelper.KEY_UNIDADE, usuario.getUnidade());
-        initialValues.put(DatabaseHelper.KEY_TIPO_VEICULO,usuario.getTipoVeiculo());
-        initialValues.put(DatabaseHelper.KEY_FUNCAO,usuario.getFuncao());
-        initialValues.put(DatabaseHelper.KEY_PLACA,usuario.getPlaca());
-        initialValues.put(DatabaseHelper.KEY_GERENCIA,usuario.getGerencia());
+        initialValues.put(DatabaseHelper.KEY_TIPO_VEICULO, usuario.getTipoVeiculo());
+        initialValues.put(DatabaseHelper.KEY_FUNCAO, usuario.getFuncao());
+        initialValues.put(DatabaseHelper.KEY_PLACA, usuario.getPlaca());
+        initialValues.put(DatabaseHelper.KEY_GERENCIA, usuario.getGerencia());
 //        initialValues.put(DatabaseHelper.KEY_KM_TOTAL, km.getKmTotal());
         return open().insert(DatabaseHelper.DATABASE_TABLE_USERS, null, initialValues);
     }
 
+    // retornando todas as quiloemtragens
     public Cursor getAllKms() {
         return db.query(DATABASE_TABLE,
-                new String[]{KEY_ROWID, KEY_DATA, KEY_ITINERARIO, KEY_KM_INICIAL, KEY_KM_FINAL},null,null,null,
-                null,null,null);
+                new String[]{KEY_ROWID, KEY_DATA, KEY_ITINERARIO, KEY_KM_INICIAL, KEY_KM_FINAL}, null, null, null,
+                null, null, null);
     }
 
-    //    deletando somente um contato
+    //    retornando todos os usuarios
+    public Cursor getAllUsers() {
+        return db.query(DATABASE_TABLE_USERS,
+                new String[]{KEY_ID_USERS, KEY_NOME, KEY_UNIDADE, KEY_TIPO_VEICULO, KEY_FUNCAO, KEY_PLACA, KEY_GERENCIA}, null, null, null,
+                null, null, null);
+    }
+
+    //    deletando somente uma quilometragem
     public boolean deleteKm(Long rowId) {
         String whereClause = DatabaseHelper.KEY_ROWID + " = ?";
         String[] whereArgs = new String[]{rowId.toString()};
@@ -91,7 +109,16 @@ public class DBAdapter {
         return removidos > 0;
     }
 
-    //    retornando todos os contatos
+    //    DELELTANDO UM USUARIO
+    public boolean deleteUser(Long rowId) {
+        String whereClause = DatabaseHelper.KEY_ID_USERS + " = ?";
+        String[] whereArgs = new String[]{rowId.toString()};
+        int removidos = open().delete(DatabaseHelper.DATABASE_TABLE_USERS,
+                whereClause, whereArgs);
+        return removidos > 0;
+    }
+
+    //    retornando todas as quilometragens
     public List<Km> getAllKm() {
         Cursor cursor = open().query(DatabaseHelper.DATABASE_TABLE,
                 new String[]{KEY_ROWID, KEY_DATA, KEY_ITINERARIO, KEY_KM_INICIAL, KEY_KM_FINAL/*, KEY_KM_TOTAL*/},
@@ -116,7 +143,7 @@ public class DBAdapter {
     }
 
 
-    //    retornando somente um contato
+    //    retornando somente uma quilometragem
     public Km getKm(Integer rowId) throws SQLException {
         Cursor cursor = open().query(true, DatabaseHelper.DATABASE_TABLE, new String[]{KEY_ROWID, KEY_DATA,
                         KEY_ITINERARIO, KEY_KM_INICIAL, KEY_KM_FINAL, KEY_KM_TOTAL}, DatabaseHelper.KEY_ROWID + " = ?",
@@ -129,7 +156,7 @@ public class DBAdapter {
         return null;
 
     }
-//    atualizar um contato
+//    atualizar uma quilometragem
 
     public boolean updateKm(Long rowId, Km km) {
         ContentValues args = new ContentValues();
@@ -141,4 +168,15 @@ public class DBAdapter {
         return open().update(DatabaseHelper.DATABASE_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
     }
 
+    //    atualizar um usuario
+    public boolean updateUser(Long rowId, Usuario usuario) {
+        ContentValues args = new ContentValues();
+        args.put(DatabaseHelper.KEY_NOME,usuario.getNome());
+        args.put(DatabaseHelper.KEY_UNIDADE,usuario.getUnidade());
+        args.put(DatabaseHelper.KEY_TIPO_VEICULO,usuario.getTipoVeiculo());
+        args.put(DatabaseHelper.KEY_FUNCAO,usuario.getFuncao());
+        args.put(DatabaseHelper.KEY_PLACA,usuario.getPlaca());
+        args.put(DatabaseHelper.KEY_GERENCIA,usuario.getGerencia());
+        return open().update(DatabaseHelper.DATABASE_TABLE_USERS, args, KEY_ID_USERS + "=" + rowId, null) > 0;
+    }
 }
