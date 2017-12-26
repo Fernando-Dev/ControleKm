@@ -6,4 +6,6 @@
     <color name="colorKmTotal">#009900</color>
     <color name="colorFundo">#999999</color>
     <color name="colorBtnText">#FFFFFF</color>
+    <color name="colorTitle">#000000</color>
+    <color name="colorWhite">#ffffff</color>
 </resources>

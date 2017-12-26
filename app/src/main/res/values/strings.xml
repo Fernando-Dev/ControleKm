@@ -20,5 +20,39 @@
     <string name="listar">Listar</string>
     <string name="gerar_pdf">Gerar PDF</string>
     <string name="empty">Sem eventos!</string>
+    <string name="inec">Inec</string>
+    <string name="particular">Particular</string>
+    <string name="alternativo">Alternativo</string>
+    <string name="tipo_veiculo"> Tipo de veículo:</string>
+    <string name="placa">Placa</string>
+    <string name="nome">Nome</string>
+    <string name="qtde_cliente"> Quant. de clientes</string>
+
+
+    <string-array name="unidade">
+        <item>Unidade</item>
+        <item>Caxias</item>
+
+
+    </string-array>
+    <string-array name="funcao">
+        <item>Função</item>
+        <item>Agente de crédito</item>
+        <item>Coordenador</item>
+    </string-array>
+    <string-array name="gerencia">
+        <item>Gerencia</item>
+        <item>Maranhão</item>
+        <item>Ceará</item>
+        <item>Piauí</item>
+        <item>Rio Grande do Norte</item>
+        <item>Paraíba</item>
+        <item>Pernambuco</item>
+        <item>Alagoas</item>
+        <item>Sergipe</item>
+        <item>Bahia</item>
+        <item>Minas Gerais</item>
+        <item>Espírito Santo</item>
+    </string-array>
 
 </resources>

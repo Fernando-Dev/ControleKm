@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorTitle"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/cadastrar"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorWhite"
+            android:textStyle="bold" />
+
+
+        <EditText
+            android:id="@+id/edtNome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/edittext_border_radius"
+            android:ems="10"
+            android:hint="@string/nome"
+            android:inputType="textPersonName"
+            android:padding="7dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColorHint="@color/colorTitle" />
+
+        <requestFocus />
+
+        <Spinner
+            android:id="@+id/spUnidade"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/edittext_border_radius"
+            android:padding="7dp"
+            android:prompt="@strings/unidade" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/tipo_veiculo"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorWhite" />
+
+        <RadioGroup
+            android:id="@+id/rgTipoVeiculo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/edittext_border_radius"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <RadioButton
+                android:id="@+id/veiculoInec"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="25dp"
+                android:padding="7dp"
+                android:text="@string/inec"
+                android:textColor="@color/colorTitle" />
+
+            <RadioButton
+                android:id="@+id/veiculoProprio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="25dp"
+                android:checked="true"
+                android:padding="7dp"
+                android:text="@string/particular"
+                android:textColor="@color/colorTitle" />
+
+            <RadioButton
+                android:id="@+id/veiculoAlternativo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="7dp"
+                android:text="@string/alternativo"
+                android:textColor="@color/colorTitle" />
+        </RadioGroup>
+
+        <Spinner
+            android:id="@+id/spFuncao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/edittext_border_radius"
+            android:padding="7dp"
+            android:prompt="@strings/funcao" />
+
+        <EditText
+            android:id="@+id/edtPlaca"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/edittext_border_radius"
+            android:ems="10"
+            android:hint="@string/placa"
+            android:inputType="text"
+            android:padding="7dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColorHint="@color/colorTitle" />
+
+        <requestFocus />
+
+        <Spinner
+            android:id="@+id/spGerencia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/edittext_border_radius"
+            android:padding="7dp"
+            android:prompt="@strings/gerencia" />
+
+        <Button
+            android:id="@+id/btnSalvarUser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:background="@drawable/btn_border_radius"
+            android:text="@string/salvar"
+            android:textColor="@color/colorBtnText" />
+
+        <Button
+            android:id="@+id/btnVoltarUser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:background="@drawable/btn_border_radius"
+            android:text="@string/voltar"
+            android:textColor="@color/colorBtnText" />
+        <!--<EditText-->
+        <!--android:id="@+id/edtUnidade"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:ems="10"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:inputType="textPersonName"-->
+        <!--android:hint="Unidade" />-->
+    </LinearLayout>
+</ScrollView>
