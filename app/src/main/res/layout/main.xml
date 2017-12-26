@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorFundo"
+    android:orientation="vertical"
+    tools:context="com.example.fernando.controlekm.Main">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="11dp"
+        android:text="Escolha opção:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="#000000"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btnMainCadastrar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:background="@color/colorPrimaryDark"
+            android:onClick="selecionarOpcao"
+            android:text="@string/cadastrar"
+            android:textColor="@color/colorBtnText" />
+
+        <Button
+            android:id="@+id/btnMainConsultar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:background="@color/colorPrimaryDark"
+            android:onClick="selecionarOpcao"
+            android:text="@string/listar"
+            android:textColor="@color/colorBtnText" />
+
+        <Button
+            android:id="@+id/btnMainGerarPdf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:background="@color/colorPrimaryDark"
+            android:text="@string/gerar_pdf"
+            android:textColor="@color/colorBtnText" />
+    </LinearLayout>
+
+</LinearLayout>
