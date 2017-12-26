@@ -132,6 +132,7 @@ public class DBAdapter {
         return kms;
     }
 
+    //criando arquivo cursor para listar quilometragens
     private Km criarKm(Cursor cursor) {
         Km km = new Km(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.KEY_ROWID)),
                 new Date(cursor.getLong(cursor.getColumnIndex(DatabaseHelper.KEY_DATA))),
@@ -140,6 +141,18 @@ public class DBAdapter {
                 cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_KM_FINAL)));
                 /*cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_KM_TOTAL)));*/
         return km;
+    }
+
+    //criando arquivo cursor para listar usuarios
+    private Usuario criarUser(Cursor cursor) {
+        Usuario usuario = new Usuario(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.KEY_ID_USERS)),
+                cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_NOME)),
+                cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_UNIDADE)),
+                cursor.getInt(cursor.getColumnIndex(DatabaseHelper.KEY_TIPO_VEICULO)),
+                cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_FUNCAO)),
+                cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_PLACA)),
+                cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_PLACA)));
+        return usuario;
     }
 
 
@@ -171,12 +184,12 @@ public class DBAdapter {
     //    atualizar um usuario
     public boolean updateUser(Long rowId, Usuario usuario) {
         ContentValues args = new ContentValues();
-        args.put(DatabaseHelper.KEY_NOME,usuario.getNome());
-        args.put(DatabaseHelper.KEY_UNIDADE,usuario.getUnidade());
-        args.put(DatabaseHelper.KEY_TIPO_VEICULO,usuario.getTipoVeiculo());
-        args.put(DatabaseHelper.KEY_FUNCAO,usuario.getFuncao());
-        args.put(DatabaseHelper.KEY_PLACA,usuario.getPlaca());
-        args.put(DatabaseHelper.KEY_GERENCIA,usuario.getGerencia());
+        args.put(DatabaseHelper.KEY_NOME, usuario.getNome());
+        args.put(DatabaseHelper.KEY_UNIDADE, usuario.getUnidade());
+        args.put(DatabaseHelper.KEY_TIPO_VEICULO, usuario.getTipoVeiculo());
+        args.put(DatabaseHelper.KEY_FUNCAO, usuario.getFuncao());
+        args.put(DatabaseHelper.KEY_PLACA, usuario.getPlaca());
+        args.put(DatabaseHelper.KEY_GERENCIA, usuario.getGerencia());
         return open().update(DatabaseHelper.DATABASE_TABLE_USERS, args, KEY_ID_USERS + "=" + rowId, null) > 0;
     }
 }
