@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.example.fernando.controlekm.DatabaseHelper;
 import com.example.fernando.controlekm.dominio.Km;
+import com.example.fernando.controlekm.dominio.Usuario;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -62,6 +63,17 @@ public class DBAdapter {
         initialValues.put(DatabaseHelper.KEY_KM_FINAL, km.getKmFinal());
 //        initialValues.put(DatabaseHelper.KEY_KM_TOTAL, km.getKmTotal());
         return open().insert(DatabaseHelper.DATABASE_TABLE, null, initialValues);
+    }
+    public long inserirUsuario(Usuario usuario) {
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(DatabaseHelper.KEY_NOME, usuario.getNome());
+        initialValues.put(DatabaseHelper.KEY_UNIDADE, usuario.getUnidade());
+        initialValues.put(DatabaseHelper.KEY_TIPO_VEICULO,usuario.getTipoVeiculo());
+        initialValues.put(DatabaseHelper.KEY_FUNCAO,usuario.getFuncao());
+        initialValues.put(DatabaseHelper.KEY_PLACA,usuario.getPlaca());
+        initialValues.put(DatabaseHelper.KEY_GERENCIA,usuario.getGerencia());
+//        initialValues.put(DatabaseHelper.KEY_KM_TOTAL, km.getKmTotal());
+        return open().insert(DatabaseHelper.DATABASE_TABLE_USERS, null, initialValues);
     }
 
     public Cursor getAllKms() {
