@@ -43,8 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@drawable/edittext_border_radius"
-            android:padding="7dp"
-            android:prompt="@strings/unidade" />
+            android:padding="7dp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -97,8 +96,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@drawable/edittext_border_radius"
-            android:padding="7dp"
-            android:prompt="@strings/funcao" />
+            android:padding="7dp" />
 
         <EditText
             android:id="@+id/edtPlaca"
@@ -121,8 +119,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@drawable/edittext_border_radius"
-            android:padding="7dp"
-            android:prompt="@strings/gerencia" />
+            android:padding="7dp" />
 
         <Button
             android:id="@+id/btnSalvarUser"

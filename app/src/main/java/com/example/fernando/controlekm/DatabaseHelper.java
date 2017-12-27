@@ -15,6 +15,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String KEY_ROWID = "_id";
     public static final String KEY_DATA = "data";
     public static final String KEY_ITINERARIO = "itinerario";
+    public static final String KEY_QTD_CLIENTE = "qtdCliente";
     public static final String KEY_KM_INICIAL = "kmInicial";
     public static final String KEY_KM_FINAL = "kmFinal";
     public static final String KEY_KM_TOTAL = "kmTotal";
@@ -23,7 +24,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_TABLE = "kms";
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_CREATE = "create table kms(_id integer primary key autoincrement,"
-            + "data date not null, itinerario text not null, kmInicial integer not null, " +
+            + "data date not null, itinerario text not null, qtdCliente integer not null, kmInicial integer not null, " +
             "kmFinal integer not null, kmTotal integer not null);";
     public static final String KEY_ID_USERS = "id";
     public static final String KEY_NOME = "nome";

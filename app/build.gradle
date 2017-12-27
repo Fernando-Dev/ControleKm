@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.2"
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.example.fernando.controlekm"
         minSdkVersion 19
@@ -27,6 +27,6 @@ dependencies {
     })
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
     compile 'com.itextpdf:itextg:5.5.10'
+    compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
 }

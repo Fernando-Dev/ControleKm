@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+
 import com.example.fernando.controlekm.DAO.DBAdapter;
 import com.example.fernando.controlekm.dominio.Km;
 
@@ -27,7 +29,7 @@ public class CadastrarKm extends AppCompatActivity {
     private int ano, mes, dia;
     private Date edtDataKm;
     private Button btnSalvarKm, btnVoltarKm, btnData;
-    private EditText edtKmInicial, edtKmFinal, edtItinerario;
+    private EditText edtKmInicial, edtKmFinal, edtItinerario,qtdCliente;
     private TextView txvKmTotal;
     private DBAdapter db;
 
@@ -51,6 +53,7 @@ public class CadastrarKm extends AppCompatActivity {
         edtKmInicial = (EditText) findViewById(R.id.edtKmInicial);
         edtKmFinal = (EditText) findViewById(R.id.edtKmFinal);
         edtItinerario = (EditText) findViewById(R.id.edtItinerario);
+        qtdCliente = (EditText) findViewById(R.id.edtQtdeCliente);
         txvKmTotal = (TextView) findViewById(R.id.txvKmTotal);
         db = new DBAdapter(CadastrarKm.this);
 
@@ -96,16 +99,19 @@ public class CadastrarKm extends AppCompatActivity {
                 edtDataKm = dateFormat.parse(btnData.getText().toString());
                 km.setData(edtDataKm);
                 km.setItinerario(edtItinerario.getText().toString());
+                km.setQtdCliente(qtdCliente.getText().toString());
                 km.setKmInicial(edtKmInicial.getText().toString());
                 km.setKmFinal(edtKmFinal.getText().toString());
-//                km.setKmTotal(txvKmTotal.getText().toString());
+                km.setKmTotal(txvKmTotal.getText().toString());
                 db.inserirKm(km);
                 Toast.makeText(getBaseContext(), "Salvo", Toast.LENGTH_LONG).show();
 
                 btnData.setText("");
                 edtItinerario.setText("");
+                qtdCliente.setText("");
                 edtKmInicial.setText("");
                 edtKmFinal.setText("");
+
 
             }
         } catch (Exception ex) {

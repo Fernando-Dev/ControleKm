@@ -14,6 +14,7 @@ public class Km {
     private Integer id;
     private Date data;
     private String itinerario;
+    private Integer qtdCliente;
     private String kmInicial;
     private String kmFinal;
     private String kmTotal;
@@ -23,13 +24,15 @@ public class Km {
 
     }
 
-    public Km(Integer id, Date data, String itinerario, String kmInicial, String kmFinal/*, String kmTotal*/) {
+    public Km(Integer id, Date data, String itinerario, Integer qtdCliente,
+              String kmInicial, String kmFinal, String kmTotal) {
         this.id = id;
         this.data = data;
         this.itinerario = itinerario;
+        this.qtdCliente = qtdCliente;
         this.kmInicial = kmInicial;
         this.kmFinal = kmFinal;
-//        this.kmTotal = kmTotal;
+        this.kmTotal = kmTotal;
     }
 
     public Integer getId() {
@@ -56,6 +59,14 @@ public class Km {
         this.itinerario = itinerario;
     }
 
+    public Integer getQtdCliente() {
+        return qtdCliente;
+    }
+
+    public void setQtdCliente(Integer qtdCliente) {
+        this.qtdCliente = qtdCliente;
+    }
+
     public String getKmInicial() {
         return kmInicial;
     }
@@ -72,13 +83,13 @@ public class Km {
         this.kmFinal = kmFinal;
     }
 
-    /*public String getKmTotal() {
+    public String getKmTotal() {
         return kmTotal;
     }
 
     public void setKmTotal(String kmTotal) {
         this.kmTotal = kmTotal;
-    }*/
+    }
 
     @Override
     public String toString() {

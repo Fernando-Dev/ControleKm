@@ -30,6 +30,7 @@ import static com.example.fernando.controlekm.DatabaseHelper.KEY_KM_INICIAL;
 import static com.example.fernando.controlekm.DatabaseHelper.KEY_KM_TOTAL;
 import static com.example.fernando.controlekm.DatabaseHelper.KEY_NOME;
 import static com.example.fernando.controlekm.DatabaseHelper.KEY_PLACA;
+import static com.example.fernando.controlekm.DatabaseHelper.KEY_QTD_CLIENTE;
 import static com.example.fernando.controlekm.DatabaseHelper.KEY_ROWID;
 import static com.example.fernando.controlekm.DatabaseHelper.KEY_TIPO_VEICULO;
 import static com.example.fernando.controlekm.DatabaseHelper.KEY_UNIDADE;
@@ -67,9 +68,10 @@ public class DBAdapter {
         ContentValues initialValues = new ContentValues();
         initialValues.put(DatabaseHelper.KEY_DATA, km.getData().getTime());
         initialValues.put(DatabaseHelper.KEY_ITINERARIO, km.getItinerario());
+        initialValues.put(DatabaseHelper.KEY_QTD_CLIENTE, km.getQtdCliente());
         initialValues.put(DatabaseHelper.KEY_KM_INICIAL, km.getKmInicial());
         initialValues.put(DatabaseHelper.KEY_KM_FINAL, km.getKmFinal());
-//        initialValues.put(DatabaseHelper.KEY_KM_TOTAL, km.getKmTotal());
+        initialValues.put(DatabaseHelper.KEY_KM_TOTAL, km.getKmTotal());
         return open().insert(DatabaseHelper.DATABASE_TABLE, null, initialValues);
     }
 
@@ -82,14 +84,13 @@ public class DBAdapter {
         initialValues.put(DatabaseHelper.KEY_FUNCAO, usuario.getFuncao());
         initialValues.put(DatabaseHelper.KEY_PLACA, usuario.getPlaca());
         initialValues.put(DatabaseHelper.KEY_GERENCIA, usuario.getGerencia());
-//        initialValues.put(DatabaseHelper.KEY_KM_TOTAL, km.getKmTotal());
         return open().insert(DatabaseHelper.DATABASE_TABLE_USERS, null, initialValues);
     }
 
     // retornando todas as quiloemtragens
     public Cursor getAllKms() {
         return db.query(DATABASE_TABLE,
-                new String[]{KEY_ROWID, KEY_DATA, KEY_ITINERARIO, KEY_KM_INICIAL, KEY_KM_FINAL}, null, null, null,
+                new String[]{KEY_ROWID, KEY_DATA, KEY_ITINERARIO, KEY_QTD_CLIENTE, KEY_KM_INICIAL, KEY_KM_FINAL}, null, null, null,
                 null, null, null);
     }
 
@@ -121,7 +122,7 @@ public class DBAdapter {
     //    retornando todas as quilometragens
     public List<Km> getAllKm() {
         Cursor cursor = open().query(DatabaseHelper.DATABASE_TABLE,
-                new String[]{KEY_ROWID, KEY_DATA, KEY_ITINERARIO, KEY_KM_INICIAL, KEY_KM_FINAL/*, KEY_KM_TOTAL*/},
+                new String[]{KEY_ROWID, KEY_DATA, KEY_ITINERARIO, KEY_QTD_CLIENTE, KEY_KM_INICIAL, KEY_KM_FINAL/*, KEY_KM_TOTAL*/},
                 null, null, null, null, null);
         List<Km> kms = new ArrayList<Km>();
         while (cursor.moveToNext()) {
@@ -137,9 +138,10 @@ public class DBAdapter {
         Km km = new Km(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.KEY_ROWID)),
                 new Date(cursor.getLong(cursor.getColumnIndex(DatabaseHelper.KEY_DATA))),
                 cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_ITINERARIO)),
+                cursor.getInt(cursor.getColumnIndex(DatabaseHelper.KEY_QTD_CLIENTE)),
                 cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_KM_INICIAL)),
-                cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_KM_FINAL)));
-                /*cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_KM_TOTAL)));*/
+                cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_KM_FINAL)),
+                cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_KM_TOTAL)));
         return km;
     }
 
@@ -151,7 +153,7 @@ public class DBAdapter {
                 cursor.getInt(cursor.getColumnIndex(DatabaseHelper.KEY_TIPO_VEICULO)),
                 cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_FUNCAO)),
                 cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_PLACA)),
-                cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_PLACA)));
+                cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_GERENCIA)));
         return usuario;
     }
 
@@ -159,7 +161,7 @@ public class DBAdapter {
     //    retornando somente uma quilometragem
     public Km getKm(Integer rowId) throws SQLException {
         Cursor cursor = open().query(true, DatabaseHelper.DATABASE_TABLE, new String[]{KEY_ROWID, KEY_DATA,
-                        KEY_ITINERARIO, KEY_KM_INICIAL, KEY_KM_FINAL, KEY_KM_TOTAL}, DatabaseHelper.KEY_ROWID + " = ?",
+                        KEY_ITINERARIO,KEY_QTD_CLIENTE, KEY_KM_INICIAL, KEY_KM_FINAL, KEY_KM_TOTAL}, DatabaseHelper.KEY_ROWID + " = ?",
                 new String[]{rowId.toString()}, null, null, null, null);
         if (cursor.moveToNext()) {
             Km km = criarKm(cursor);
@@ -175,9 +177,10 @@ public class DBAdapter {
         ContentValues args = new ContentValues();
         args.put(DatabaseHelper.KEY_DATA, km.getData().getTime());
         args.put(DatabaseHelper.KEY_ITINERARIO, km.getItinerario());
+        args.put(DatabaseHelper.KEY_QTD_CLIENTE, km.getQtdCliente());
         args.put(DatabaseHelper.KEY_KM_INICIAL, km.getKmInicial());
         args.put(DatabaseHelper.KEY_KM_FINAL, km.getKmFinal());
-//        args.put(DatabaseHelper.KEY_KM_TOTAL, km.getKmTotal());
+        args.put(DatabaseHelper.KEY_KM_TOTAL, km.getKmTotal());
         return open().update(DatabaseHelper.DATABASE_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
     }
 
