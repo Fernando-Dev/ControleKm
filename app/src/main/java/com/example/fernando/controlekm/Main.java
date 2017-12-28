@@ -22,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.fernando.controlekm.DAO.DBAdapter;
@@ -70,8 +71,8 @@ public class Main extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        Button btnMainGerarPdf = (Button) findViewById(R.id.btnMainGerarPdf);
-        btnMainGerarPdf.setOnClickListener(new View.OnClickListener() {
+        ImageView ivRelatorio = (ImageView) findViewById(R.id.ivRelatorio);
+        ivRelatorio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
@@ -205,8 +206,8 @@ public class Main extends AppCompatActivity {
                 String itinerario = c.getString(c.getColumnIndex(DatabaseHelper.KEY_ITINERARIO));
                 String kmInicial = c.getString(c.getColumnIndex(DatabaseHelper.KEY_KM_INICIAL));
                 String kmFinal = c.getString(c.getColumnIndex(DatabaseHelper.KEY_KM_FINAL));
-                String[][] info = {{id},{data},{itinerario},{kmInicial},{kmFinal}};
-                for (String [] linha : info) {
+                String[][] info = {{id}, {data}, {itinerario}, {kmInicial}, {kmFinal}};
+                for (String[] linha : info) {
                     table.addCell(createCell(linha[0], 1, 1, Element.ALIGN_LEFT));
                     table.addCell(createCell(linha[1], 1, 1, Element.ALIGN_LEFT));
                     table.addCell(createCell(linha[2], 1, 1, Element.ALIGN_LEFT));
@@ -265,9 +266,10 @@ public class Main extends AppCompatActivity {
         Km km = new Km(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.KEY_ROWID)),
                 new Date(cursor.getLong(cursor.getColumnIndex(DatabaseHelper.KEY_DATA))),
                 cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_ITINERARIO)),
+                cursor.getInt(cursor.getColumnIndex(DatabaseHelper.KEY_QTD_CLIENTE)),
                 cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_KM_INICIAL)),
-                cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_KM_FINAL)));
-                /*cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_KM_TOTAL)));*/
+                cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_KM_FINAL)),
+                cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_KM_TOTAL)));
         return km;
     }
 
@@ -348,11 +350,14 @@ public class Main extends AppCompatActivity {
 
     public void selecionarOpcao(View v) {
         switch (v.getId()) {
-            case R.id.btnMainCadastrar:
+            case R.id.ivAddkm:
                 startActivity(new Intent(this, CadastrarKm.class));
                 break;
-            case R.id.btnMainConsultar:
+            case R.id.ivListkm:
                 startActivity(new Intent(this, ListKm.class));
+                break;
+            case R.id.ivAddUsuario:
+                startActivity(new Intent(this, CadastrarUsuario.class));
                 break;
         }
     }

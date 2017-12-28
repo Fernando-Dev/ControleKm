@@ -93,13 +93,14 @@ public class CadastrarKm extends AppCompatActivity {
             } else {
                 Integer diferenca = (_kmFim - _kmIni);
                 String resultado = String.valueOf(diferenca);
-                txvKmTotal.setText(resultado.toString() + " Km");
+                txvKmTotal.setText(resultado);
                 Km km = new Km();
                 DateFormat dateFormat = DateFormat.getDateInstance();
                 edtDataKm = dateFormat.parse(btnData.getText().toString());
                 km.setData(edtDataKm);
                 km.setItinerario(edtItinerario.getText().toString());
-                km.setQtdCliente(qtdCliente.getText().toString());
+                int cliente = Integer.parseInt(qtdCliente.getText().toString());
+                km.setQtdCliente(cliente);
                 km.setKmInicial(edtKmInicial.getText().toString());
                 km.setKmFinal(edtKmFinal.getText().toString());
                 km.setKmTotal(txvKmTotal.getText().toString());

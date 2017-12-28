@@ -33,17 +33,17 @@ public class CadastrarUsuario extends AppCompatActivity {
         edtNome = (EditText) findViewById(R.id.edtNome);
         spUnidade = (Spinner) findViewById(R.id.spUnidade);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this,R.array.tipo_unidade,android.R.layout.simple_spinner_item);
+                this,R.array.tipo_unidade,R.layout.spinner_item);
         spUnidade.setAdapter(adapter);
         rgTipoVeiculo = (RadioGroup) findViewById(R.id.rgTipoVeiculo);
         spFuncao = (Spinner) findViewById(R.id.spFuncao);
         ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(
-                this, R.array.tipo_funcao,android.R.layout.simple_spinner_item);
+                this, R.array.tipo_funcao,R.layout.spinner_item);
         spFuncao.setAdapter(adapter1);
         edtPlaca = (EditText) findViewById(R.id.edtPlaca);
         spGerencia = (Spinner) findViewById(R.id.spGerencia);
         ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(
-                this,R.array.tipo_gerencia,android.R.layout.simple_spinner_item);
+                this,R.array.tipo_gerencia,R.layout.spinner_item);
         spGerencia.setAdapter(adapter2);
 
         db = new DBAdapter(CadastrarUsuario.this);

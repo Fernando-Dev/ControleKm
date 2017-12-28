@@ -122,7 +122,7 @@ public class DBAdapter {
     //    retornando todas as quilometragens
     public List<Km> getAllKm() {
         Cursor cursor = open().query(DatabaseHelper.DATABASE_TABLE,
-                new String[]{KEY_ROWID, KEY_DATA, KEY_ITINERARIO, KEY_QTD_CLIENTE, KEY_KM_INICIAL, KEY_KM_FINAL/*, KEY_KM_TOTAL*/},
+                new String[]{KEY_ROWID, KEY_DATA, KEY_ITINERARIO, KEY_QTD_CLIENTE, KEY_KM_INICIAL, KEY_KM_FINAL, KEY_KM_TOTAL},
                 null, null, null, null, null);
         List<Km> kms = new ArrayList<Km>();
         while (cursor.moveToNext()) {

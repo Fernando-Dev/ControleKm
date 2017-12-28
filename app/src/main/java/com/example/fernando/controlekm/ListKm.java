@@ -45,6 +45,7 @@ public class ListKm extends ListActivity implements
     private AlertDialog alertDialog;
     private int kmSelecionado;
     private Km km;
+    private String id;
 
 
     @Override
@@ -73,8 +74,8 @@ public class ListKm extends ListActivity implements
         @Override
         protected void onPostExecute(List<Map<String, Object>> result) {
 
-            String[] de = {"id", "data", "itinerario", "kms"/*, "Total"*/};
-            int[] para = {R.id.lstIdKm, R.id.lstDataKm, R.id.lstItinerario, R.id.lstKm/*, R.id.lstKmTotal*/};
+            String[] de = {"id", "data", "itinerario", "qtdCliente", "kms", "Total"};
+            int[] para = {R.id.lstIdKm, R.id.lstDataKm, R.id.lstItinerario, R.id.lstQtdCliente, R.id.lstKm, R.id.lstKmTotal};
             SimpleAdapter simpleAdapter = new SimpleAdapter(ListKm.this, result,
                     R.layout.listar_km, de, para);
             setListAdapter(simpleAdapter);
@@ -88,11 +89,12 @@ public class ListKm extends ListActivity implements
         for (Km km : listaKms) {
             Map<String, Object> item = new HashMap<String, Object>();
             String periodo = dateFormat.format(km.getData());
-            item.put("id", km.getId() + " - ");
-            item.put("data", periodo);
-            item.put("itinerario", km.getItinerario());
-            item.put("kms", km.getKmInicial() + " Km" + " a " + km.getKmFinal() + " Km ");
-//            item.put("Total",km.getKmTotal());
+            item.put("id", "Id: " + km.getId());
+            item.put("data", "Data: " + periodo);
+            item.put("itinerario", "Itinerário: " + km.getItinerario());
+            item.put("qtdCliente", "Cliente(s): " + km.getQtdCliente());
+            item.put("kms", "Km Inicial: " + km.getKmInicial() + " Km" + " a " + "Km Final: " + km.getKmFinal() + " Km ");
+            item.put("Total", "Total: " + km.getKmTotal() + " Km ");
             kms.add(item);
             Comparator<Km> comparator = new Comparator<Km>() {
                 @Override
@@ -175,12 +177,12 @@ public class ListKm extends ListActivity implements
 //            finish();
 //        } else {
 //            position = parent.getSelectedItemPosition();
-            kmSelecionado = position;
+        kmSelecionado = position;
 //            String idKm = (String) kms.get(kmSelecionado).get("id");
 //            Intent data = new Intent();
 //            data.putExtra(KEY_EXTRA_ROW_ID,idKm);
 //            setResult(Activity.RESULT_OK,data);
-            alertDialog.show();
+        alertDialog.show();
 //            finish();
 //        }
 //        }

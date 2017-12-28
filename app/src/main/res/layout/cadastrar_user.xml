@@ -43,7 +43,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@drawable/edittext_border_radius"
-            android:padding="7dp" />
+            android:padding="7dp"
+            />
 
         <TextView
             android:layout_width="match_parent"
@@ -60,13 +61,12 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/edittext_border_radius"
             android:orientation="horizontal"
-            android:padding="5dp">
+            android:padding="1dp">
 
             <RadioButton
                 android:id="@+id/veiculoInec"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="25dp"
                 android:padding="7dp"
                 android:text="@string/inec"
                 android:textColor="@color/colorTitle" />
@@ -75,7 +75,6 @@
                 android:id="@+id/veiculoProprio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="25dp"
                 android:checked="true"
                 android:padding="7dp"
                 android:text="@string/particular"
