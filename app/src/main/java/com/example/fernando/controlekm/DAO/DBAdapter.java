@@ -101,6 +101,7 @@ public class DBAdapter {
                 null, null, null);
     }
 
+
     //    deletando somente uma quilometragem
     public boolean deleteKm(Long rowId) {
         String whereClause = DatabaseHelper.KEY_ROWID + " = ?";

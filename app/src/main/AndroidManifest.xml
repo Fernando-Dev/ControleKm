@@ -25,6 +25,7 @@
         </activity>
         <activity android:name=".ListKm" />
         <activity android:name=".CadastrarUsuario"/>
+        <activity android:name=".GeradorPdf"/>
         <activity android:name=".AlterarKm">
         </activity>
 

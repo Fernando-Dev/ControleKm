@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorTitle"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+
+        <EditText
+            android:id="@+id/edtDataPdf1"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/textView"
+            android:layout_marginTop="19dp"
+            android:background="@drawable/edittext_border_radius"
+            android:inputType="date" />
+
+        <EditText
+            android:id="@+id/edtDataPdf2"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/edtDataPdf1"
+            android:layout_alignBottom="@+id/edtDataPdf1"
+            android:layout_marginEnd="28dp"
+            android:layout_toStartOf="@+id/textView10"
+            android:background="@drawable/edittext_border_radius"
+            android:inputType="date" />
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/edtDataPdf2"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/textview_main"
+            android:text="à"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorWhite" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:text="Relatório"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorWhite"
+            android:textStyle="bold" />
+
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btnFiltroPdf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/btn_border_radius"
+        android:text="Filtro"
+        android:textColor="@color/colorBtnText" />
+
+
+    <Button
+        android:id="@+id/btnGerarPdf"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/btn_border_radius"
+        android:text="@string/gerar_pdf"
+        android:textColor="@color/colorBtnText" />
+
+    <Button
+        android:id="@+id/btnVoltarPdf"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/btn_border_radius"
+        android:text="@string/voltar"
+        android:textColor="@color/colorBtnText" />
+
+
+</LinearLayout>
