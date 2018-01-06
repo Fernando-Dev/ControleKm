@@ -1,12 +1,13 @@
 package com.example.fernando.controlekm;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.database.DatabaseErrorHandler;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -15,13 +16,14 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.fernando.controlekm.DAO.DBAdapter;
 import com.example.fernando.controlekm.dominio.Km;
+import com.itextpdf.awt.geom.CubicCurve2D;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
@@ -35,10 +37,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -53,6 +52,7 @@ public class GeradorPdf extends AppCompatActivity {
     final private int REQUEST_CODE_ASK_PERMISSIONS = 111;
     private SimpleDateFormat dateFormat;
     private DBAdapter db;
+    private ProgressDialog mProgressDialog;
 
 
     @Override
@@ -60,9 +60,13 @@ public class GeradorPdf extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gerar_relatorio);
 
+
+        db = new DBAdapter(this);
+
         Button gerarRelatorio = (Button) findViewById(R.id.btnGerarPdf);
         Button voltarPdf = (Button) findViewById(R.id.btnVoltarPdf);
         Button filtrarData = (Button) findViewById(R.id.btnFiltroPdf);
+
 
         filtrarData.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,7 +87,18 @@ public class GeradorPdf extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    PdfWrapper();
+//                    PdfWrapper();
+                    mProgressDialog = new ProgressDialog(GeradorPdf.this);
+                    mProgressDialog.setCancelable(false);
+                    mProgressDialog.setTitle("Carregando...");
+                    mProgressDialog.setMessage("Iniciando");
+                    mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                    mProgressDialog.setMax(100);
+                    mProgressDialog.setProgress(0);
+                    mProgressDialog.show();
+                    ProgressData p = new ProgressData();
+                    p.execute(10);
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(getBaseContext(), "Algo deu errado, tente mais tarde.", Toast.LENGTH_LONG).show();
@@ -92,6 +107,57 @@ public class GeradorPdf extends AppCompatActivity {
         });
 
 
+    }
+
+    private class ProgressData extends AsyncTask<Integer, String, String> {
+
+        @Override
+        protected String doInBackground(Integer... integers) {
+            int progress = 0;
+            int total = integers[0];
+            while (progress <= total) {
+                try {
+//                    PdfWrapper();
+                    Thread.sleep(2000); // pausa de 2 segundos
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                } catch (DocumentException e) {
+//                    e.printStackTrace();
+                }
+
+                String s = progress % 2 == 0 ? "Por favor aguarde..." : "Construindo relatório";
+
+                //exibindo o progresso
+                this.publishProgress(String.valueOf(progress), String.valueOf(total), s);
+                progress++;
+
+            }
+            return "done";
+        }
+
+        @Override
+        protected void onProgressUpdate(String... values) {
+            super.onProgressUpdate(values);
+            Float progress = Float.valueOf(values[0]);
+            Float total = Float.valueOf(values[1]);
+            String message = values[2];
+            mProgressDialog.setProgress((int) ((progress / total) * 100));
+            mProgressDialog.setMessage(message);
+            // mensagem de finalização
+            String a = "90";
+            if (values[0].equals(a)) {
+                mProgressDialog.setMessage("Finalizando...");
+            }
+            //se os valores sao iguais terminamos nosso processamento
+            if (values[0].equals(values[1])) {
+                //removemos o dialog
+                mProgressDialog.cancel();
+            }
+
+
+        }
     }
 
 
@@ -159,12 +225,9 @@ public class GeradorPdf extends AppCompatActivity {
     private void criarPdf() throws FileNotFoundException, DocumentException {
 
         File docsFolder = new File(Environment.getExternalStorageDirectory() + "/Documents");
-        if (!docsFolder.exists()) {
-            docsFolder.mkdir();
-            Log.i(TAG, "Criou um novo diretório para PDF");
-        }
+        docsFolder.mkdir();
 
-        try {
+
 //            c = db.getAllKm(getBaseContext());
 //            db.open();
 //            SQLiteDatabase bd = helper.getWritableDatabase();
@@ -172,29 +235,30 @@ public class GeradorPdf extends AppCompatActivity {
 //            c = bd.rawQuery(sql, new String[]{KEY_ROWID, KEY_DATA, KEY_ITINERARIO, KEY_KM_INICIAL, KEY_KM_FINAL});
 //            String sql_consulta = "SELECT id, data, itinerario, kmInicial, kmFinal"
 //                    + " FROM kms ";
-            pdfFile = new File(docsFolder.getAbsolutePath(), "RelatórioKm.pdf");
-            OutputStream output = new FileOutputStream(pdfFile);
-            Document documento = new Document();
+        pdfFile = new File(docsFolder.getAbsolutePath(), "RelatórioKm.pdf");
+        c = db.open().rawQuery("SELECT * FROM " + DatabaseHelper.DATABASE_TABLE, null);
+        OutputStream output = new FileOutputStream(pdfFile);
+        Document documento = new Document();
 //            List<Km> listaKm = helper.getReadableDatabase().
 
-            PdfWriter writer = PdfWriter.getInstance(documento, output);
-            PageOrientation event = new PageOrientation();
-            writer.setPageEvent(event);
-            documento.open();
+        PdfWriter writer = PdfWriter.getInstance(documento, output);
+        PageOrientation event = new PageOrientation();
+        writer.setPageEvent(event);
+        documento.open();
 //            Paragraph p = new Paragraph();
 //            p.add("Nome: ");
 //            documento.add(p);
 //            c = db.getAllKms();
 
-            PdfPTable table = new PdfPTable(7);
-            table.setWidths(new int[]{1, 2, 1, 1, 1, 1, 1});
-            table.addCell(createCell("Id", 2, 1, Element.ALIGN_LEFT));
-            table.addCell(createCell("Data", 2, 1, Element.ALIGN_LEFT));
-            table.addCell(createCell("Itinerário", 2, 1, Element.ALIGN_LEFT));
-            table.addCell(createCell("Quant. Clientes", 2, 1, Element.ALIGN_LEFT));
-            table.addCell(createCell("Km inicial", 2, 1, Element.ALIGN_LEFT));
-            table.addCell(createCell("Km final", 2, 1, Element.ALIGN_LEFT));
-            table.addCell(createCell("Total", 2, 1, Element.ALIGN_LEFT));
+        PdfPTable table = new PdfPTable(7);
+        table.setWidths(new int[]{1, 2, 1, 1, 1, 1, 1});
+        table.addCell(createCell("Id", 2, 1, Element.ALIGN_LEFT));
+        table.addCell(createCell("Data", 2, 1, Element.ALIGN_LEFT));
+        table.addCell(createCell("Itinerário", 2, 1, Element.ALIGN_LEFT));
+        table.addCell(createCell("Quant. Clientes", 2, 1, Element.ALIGN_LEFT));
+        table.addCell(createCell("Km inicial", 2, 1, Element.ALIGN_LEFT));
+        table.addCell(createCell("Km final", 2, 1, Element.ALIGN_LEFT));
+        table.addCell(createCell("Total", 2, 1, Element.ALIGN_LEFT));
 
 
 //            PdfPCell c1 = new PdfPCell(new Phrase("Id"));
@@ -214,48 +278,60 @@ public class GeradorPdf extends AppCompatActivity {
 //            table.addCell(c5);
 //            table.setHeaderRows(1);
 
-//            while (c.moveToFirst()) {
-            List<Km> listaKms = db.getAllKm();
-            for (Km km : listaKms) {
+//        while (c.moveToFirst()) {
+//            List<Km> listaKms = db.getAllKm();
+//            for (Km km : listaKms) {
+//
+//
+//                table.addCell(createCell(String.valueOf(km.getId()), 1, 1, Element.ALIGN_LEFT));
+//                String dataKm = dateFormat.format(km.getData());
+//                table.addCell(createCell(dataKm, 1, 1, Element.ALIGN_LEFT));
+//                table.addCell(createCell(km.getItinerario(), 1, 1, Element.ALIGN_LEFT));
+//                table.addCell(createCell(String.valueOf(km.getQtdCliente()), 1, 1, Element.ALIGN_LEFT));
+//                table.addCell(createCell(km.getKmInicial(), 1, 1, Element.ALIGN_LEFT));
+//                table.addCell(createCell(km.getKmFinal(), 1, 1, Element.ALIGN_LEFT));
+//                table.addCell(createCell(km.getKmTotal(), 1, 1, Element.ALIGN_LEFT));
+//
+//                Comparator<Km> comparator = new Comparator<Km>() {
+//                    @Override
+//                    public int compare(Km km, Km t1) {
+//                        if (km.getData().compareTo(t1.getData()) < 0) {
+//                            return -1;
+//                        }
+//                        if (km.getData().compareTo(t1.getData()) > 0) {
+//                            return 1;
+//                        }
+//                        return 0;
+//                    }
+//
+//                };
+//                Collections.sort(listaKms, comparator);
+//            }
+//        while (c.moveToFirst()) {
+        c.moveToFirst();
+        for (int a = 0; a < c.getCount(); a++) {
 
-                table.addCell(createCell(String.valueOf(km.getId()), 1, 1, Element.ALIGN_LEFT));
-                String dataKm = dateFormat.format(km.getData());
-                table.addCell(createCell(dataKm, 1, 1, Element.ALIGN_LEFT));
-                table.addCell(createCell(km.getItinerario(), 1, 1, Element.ALIGN_LEFT));
-                table.addCell(createCell(String.valueOf(km.getQtdCliente()), 1, 1, Element.ALIGN_LEFT));
-                table.addCell(createCell(km.getKmInicial(), 1, 1, Element.ALIGN_LEFT));
-                table.addCell(createCell(km.getKmFinal(), 1, 1, Element.ALIGN_LEFT));
-                table.addCell(createCell(km.getKmTotal(), 1, 1, Element.ALIGN_LEFT));
 
-                Comparator<Km> comparator = new Comparator<Km>() {
-                    @Override
-                    public int compare(Km km, Km t1) {
-                        if (km.getData().compareTo(t1.getData()) < 0) {
-                            return -1;
-                        }
-                        if (km.getData().compareTo(t1.getData()) > 0) {
-                            return 1;
-                        }
-                        return 0;
-                    }
-
-                };
-                Collections.sort(listaKms, comparator);
-            }
-//                c.moveToNext();
-
-//                String id = String.valueOf(c.getInt(c.getColumnIndex(DatabaseHelper.KEY_ROWID)));
-//                String data = String.valueOf(new Date(c.getLong(c.getColumnIndex(DatabaseHelper.KEY_DATA))));
-//                String itinerario = c.getString(c.getColumnIndex(DatabaseHelper.KEY_ITINERARIO));
-//                String kmInicial = c.getString(c.getColumnIndex(DatabaseHelper.KEY_KM_INICIAL));
-//                String kmFinal = c.getString(c.getColumnIndex(DatabaseHelper.KEY_KM_FINAL));
-//                String[][] info = {{id}, {data}, {itinerario}, {kmInicial}, {kmFinal}};
-//                for (String[] linha : info) {
-//                    table.addCell(createCell(linha[0], 1, 1, Element.ALIGN_LEFT));
-//                    table.addCell(createCell(linha[1], 1, 1, Element.ALIGN_LEFT));
-//                    table.addCell(createCell(linha[2], 1, 1, Element.ALIGN_LEFT));
-//                    table.addCell(createCell(linha[3], 1, 1, Element.ALIGN_LEFT));
-//                    table.addCell(createCell(linha[4], 1, 1, Element.ALIGN_LEFT));
+            String id = String.valueOf(c.getInt(c.getColumnIndex(DatabaseHelper.KEY_ROWID)));
+            String data = String.valueOf(new Date(c.getLong(c.getColumnIndex(DatabaseHelper.KEY_DATA))));
+            String itinerario = c.getString(c.getColumnIndex(DatabaseHelper.KEY_ITINERARIO));
+            String qtdCliente = c.getString(c.getColumnIndex(DatabaseHelper.KEY_QTD_CLIENTE));
+            String kmInicial = c.getString(c.getColumnIndex(DatabaseHelper.KEY_KM_INICIAL));
+            String kmFinal = c.getString(c.getColumnIndex(DatabaseHelper.KEY_KM_FINAL));
+            String kmTotal = String.valueOf(c.getInt(c.getColumnIndex(DatabaseHelper.KEY_KM_TOTAL)));
+//            String[][] info = {{id}, {data}, {itinerario}, {qtdCliente}, {kmInicial}, {kmFinal}, {kmTotal}};
+//            for (String[] linha : info) {
+            table.addCell(createCell(id, 1, 1, Element.ALIGN_LEFT));
+            table.addCell(createCell(data, 1, 1, Element.ALIGN_LEFT));
+            table.addCell(createCell(itinerario, 1, 1, Element.ALIGN_LEFT));
+            table.addCell(createCell(qtdCliente, 1, 1, Element.ALIGN_LEFT));
+            table.addCell(createCell(kmInicial, 1, 1, Element.ALIGN_LEFT));
+            table.addCell(createCell(kmFinal, 1, 1, Element.ALIGN_LEFT));
+            table.addCell(createCell(kmTotal, 1, 1, Element.ALIGN_LEFT));
+//            }
+            c.moveToNext();
+        }
+//        }
 //                Km kms = new Km();
 //                kms.setId(c.getInt(0));
 //                DateFormat dateFormat = DateFormat.getDateInstance();
@@ -269,22 +345,23 @@ public class GeradorPdf extends AppCompatActivity {
 //                    documento.add(new Paragraph("Km inicial: " + km.getKmInicial().toString()));
 //                    documento.add(new Paragraph("Km final: " + km.getKmFinal().toString()));
 //                    documento.add(new Paragraph("|____________________________________|"));
-//            }
+//        }
 
-            documento.add(table);
-            event.setOrientation(PdfPage.LANDSCAPE);
-            documento.addCreationDate();
-            documento.close();
+        documento.add(table);
+        event.setOrientation(PdfPage.LANDSCAPE);
+        documento.addCreationDate();
+        documento.close();
+        c.close();
+        db.close();
 
 //                document.add(new Paragraph(mContentEditText.getText().toString()));
 //            bd.close();
 //            db.close();
 
-        } catch (Exception e) {
+
 //            c.close();
-            e.printStackTrace();
-            previaPdf();
-        }
+
+        previaPdf();
 
 
 //        return kms;

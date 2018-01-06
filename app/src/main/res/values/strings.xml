@@ -31,6 +31,8 @@
         <string name="placa">Placa</string>
         <string name="nome">Nome</string>
         <string name="qtde_cliente"> Quant. de clientes</string>
+        <string name="realatorio">Relatório</string>
+        <string name="listar_usuario">Usuários</string>
 
 
         <string-array name="tipo_unidade">
@@ -47,17 +49,17 @@
 
         <string-array name="tipo_gerencia">
             <item>Gerencia</item>
-            <item>Maranhão</item>
+            <item>Alagoas</item>
+            <item>Bahia</item>
             <item>Ceará</item>
-            <item>Piauí</item>
-            <item>Rio Grande do Norte</item>
+            <item>Espírito Santo</item>
+            <item>Maranhão</item>
+            <item>Minas Gerais</item>
             <item>Paraíba</item>
             <item>Pernambuco</item>
-            <item>Alagoas</item>
+            <item>Piauí</item>
+            <item>Rio Grande do Norte</item>
             <item>Sergipe</item>
-            <item>Bahia</item>
-            <item>Minas Gerais</item>
-            <item>Espírito Santo</item>
         </string-array>
 
     

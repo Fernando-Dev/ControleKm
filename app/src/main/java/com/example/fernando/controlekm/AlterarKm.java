@@ -2,6 +2,7 @@ package com.example.fernando.controlekm;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -77,6 +78,7 @@ public class AlterarKm extends AppCompatActivity {
         try {
             codigo = this.getIntent().getStringExtra("codigo");
             db.open();
+            Cursor c = (Cursor) db.getKm(Integer.parseInt(codigo));
             String kmIni = altKmInicial.getText().toString();
             int _kmIni = Integer.parseInt(kmIni);
             String kmFim = altKmFinal.getText().toString();
@@ -89,13 +91,14 @@ public class AlterarKm extends AppCompatActivity {
                 String resultado = String.valueOf(diferenca);
                 txvKmTotal.setText(resultado.toString() + " Km");
                 Km km = new Km();
-                DateFormat dateFormat = DateFormat.getDateInstance();
-                edtDataKm = dateFormat.parse(altData.getText().toString());
-                km.setData(edtDataKm);
-                km.setItinerario(altItinerario.getText().toString());
-                km.setKmInicial(altKmInicial.getText().toString());
-                km.setKmFinal(altKmFinal.getText().toString());
-//                km.setKmTotal(txvKmTotal.getText().toString());
+//                DateFormat dateFormat = DateFormat.getDateInstance();
+//                edtDataKm = dateFormat.parse(altData.getText().toString());
+                km.setData(new Date(c.getLong(c.getColumnIndex(DatabaseHelper.KEY_DATA))));
+                km.setItinerario(c.getString(c.getColumnIndex(DatabaseHelper.KEY_ITINERARIO)));
+                km.setQtdCliente(c.getInt(c.getColumnIndex(DatabaseHelper.KEY_QTD_CLIENTE)));
+                km.setKmInicial(c.getString(c.getColumnIndex(DatabaseHelper.KEY_KM_INICIAL)));
+                km.setKmFinal(c.getString(c.getColumnIndex(DatabaseHelper.KEY_KM_FINAL)));
+                km.setKmTotal(c.getString(c.getColumnIndex(DatabaseHelper.KEY_KM_TOTAL)));
                 db.updateKm(Long.parseLong(codigo),km);
                 Toast.makeText(getBaseContext(), "Alterado", Toast.LENGTH_LONG).show();
 

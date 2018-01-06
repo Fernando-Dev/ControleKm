@@ -77,6 +77,9 @@ public class Main extends AppCompatActivity {
             case R.id.ivAddUsuario:
                 startActivity(new Intent(this, CadastrarUsuario.class));
                 break;
+            case R.id.ivListUser:
+                startActivity(new Intent(this,ListUser.class));
+                break;
             case R.id.ivRelatorio:
                 startActivity(new Intent(this, GeradorPdf.class));
                 break;
@@ -94,73 +97,5 @@ public class Main extends AppCompatActivity {
         finish();
         return true;
     }
-
-
-    //    private void criandoDiretorio(String diretorio) {
-//        File file1 = new File(Environment.getExternalStorageDirectory(), "/" + diretorio + "/");
-//        if (!file1.exists()) {
-//            file1.mkdir();
-//            file1 = new File(Environment.getExternalStorageDirectory(), "/" + diretorio + "/");
-//        }
-//    }
-
-//    public ArrayList<Km> RelatorioPdf() throws DocumentException, FileNotFoundException {
-//        final String DEST = "ControleKm/RelatorioKm.pdf";
-////        String diretorio = null;
-////        criandoDiretorio(diretorio);
-//        Document documento = new Document();
-//        ArrayList<Km> lista = new ArrayList<Km>();
-//        File file = new File(Environment.getExternalStorageDirectory(), DEST);
-//        file.getParentFile().mkdirs();
-//        try {
-//        String sql_innerJoin = "SELECT kms.id, kms.data, kms.itinerario, kms.kmInicial, kms.kmFinal, kms.kmTotal"
-//                + " FROM kms ";
-
-//
-//            Cursor c = helper.getReadableDatabase().rawQuery(sql_innerJoin, null);
-//            // Cursor c = getReadableDatabase().query(t,VisitantesDB.COLUNAS,
-//            // null, null, null, null, null,null);
-////            PdfWriter.getInstance(documento, new FileOutputStream(Environment.getExternalStorageDirectory() +
-////                    File.separator + "testeKm.pdf"));
-//            FileOutputStream fileOut = new FileOutputStream(file);
-//            if (file.exists()) {
-//                new FileOutputStream(file);
-//            } else {
-//                file.createNewFile();
-//                new FileOutputStream(file);
-//            }
-//            PdfWriter.getInstance(documento, fileOut);
-//            documento.open();
-//            documento.addAuthor("Fernando");
-//
-//
-//            while (c.moveToNext()) {
-//                Km kms = new Km();
-//                kms.setId(c.getInt(0));
-//                DateFormat dateFormat = DateFormat.getDateInstance();
-//                kms.setData(dateFormat.parse(c.getString(1)));
-//                kms.setItinerario(c.getString(2));
-//                kms.setKmInicial(c.getString(3));
-//                kms.setKmFinal(c.getString(4));
-////                kms.setKmTotal(c.getString(5));
-//                documento.add(new Paragraph("Id: " + kms.getId()));
-//                documento.add(new Paragraph("Data: " + kms.getData()));
-//                documento.add(new Paragraph("Itinerario: " + kms.getItinerario()));
-//                documento.add(new Paragraph("Km inicial: " + kms.getKmInicial()));
-//                documento.add(new Paragraph("Km final: " + kms.getKmFinal()));
-//                documento.add(new Paragraph("Km total: " + kms.getKmTotal()));
-//                documento.add(new Paragraph("|____________________________________|"));
-//                lista.add(kms);
-//            }
-//            c.close();
-//            documento.addCreationDate();
-//            documento.close();
-//            fileOut.close();
-//        } catch (Exception e) {
-//            Log.e("erro", e.toString());
-//        }
-//        return lista;
-//    }
-
 
 }

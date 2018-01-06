@@ -4,13 +4,17 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.fernando.controlekm.DAO.DBAdapter;
+import com.example.fernando.controlekm.dominio.Km;
+import com.example.fernando.controlekm.dominio.Usuario;
 
 /**
  * Created by Flavia on 27/12/2017.
@@ -18,10 +22,10 @@ import com.example.fernando.controlekm.DAO.DBAdapter;
 
 public class CadastrarUsuario extends AppCompatActivity {
 
-    private EditText edtNome,edtPlaca;
-    private Spinner spUnidade,spFuncao,spGerencia;
+    private EditText edtNome, edtPlaca;
+    private Spinner spUnidade, spFuncao, spGerencia;
     private RadioGroup rgTipoVeiculo;
-    private Button  btnSalvar, btnVoltar;
+    private Button btnSalvar, btnVoltar;
     private DBAdapter db;
 
 
@@ -33,20 +37,71 @@ public class CadastrarUsuario extends AppCompatActivity {
         edtNome = (EditText) findViewById(R.id.edtNome);
         spUnidade = (Spinner) findViewById(R.id.spUnidade);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this,R.array.tipo_unidade,R.layout.spinner_item);
+                this, R.array.tipo_unidade, R.layout.spinner_item);
         spUnidade.setAdapter(adapter);
         rgTipoVeiculo = (RadioGroup) findViewById(R.id.rgTipoVeiculo);
         spFuncao = (Spinner) findViewById(R.id.spFuncao);
         ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(
-                this, R.array.tipo_funcao,R.layout.spinner_item);
+                this, R.array.tipo_funcao, R.layout.spinner_item);
         spFuncao.setAdapter(adapter1);
         edtPlaca = (EditText) findViewById(R.id.edtPlaca);
         spGerencia = (Spinner) findViewById(R.id.spGerencia);
         ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(
-                this,R.array.tipo_gerencia,R.layout.spinner_item);
+                this, R.array.tipo_gerencia, R.layout.spinner_item);
         spGerencia.setAdapter(adapter2);
+        btnSalvar = (Button) findViewById(R.id.btnSalvarUser);
+        btnVoltar = (Button)findViewById(R.id.btnVoltarUser);
 
         db = new DBAdapter(CadastrarUsuario.this);
 
+        btnSalvar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addUsuario();
+            }
+        });
+        btnVoltar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+    }
+
+
+    public void addUsuario() {
+        try {
+            DatabaseHelper helper = new DatabaseHelper(this);
+            db.open();
+            Usuario usuario = new Usuario();
+            usuario.setNome(edtNome.getText().toString());
+            usuario.setUnidade(spUnidade.getSelectedItem().toString());
+            int tipoVeiculo = rgTipoVeiculo.getCheckedRadioButtonId();
+            if (tipoVeiculo == R.id.veiculoInec) {
+                usuario.setTipoVeiculo(Constante.TIPO_VEICULO_INEC);
+            } else if (tipoVeiculo == R.id.veiculoProprio) {
+                usuario.setTipoVeiculo(Constante.TIPO_VEICULO_PARTICULAR);
+            } else {
+                usuario.setTipoVeiculo(Constante.TIPO_VEICULO_ALTERNATIVO);
+            }
+            usuario.setFuncao(spFuncao.getSelectedItem().toString());
+            String placa = edtPlaca.getText().toString();
+            placa = placa.toUpperCase();
+            usuario.setPlaca(placa);
+            usuario.setGerencia(spGerencia.getSelectedItem().toString());
+            db.inserirUsuario(usuario);
+            Toast.makeText(getBaseContext(), "Salvo", Toast.LENGTH_LONG).show();
+            finish();
+        }catch (Exception e){
+            Toast.makeText(getBaseContext(),"Erro ao salvar",Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        db.close();
+        super.onDestroy();
     }
 }

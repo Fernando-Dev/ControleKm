@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.fernando.controlekm">
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_another"
@@ -19,15 +21,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Main">
-        </activity>
-        <activity android:name=".CadastrarKm">
-        </activity>
+        <activity android:name=".Main" />
+        <activity
+            android:name=".CadastrarKm"
+            android:label="@string/cadastrar" />
         <activity android:name=".ListKm" />
-        <activity android:name=".CadastrarUsuario"/>
-        <activity android:name=".GeradorPdf"/>
-        <activity android:name=".AlterarKm">
-        </activity>
+        <activity
+            android:name=".CadastrarUsuario"
+            android:label="@string/cadastrar" />
+        <activity
+            android:name=".ListUser"
+            android:label="@string/listar_usuario" />
+        <activity
+            android:name=".GeradorPdf"
+            android:label="@string/realatorio" />
+        <activity android:name=".AlterarKm" />
 
 
     </application>

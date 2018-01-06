@@ -12,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-
 import com.example.fernando.controlekm.DAO.DBAdapter;
 import com.example.fernando.controlekm.dominio.Km;
 
@@ -29,7 +28,7 @@ public class CadastrarKm extends AppCompatActivity {
     private int ano, mes, dia;
     private Date edtDataKm;
     private Button btnSalvarKm, btnVoltarKm, btnData;
-    private EditText edtKmInicial, edtKmFinal, edtItinerario,qtdCliente;
+    private EditText edtKmInicial, edtKmFinal, edtItinerario, qtdCliente;
     private TextView txvKmTotal;
     private DBAdapter db;
 
@@ -107,13 +106,7 @@ public class CadastrarKm extends AppCompatActivity {
                 db.inserirKm(km);
                 Toast.makeText(getBaseContext(), "Salvo", Toast.LENGTH_LONG).show();
 
-                btnData.setText("");
-                edtItinerario.setText("");
-                qtdCliente.setText("");
-                edtKmInicial.setText("");
-                edtKmFinal.setText("");
-
-
+                finish();
             }
         } catch (Exception ex) {
             Toast.makeText(getBaseContext(), "Erro ao salvar!", Toast.LENGTH_LONG).show();

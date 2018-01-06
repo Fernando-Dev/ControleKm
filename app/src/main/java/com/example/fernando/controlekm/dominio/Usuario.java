@@ -13,6 +13,10 @@ public class Usuario {
     private String placa;
     private String gerencia;
 
+    public Usuario(){
+
+    }
+
     public Usuario(Integer id, String nome, String unidade, Integer tipoVeiculo, String funcao, String placa, String gerencia) {
         this.id = id;
         this.nome = nome;
