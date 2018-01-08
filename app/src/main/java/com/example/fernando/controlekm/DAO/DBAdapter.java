@@ -58,6 +58,13 @@ public class DBAdapter {
         return db;
     }
 
+    public SQLiteDatabase read() throws SQLException {
+        if (db == null) {
+            db = DBHelper.getReadableDatabase();
+        }
+        return db;
+    }
+
     //    fechando o banco de dados
     public void close() {
         DBHelper.close();
@@ -122,8 +129,9 @@ public class DBAdapter {
 
     //    retornando todas as quilometragens
     public List<Km> getAllKm() {
-        Cursor cursor = open().query(DatabaseHelper.DATABASE_TABLE,
-                new String[]{KEY_ROWID, KEY_DATA, KEY_ITINERARIO, KEY_QTD_CLIENTE, KEY_KM_INICIAL, KEY_KM_FINAL, KEY_KM_TOTAL},
+        Cursor cursor = read().query(DatabaseHelper.DATABASE_TABLE,
+                new String[]{KEY_ROWID, KEY_DATA, KEY_ITINERARIO, KEY_QTD_CLIENTE,
+                        KEY_KM_INICIAL, KEY_KM_FINAL, KEY_KM_TOTAL},
                 null, null, null, null, null);
         List<Km> kms = new ArrayList<Km>();
         while (cursor.moveToNext()) {
@@ -145,6 +153,22 @@ public class DBAdapter {
                 cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_KM_TOTAL)));
         return km;
     }
+//    retorna todos os usuarios em uma lista
+
+    public List<Usuario> listaUsuario() {
+        Cursor cursor = read().query(DatabaseHelper.DATABASE_TABLE_USERS, new String[]{KEY_ID_USERS,
+                KEY_NOME, KEY_UNIDADE, KEY_TIPO_VEICULO, KEY_FUNCAO,
+                KEY_PLACA, KEY_GERENCIA}, null, null, null, null, null);
+        List<Usuario> usuarios = new ArrayList<Usuario>();
+        while (cursor.moveToNext()) {
+            Usuario usuario = criarUser(cursor);
+            usuarios.add(usuario);
+        }
+        cursor.close();
+        return usuarios;
+
+
+    }
 
     //criando arquivo cursor para listar usuarios
     private Usuario criarUser(Cursor cursor) {
@@ -161,8 +185,9 @@ public class DBAdapter {
 
     //    retornando somente uma quilometragem
     public Km getKm(Integer rowId) throws SQLException {
-        Cursor cursor = open().query(true, DatabaseHelper.DATABASE_TABLE, new String[]{KEY_ROWID, KEY_DATA,
-                        KEY_ITINERARIO,KEY_QTD_CLIENTE, KEY_KM_INICIAL, KEY_KM_FINAL, KEY_KM_TOTAL}, DatabaseHelper.KEY_ROWID + " = ?",
+        Cursor cursor = read().query(true, DatabaseHelper.DATABASE_TABLE, new String[]{KEY_ROWID, KEY_DATA,
+                        KEY_ITINERARIO, KEY_QTD_CLIENTE, KEY_KM_INICIAL, KEY_KM_FINAL, KEY_KM_TOTAL},
+                DatabaseHelper.KEY_ROWID + " = ?",
                 new String[]{rowId.toString()}, null, null, null, null);
         if (cursor.moveToNext()) {
             Km km = criarKm(cursor);
@@ -172,6 +197,22 @@ public class DBAdapter {
         return null;
 
     }
+//    retornando somente um usuario
+
+    public Usuario getUsuario(Integer id) {
+        Cursor cursor = read().query(true, DatabaseHelper.DATABASE_TABLE_USERS, new String[]{KEY_ID_USERS, KEY_NOME,
+                        KEY_UNIDADE, KEY_TIPO_VEICULO, KEY_FUNCAO, KEY_PLACA, KEY_GERENCIA},
+                DatabaseHelper.KEY_ROWID + " = ?",
+                new String[]{id.toString()}, null, null, null, null);
+        if (cursor.moveToNext()) {
+            Usuario usuario = criarUser(cursor);
+            cursor.close();
+            return usuario;
+        }
+        return null;
+
+    }
+
 //    atualizar uma quilometragem
 
     public boolean updateKm(Long rowId, Km km) {

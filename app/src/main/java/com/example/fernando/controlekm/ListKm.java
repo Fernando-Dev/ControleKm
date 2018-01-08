@@ -48,7 +48,7 @@ public class ListKm extends ListActivity implements
     private AlertDialog alertDialog;
     private int kmSelecionado;
     private Km km;
-
+    private String Id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +60,7 @@ public class ListKm extends ListActivity implements
         getListView().setOnItemClickListener(ListKm.this);
         alertDialog = criaAlertDialog();
         dialogConfirmacao = criarDialogConfirmacao();
+        Id = getIntent().getStringExtra(Constante.KEY_ROWID);
 
 
         new Task().execute((Void[]) null);
@@ -99,19 +100,7 @@ public class ListKm extends ListActivity implements
             item.put("kms", "Km Inicial: " + km.getKmInicial() + " Km" + " <---> " + "Km Final: " + km.getKmFinal() + " Km ");
             item.put("Total", "Total: " + km.getKmTotal() + " Km ");
             kms.add(item);
-            Comparator<Km> comparator = new Comparator<Km>() {
-                @Override
-                public int compare(Km km, Km t1) {
-                    if (km.getData().compareTo(t1.getData()) < 0) {
-                        return -1;
-                    }
-                    if (km.getData().compareTo(t1.getData()) > 0) {
-                        return 1;
-                    }
-                    return 0;
-                }
-            };
-            Collections.sort(listaKms, comparator);
+
         }
         return kms;
     }
@@ -138,9 +127,9 @@ public class ListKm extends ListActivity implements
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(ListKm.this, "posicao-> " + position, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(ListKm.this, "posicao-> " + position, Toast.LENGTH_SHORT).show();
 //        Toast.makeText(ListKm.this, "getSelectedItem-> " + parent.getSelectedItemPosition(), Toast.LENGTH_SHORT).show();
-        Toast.makeText(ListKm.this, "id-> " + id, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(ListKm.this, "id-> " + id, Toast.LENGTH_SHORT).show();
 //        Toast.makeText(getBaseContext(), "Dados: " + selectionData, Toast.LENGTH_SHORT).show();
 //        if (position == id) {
 //            String _id = (String) kms.get(position).get("id");
@@ -165,11 +154,17 @@ public class ListKm extends ListActivity implements
 //////            Cursor itemCursor = (Cursor) kms.get(position).get("id");
 //////            int idKm = itemCursor.getInt(itemCursor.getColumnIndex(DatabaseHelper.KEY_ROWID));
 ////
-//            String idKm = (String) kms.get(position).get(String.valueOf(id));
-//            Intent data = new Intent();
-//            data.putExtra(KEY_EXTRA_ROW_ID, idKm);
-//            setResult(Activity.RESULT_OK, data);
-//            alertDialog.show();
+        /* = (String) kms.get(position).get("id");*/
+//        db.read();
+        Id = String.valueOf(db.getKm(position + 1));
+        this.kmSelecionado = position + 1;
+//        idKm = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.KEY_ROWID));
+        Toast.makeText(getBaseContext(), "Id do banco: " + Id, Toast.LENGTH_LONG).show();
+//        db.close();
+        Intent data = new Intent();
+        data.putExtra(Constante.KEY_ROWID, Id);
+        setResult(Activity.RESULT_OK, data);
+        alertDialog.show();
 //            finish();
 //        } else {
 ////            position = parent.getSelectedItemPosition();
@@ -190,13 +185,14 @@ public class ListKm extends ListActivity implements
         final int excluir = 1;
         Intent intent;
 
-        Long id = (Long) kms.get(kmSelecionado).get("id");
+        /*String id;*//* = (Long) kms.get(kmSelecionado).get("id");*/
+//        id = String.valueOf(db.getKm(kmSelecionado));
 
 
         switch (item) {
             case editar: //editar
                 intent = new Intent(this, AlterarKm.class);
-                intent.putExtra(Constante.KEY_ROWID, id);
+                intent.putExtra(Constante.KEY_ROWID, Id);
                 startActivity(intent);
                 break;
             case excluir: //confirmacao de exclusao
@@ -204,7 +200,8 @@ public class ListKm extends ListActivity implements
                 break;
             case DialogInterface.BUTTON_POSITIVE: //exclusao
                 kms.remove(kmSelecionado);
-                db.deleteKm(id);
+                String dataAnterior = "";
+                db.deleteKm(Long.parseLong(Id));
                 getListView().invalidateViews();
                 break;
             case DialogInterface.BUTTON_NEGATIVE:

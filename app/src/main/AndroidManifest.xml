@@ -30,8 +30,7 @@
             android:name=".CadastrarUsuario"
             android:label="@string/cadastrar" />
         <activity
-            android:name=".ListUser"
-            android:label="@string/listar_usuario" />
+            android:name=".ListUser" />
         <activity
             android:name=".GeradorPdf"
             android:label="@string/realatorio" />
