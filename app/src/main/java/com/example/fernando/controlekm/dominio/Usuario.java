@@ -8,7 +8,7 @@ public class Usuario {
     private Integer id;
     private String nome;
     private String unidade;
-    private Integer tipoVeiculo;
+    private String tipoVeiculo;
     private String funcao;
     private String placa;
     private String gerencia;
@@ -17,7 +17,7 @@ public class Usuario {
 
     }
 
-    public Usuario(Integer id, String nome, String unidade, Integer tipoVeiculo, String funcao, String placa, String gerencia) {
+    public Usuario(Integer id, String nome, String unidade, String tipoVeiculo, String funcao, String placa, String gerencia) {
         this.id = id;
         this.nome = nome;
         this.unidade = unidade;
@@ -51,11 +51,11 @@ public class Usuario {
         this.unidade = unidade;
     }
 
-    public Integer getTipoVeiculo() {
+    public String getTipoVeiculo() {
         return tipoVeiculo;
     }
 
-    public void setTipoVeiculo(Integer tipoVeiculo) {
+    public void setTipoVeiculo(String tipoVeiculo) {
         this.tipoVeiculo = tipoVeiculo;
     }
 

@@ -35,7 +35,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String KEY_GERENCIA = "gerencia";
     public static final String DATABASE_TABLE_USERS = "usuarios";
     private static final String DATABASE_CREATE_USERS = "create table usuarios(id integer primary key autoincrement,"
-            + "nome text not null, unidade text not null,tipoVeiculo integer not null," +
+            + "nome text not null, unidade text not null,tipoVeiculo text not null," +
             "funcao text not null,placa text not null,gerencia text not null);";
 
     public DatabaseHelper(Context context) {

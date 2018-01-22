@@ -27,8 +27,8 @@ import java.util.Date;
 public class AlterarKm extends AppCompatActivity {
     private int ano, mes, dia;
     private Date edtDataKm;
-    private Button btnAlterar, btnVoltarKm;
-    private EditText altIdKm, altKmInicial, altKmFinal, altItinerario, altData;
+    private Button btnAlterar, btnVoltarKm, btnData;
+    private EditText altIdKm, altKmInicial, altKmFinal, altItinerario;
     private TextView txvKmTotal;
     private DBAdapter db;
     private String codigo;
@@ -46,17 +46,19 @@ public class AlterarKm extends AppCompatActivity {
         AtualizarData();
 
 
-
-
         btnAlterar = (Button) findViewById(R.id.btnAlterarKm);
         btnVoltarKm = (Button) findViewById(R.id.btnVoltarKm);
 
         altIdKm = (EditText) findViewById(R.id.altIdKm);
-        altData = (EditText) findViewById(R.id.altData);
+        btnData = (Button) findViewById(R.id.altData);
         altKmInicial = (EditText) findViewById(R.id.altKmInicial);
         altKmFinal = (EditText) findViewById(R.id.altKmFinal);
         altItinerario = (EditText) findViewById(R.id.altItinerario);
         txvKmTotal = (TextView) findViewById(R.id.altTxvKmTotal);
+        Bundle extra = getIntent().getExtras();
+        if (extra != null) {
+            codigo = extra.getString(Constante.KEY_ROWID);
+        }
         db = new DBAdapter(AlterarKm.this);
 
 
@@ -75,8 +77,8 @@ public class AlterarKm extends AppCompatActivity {
     }
 
     public void alterarKm() {
+
         try {
-            codigo = this.getIntent().getStringExtra("codigo");
             db.open();
             Cursor c = (Cursor) db.getKm(Integer.parseInt(codigo));
             String kmIni = altKmInicial.getText().toString();
@@ -89,24 +91,18 @@ public class AlterarKm extends AppCompatActivity {
             } else {
                 Integer diferenca = (_kmFim - _kmIni);
                 String resultado = String.valueOf(diferenca);
-                txvKmTotal.setText(resultado.toString() + " Km");
+                txvKmTotal.setText(resultado);
                 Km km = new Km();
-//                DateFormat dateFormat = DateFormat.getDateInstance();
-//                edtDataKm = dateFormat.parse(altData.getText().toString());
+                km.setId(c.getInt(c.getColumnIndex(DatabaseHelper.KEY_ROWID)));
                 km.setData(new Date(c.getLong(c.getColumnIndex(DatabaseHelper.KEY_DATA))));
                 km.setItinerario(c.getString(c.getColumnIndex(DatabaseHelper.KEY_ITINERARIO)));
                 km.setQtdCliente(c.getInt(c.getColumnIndex(DatabaseHelper.KEY_QTD_CLIENTE)));
                 km.setKmInicial(c.getString(c.getColumnIndex(DatabaseHelper.KEY_KM_INICIAL)));
                 km.setKmFinal(c.getString(c.getColumnIndex(DatabaseHelper.KEY_KM_FINAL)));
                 km.setKmTotal(c.getString(c.getColumnIndex(DatabaseHelper.KEY_KM_TOTAL)));
-                db.updateKm(Long.parseLong(codigo),km);
+                db.updateKm(Integer.valueOf(codigo), km);
                 Toast.makeText(getBaseContext(), "Alterado", Toast.LENGTH_LONG).show();
-
-                altData.setText("");
-                altItinerario.setText("");
-                altKmInicial.setText("");
-                altKmFinal.setText("");
-
+                finish();
             }
         } catch (Exception ex) {
             Toast.makeText(getBaseContext(), "Erro ao alterar!", Toast.LENGTH_LONG).show();
@@ -145,8 +141,9 @@ public class AlterarKm extends AppCompatActivity {
         calendar.set(anoSelecionado, mesSelecionado, diaSelecionado);
         return calendar.getTime();
     }
+
     private void AtualizarData() {
-        altData.setText(new StringBuilder().append(dia).append("/").append(mes +
+        btnData.setText(new StringBuilder().append(dia).append("/").append(mes +
                 1).append("/").append(ano).append(""));
     }
 

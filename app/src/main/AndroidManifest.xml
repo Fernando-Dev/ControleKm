@@ -29,13 +29,14 @@
         <activity
             android:name=".CadastrarUsuario"
             android:label="@string/cadastrar" />
-        <activity
-            android:name=".ListUser" />
+        <activity android:name=".ListUser" />
         <activity
             android:name=".GeradorPdf"
             android:label="@string/realatorio" />
         <activity android:name=".AlterarKm" />
-
+        <activity
+            android:name=".Utilitario"
+            android:label="Utilitários" />
 
     </application>
 

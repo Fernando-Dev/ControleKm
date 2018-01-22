@@ -15,7 +15,9 @@ import com.example.fernando.controlekm.dominio.Usuario;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.R.attr.start;
 import static com.example.fernando.controlekm.DatabaseHelper.DATABASE_TABLE;
@@ -44,6 +46,8 @@ public class DBAdapter {
 
     private DatabaseHelper DBHelper;
     private SQLiteDatabase db;
+    private List<Map<String, Object>> users;
+    private Map<String, Object> usuarios;
 
 
     public DBAdapter(Context context) {
@@ -170,12 +174,38 @@ public class DBAdapter {
 
     }
 
+
+    public Object returnIdUser(Integer id){
+        Cursor cursor = read().query(true, DatabaseHelper.DATABASE_TABLE_USERS, new String[]{KEY_ID_USERS,
+                KEY_NOME,KEY_UNIDADE,KEY_TIPO_VEICULO,KEY_FUNCAO,KEY_PLACA,KEY_GERENCIA},
+                DatabaseHelper.KEY_ID_USERS + " = ?",
+                new String[]{id.toString()}, null, null, null, null);
+        if (cursor.moveToNext()) {
+            Usuario usuario = criarUser(cursor);
+            cursor.close();
+            return usuario.getId();
+        }
+        return null;
+    }
+
+    public Object returnIdKm(Integer id){
+        Cursor cursor = read().query(true, DatabaseHelper.DATABASE_TABLE, new String[]{KEY_ROWID, KEY_DATA,
+                        KEY_ITINERARIO, KEY_QTD_CLIENTE, KEY_KM_INICIAL, KEY_KM_FINAL, KEY_KM_TOTAL},
+                DatabaseHelper.KEY_ROWID + " = ?",
+                new String[]{id.toString()}, null, null, null, null);
+        if (cursor.moveToNext()) {
+            Km km = criarKm(cursor);
+            cursor.close();
+            return km.getId();
+        }
+        return null;
+    }
     //criando arquivo cursor para listar usuarios
     private Usuario criarUser(Cursor cursor) {
         Usuario usuario = new Usuario(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.KEY_ID_USERS)),
                 cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_NOME)),
                 cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_UNIDADE)),
-                cursor.getInt(cursor.getColumnIndex(DatabaseHelper.KEY_TIPO_VEICULO)),
+                cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_TIPO_VEICULO)),
                 cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_FUNCAO)),
                 cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_PLACA)),
                 cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_GERENCIA)));
@@ -215,7 +245,7 @@ public class DBAdapter {
 
 //    atualizar uma quilometragem
 
-    public boolean updateKm(Long rowId, Km km) {
+    public boolean updateKm(Integer rowId, Km km) {
         ContentValues args = new ContentValues();
         args.put(DatabaseHelper.KEY_DATA, km.getData().getTime());
         args.put(DatabaseHelper.KEY_ITINERARIO, km.getItinerario());
@@ -227,7 +257,7 @@ public class DBAdapter {
     }
 
     //    atualizar um usuario
-    public boolean updateUser(Long rowId, Usuario usuario) {
+    public boolean updateUser(Integer rowId, Usuario usuario) {
         ContentValues args = new ContentValues();
         args.put(DatabaseHelper.KEY_NOME, usuario.getNome());
         args.put(DatabaseHelper.KEY_UNIDADE, usuario.getUnidade());

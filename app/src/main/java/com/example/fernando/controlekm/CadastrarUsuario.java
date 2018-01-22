@@ -50,7 +50,7 @@ public class CadastrarUsuario extends AppCompatActivity {
                 this, R.array.tipo_gerencia, R.layout.spinner_item);
         spGerencia.setAdapter(adapter2);
         btnSalvar = (Button) findViewById(R.id.btnSalvarUser);
-        btnVoltar = (Button)findViewById(R.id.btnVoltarUser);
+        btnVoltar = (Button) findViewById(R.id.btnVoltarUser);
 
         db = new DBAdapter(CadastrarUsuario.this);
 
@@ -77,12 +77,15 @@ public class CadastrarUsuario extends AppCompatActivity {
             Usuario usuario = new Usuario();
             usuario.setNome(edtNome.getText().toString());
             usuario.setUnidade(spUnidade.getSelectedItem().toString());
-            int tipoVeiculo = rgTipoVeiculo.getCheckedRadioButtonId();
-            if (tipoVeiculo == R.id.veiculoInec) {
+            String tipoVeiculo = String.valueOf(rgTipoVeiculo.getCheckedRadioButtonId());
+            String veiculoInec = String.valueOf(R.id.veiculoInec);
+            String veiculoProprio = String.valueOf(R.id.veiculoProprio);
+            String veiculoAlternativo = String.valueOf(R.id.veiculoAlternativo);
+            if (tipoVeiculo.equals(veiculoInec)) {
                 usuario.setTipoVeiculo(Constante.TIPO_VEICULO_INEC);
-            } else if (tipoVeiculo == R.id.veiculoProprio) {
+            } else if (tipoVeiculo.equals(veiculoProprio)) {
                 usuario.setTipoVeiculo(Constante.TIPO_VEICULO_PARTICULAR);
-            } else {
+            } else if (tipoVeiculo.equals(veiculoAlternativo)) {
                 usuario.setTipoVeiculo(Constante.TIPO_VEICULO_ALTERNATIVO);
             }
             usuario.setFuncao(spFuncao.getSelectedItem().toString());
@@ -93,8 +96,8 @@ public class CadastrarUsuario extends AppCompatActivity {
             db.inserirUsuario(usuario);
             Toast.makeText(getBaseContext(), "Salvo", Toast.LENGTH_LONG).show();
             finish();
-        }catch (Exception e){
-            Toast.makeText(getBaseContext(),"Erro ao salvar",Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Toast.makeText(getBaseContext(), "Erro ao salvar", Toast.LENGTH_LONG).show();
         }
 
     }

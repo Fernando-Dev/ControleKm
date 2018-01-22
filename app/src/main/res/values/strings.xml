@@ -2,7 +2,7 @@
 <resources>
 
 
-
+        <string name="ponto">. </string>
         <string name="app_name">ControleKm</string>
         <string name="cadastrar">Cadastrar</string>
         <string name="data">Data</string>

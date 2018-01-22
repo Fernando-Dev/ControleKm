@@ -9,8 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="10dp">
-
+        android:padding="@dimen/padding_padrao">
 
 
         <EditText
@@ -34,8 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@drawable/edittext_border_radius"
-            android:padding="7dp"
-            />
+            android:padding="7dp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -128,13 +126,6 @@
             android:background="@drawable/btn_border_radius"
             android:text="@string/voltar"
             android:textColor="@color/colorBtnText" />
-        <!--<EditText-->
-        <!--android:id="@+id/edtUnidade"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:ems="10"-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:inputType="textPersonName"-->
-        <!--android:hint="Unidade" />-->
+
     </LinearLayout>
 </ScrollView>

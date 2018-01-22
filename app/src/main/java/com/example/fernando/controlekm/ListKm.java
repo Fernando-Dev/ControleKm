@@ -93,7 +93,7 @@ public class ListKm extends ListActivity implements
         for (Km km : listaKms) {
             Map<String, Object> item = new HashMap<String, Object>();
             String periodo = dateFormat.format(km.getData());
-            item.put("id", "Id: " + km.getId());
+            item.put("id", km.getId());
             item.put("data", "Data: " + periodo);
             item.put("itinerario", "Itinerário: " + km.getItinerario());
             item.put("qtdCliente", "Cliente(s): " + km.getQtdCliente());
@@ -127,6 +127,12 @@ public class ListKm extends ListActivity implements
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Map<String, Object> map = kms.get(position);
+        Integer codigo = (Integer) map.get("id");
+        Id = String.valueOf(db.returnIdKm(codigo));
+        Toast.makeText(getBaseContext(), "Km selecionado: " + Id, Toast.LENGTH_SHORT).show();
+        alertDialog.show();
+
 //        Toast.makeText(ListKm.this, "posicao-> " + position, Toast.LENGTH_SHORT).show();
 //        Toast.makeText(ListKm.this, "getSelectedItem-> " + parent.getSelectedItemPosition(), Toast.LENGTH_SHORT).show();
 //        Toast.makeText(ListKm.this, "id-> " + id, Toast.LENGTH_SHORT).show();
@@ -154,17 +160,17 @@ public class ListKm extends ListActivity implements
 //////            Cursor itemCursor = (Cursor) kms.get(position).get("id");
 //////            int idKm = itemCursor.getInt(itemCursor.getColumnIndex(DatabaseHelper.KEY_ROWID));
 ////
-        /* = (String) kms.get(position).get("id");*/
+
 //        db.read();
-        Id = String.valueOf(db.getKm(position + 1));
-        this.kmSelecionado = position + 1;
+//        Id = String.valueOf(db.getKm(position + 1));
+//        this.kmSelecionado = position + 1;
 //        idKm = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.KEY_ROWID));
-        Toast.makeText(getBaseContext(), "Id do banco: " + Id, Toast.LENGTH_LONG).show();
+//        Toast.makeText(getBaseContext(), "Id do banco: " + Id, Toast.LENGTH_LONG).show();
 //        db.close();
-        Intent data = new Intent();
-        data.putExtra(Constante.KEY_ROWID, Id);
-        setResult(Activity.RESULT_OK, data);
-        alertDialog.show();
+//        Intent data = new Intent();
+//        data.putExtra(Constante.KEY_ROWID, Id);
+//        setResult(Activity.RESULT_OK, data);
+//        alertDialog.show();
 //            finish();
 //        } else {
 ////            position = parent.getSelectedItemPosition();
@@ -191,7 +197,7 @@ public class ListKm extends ListActivity implements
 
         switch (item) {
             case editar: //editar
-                intent = new Intent(this, AlterarKm.class);
+                intent = new Intent(ListKm.this, AlterarKm.class);
                 intent.putExtra(Constante.KEY_ROWID, Id);
                 startActivity(intent);
                 break;
