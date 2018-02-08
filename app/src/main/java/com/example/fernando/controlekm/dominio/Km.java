@@ -2,6 +2,7 @@ package com.example.fernando.controlekm.dominio;
 
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
@@ -10,7 +11,7 @@ import java.util.Date;
  * Created by Flavia on 27/07/2017.
  */
 
-public class Km {
+public class Km implements Serializable {
     private Integer id;
     private Date data;
     private String itinerario;

@@ -114,7 +114,7 @@ public class DBAdapter {
 
 
     //    deletando somente uma quilometragem
-    public boolean deleteKm(Long rowId) {
+    public boolean deleteKm(Integer rowId) {
         String whereClause = DatabaseHelper.KEY_ROWID + " = ?";
         String[] whereArgs = new String[]{rowId.toString()};
         int removidos = open().delete(DatabaseHelper.DATABASE_TABLE,
@@ -123,7 +123,7 @@ public class DBAdapter {
     }
 
     //    DELELTANDO UM USUARIO
-    public boolean deleteUser(Long rowId) {
+    public boolean deleteUser(Integer rowId) {
         String whereClause = DatabaseHelper.KEY_ID_USERS + " = ?";
         String[] whereArgs = new String[]{rowId.toString()};
         int removidos = open().delete(DatabaseHelper.DATABASE_TABLE_USERS,

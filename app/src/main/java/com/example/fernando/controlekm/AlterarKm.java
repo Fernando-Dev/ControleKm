@@ -2,9 +2,13 @@ package com.example.fernando.controlekm;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -16,6 +20,7 @@ import com.example.fernando.controlekm.DAO.DBAdapter;
 import com.example.fernando.controlekm.dominio.Km;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -28,14 +33,15 @@ public class AlterarKm extends AppCompatActivity {
     private int ano, mes, dia;
     private Date edtDataKm;
     private Button btnAlterar, btnVoltarKm, btnData;
-    private EditText altIdKm, altKmInicial, altKmFinal, altItinerario;
+    private EditText altIdKm, altKmInicial, altKmFinal, altItinerario, altQtdCliente;
     private TextView txvKmTotal;
     private DBAdapter db;
-    private String codigo;
+    private SimpleDateFormat dateFormat;
+    private Integer codigo;
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.alterar_km);
 
@@ -43,6 +49,7 @@ public class AlterarKm extends AppCompatActivity {
         ano = calendar.get(Calendar.YEAR);
         mes = calendar.get(Calendar.MONTH);
         dia = calendar.get(Calendar.DAY_OF_MONTH);
+        dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         AtualizarData();
 
 
@@ -54,11 +61,13 @@ public class AlterarKm extends AppCompatActivity {
         altKmInicial = (EditText) findViewById(R.id.altKmInicial);
         altKmFinal = (EditText) findViewById(R.id.altKmFinal);
         altItinerario = (EditText) findViewById(R.id.altItinerario);
+        altQtdCliente = (EditText) findViewById(R.id.altQtdeCliente);
         txvKmTotal = (TextView) findViewById(R.id.altTxvKmTotal);
-        Bundle extra = getIntent().getExtras();
-        if (extra != null) {
-            codigo = extra.getString(Constante.KEY_ROWID);
+        codigo = getIntent().getExtras().getInt("EXTRA_ID_KM");
+        if (codigo != null){
+            preparaEdicao();
         }
+
         db = new DBAdapter(AlterarKm.this);
 
 
@@ -80,7 +89,7 @@ public class AlterarKm extends AppCompatActivity {
 
         try {
             db.open();
-            Cursor c = (Cursor) db.getKm(Integer.parseInt(codigo));
+            Cursor c = (Cursor) db.getKm(codigo);
             String kmIni = altKmInicial.getText().toString();
             int _kmIni = Integer.parseInt(kmIni);
             String kmFim = altKmFinal.getText().toString();
@@ -100,7 +109,7 @@ public class AlterarKm extends AppCompatActivity {
                 km.setKmInicial(c.getString(c.getColumnIndex(DatabaseHelper.KEY_KM_INICIAL)));
                 km.setKmFinal(c.getString(c.getColumnIndex(DatabaseHelper.KEY_KM_FINAL)));
                 km.setKmTotal(c.getString(c.getColumnIndex(DatabaseHelper.KEY_KM_TOTAL)));
-                db.updateKm(Integer.valueOf(codigo), km);
+                db.updateKm(codigo, km);
                 Toast.makeText(getBaseContext(), "Alterado", Toast.LENGTH_LONG).show();
                 finish();
             }
@@ -109,6 +118,23 @@ public class AlterarKm extends AppCompatActivity {
         } finally {
             db.close();
         }
+    }
+
+    public void preparaEdicao() {
+
+        db.open();
+        Cursor c = (Cursor) db.getKm(codigo);
+        altIdKm.setText(c.getInt(c.getColumnIndex(DatabaseHelper.KEY_ROWID)));
+        String periodo = dateFormat.format(new Date(c.getLong(c.getColumnIndex(DatabaseHelper.KEY_DATA))));
+        btnData.setText(periodo);
+        altItinerario.setText(c.getString(c.getColumnIndex(DatabaseHelper.KEY_ITINERARIO)));
+        altQtdCliente.setText(c.getInt(c.getColumnIndex(DatabaseHelper.KEY_QTD_CLIENTE)));
+        altKmInicial.setText(c.getString(c.getColumnIndex(DatabaseHelper.KEY_KM_INICIAL)));
+        altKmFinal.setText(c.getString(c.getColumnIndex(DatabaseHelper.KEY_KM_FINAL)));
+        txvKmTotal.setText(c.getString(c.getColumnIndex(DatabaseHelper.KEY_KM_TOTAL)));
+        db.close();
+
+
     }
 
 

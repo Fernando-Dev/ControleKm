@@ -1,6 +1,7 @@
 package com.example.fernando.controlekm;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,8 @@ import com.example.fernando.controlekm.DAO.DBAdapter;
 import com.example.fernando.controlekm.dominio.Km;
 import com.example.fernando.controlekm.dominio.Usuario;
 
+import java.util.Date;
+
 /**
  * Created by Flavia on 27/12/2017.
  */
@@ -27,7 +30,7 @@ public class CadastrarUsuario extends AppCompatActivity {
     private RadioGroup rgTipoVeiculo;
     private Button btnSalvar, btnVoltar;
     private DBAdapter db;
-
+    private Integer codigo;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -93,7 +96,9 @@ public class CadastrarUsuario extends AppCompatActivity {
             placa = placa.toUpperCase();
             usuario.setPlaca(placa);
             usuario.setGerencia(spGerencia.getSelectedItem().toString());
+
             db.inserirUsuario(usuario);
+
             Toast.makeText(getBaseContext(), "Salvo", Toast.LENGTH_LONG).show();
             finish();
         } catch (Exception e) {

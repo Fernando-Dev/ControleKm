@@ -1,6 +1,7 @@
 package com.example.fernando.controlekm;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -48,7 +49,7 @@ public class ListUser extends ListActivity implements AdapterView.OnItemClickLis
         SimpleAdapter simpleAdapter = new SimpleAdapter(this, listarUsuario(), R.layout.listar_users, de, para);
         setListAdapter(simpleAdapter);
         getListView().setOnItemClickListener(ListUser.this);
-        Id = getIntent().getStringExtra(Constante.KEY_USER_ID);
+
         registerForContextMenu(getListView());
 
     }
@@ -85,8 +86,9 @@ public class ListUser extends ListActivity implements AdapterView.OnItemClickLis
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         MenuInflater inflater = getMenuInflater();
+        setTitle(R.string.opcoes);
+        menu.setHeaderTitle(R.string.opcoes);
         inflater.inflate(R.menu.lista_usuario_menu, menu);
-//        super.onCreateContextMenu(menu, v, menuInfo);
     }
 
     @Override
@@ -100,13 +102,18 @@ public class ListUser extends ListActivity implements AdapterView.OnItemClickLis
             usuarios.remove(position);
             getListView().invalidateViews();
             data = "";
-            dbAdapter.deleteUser(Long.valueOf(Id));
+            dbAdapter.deleteUser(Integer.valueOf(Id));
             return true;
         }
         if(item.getItemId()== R.id.mnEditar){
             AdapterView.AdapterContextMenuInfo info=
                     (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
             int posicao = info.position;
+            Map<String,Object> map = usuarios.get(posicao);
+            Integer id = (Integer) map.get("id");
+            Intent intent = new Intent(this,AlterarUser.class);
+            intent.putExtra("EXTRA_ID_USER",id);
+            startActivity(intent);
 
         }
 

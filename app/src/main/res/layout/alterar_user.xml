@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorTitle"
+    android:orientation="vertical"
+    tools:context="com.example.fernando.controlekm.AlterarUser">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_padrao">
+
+
+        <EditText
+            android:id="@+id/altNome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/edittext_border_radius"
+            android:ems="10"
+            android:hint="@string/nome"
+            android:inputType="textPersonName"
+            android:padding="7dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColorHint="@color/colorTitle" />
+
+        <requestFocus />
+
+        <Spinner
+            android:id="@+id/altUnidade"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/edittext_border_radius"
+            android:padding="7dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/tipo_veiculo"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorWhite" />
+
+        <RadioGroup
+            android:id="@+id/altTipoVeiculo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/edittext_border_radius"
+            android:orientation="horizontal"
+            android:padding="1dp">
+
+            <RadioButton
+                android:id="@+id/veiculoInec"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="7dp"
+                android:text="@string/inec"
+                android:textColor="@color/colorTitle" />
+
+            <RadioButton
+                android:id="@+id/veiculoProprio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:padding="7dp"
+                android:text="@string/particular"
+                android:textColor="@color/colorTitle" />
+
+            <RadioButton
+                android:id="@+id/veiculoAlternativo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="7dp"
+                android:text="@string/alternativo"
+                android:textColor="@color/colorTitle" />
+        </RadioGroup>
+
+        <Spinner
+            android:id="@+id/altFuncao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/edittext_border_radius"
+            android:padding="7dp" />
+
+        <EditText
+            android:id="@+id/altPlaca"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/edittext_border_radius"
+            android:ems="10"
+            android:hint="@string/placa"
+            android:inputType="text"
+            android:padding="7dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColorHint="@color/colorTitle" />
+
+        <requestFocus />
+
+        <Spinner
+            android:id="@+id/altGerencia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/edittext_border_radius"
+            android:padding="7dp" />
+
+        <Button
+            android:id="@+id/btnAlterarUser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:background="@drawable/btn_border_radius"
+            android:text="@string/alterar"
+            android:textColor="@color/colorBtnText" />
+
+        <Button
+            android:id="@+id/btnVoltarUser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:background="@drawable/btn_border_radius"
+            android:text="@string/voltar"
+            android:textColor="@color/colorBtnText" />
+
+    </LinearLayout>
+
+</ScrollView>
