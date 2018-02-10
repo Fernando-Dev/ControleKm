@@ -1,8 +1,10 @@
 package com.example.fernando.controlekm;
 
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,7 +21,8 @@ public class AlterarUser extends AppCompatActivity {
     private RadioGroup altTipoVeiculo;
     private Button btnAlterar, btnVoltar;
     private DBAdapter db;
-    private Integer codigo;
+    private Integer id;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +35,7 @@ public class AlterarUser extends AppCompatActivity {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 this, R.array.tipo_unidade, R.layout.spinner_item);
         altUnidade.setAdapter(adapter);
-        altTipoVeiculo = (RadioGroup) findViewById(R.id.rgTipoVeiculo);
+        altTipoVeiculo = (RadioGroup) findViewById(R.id.altTipoVeiculo);
         altFuncao = (Spinner) findViewById(R.id.altFuncao);
         ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(
                 this, R.array.tipo_funcao, R.layout.spinner_item);
@@ -44,27 +47,39 @@ public class AlterarUser extends AppCompatActivity {
         altGerencia.setAdapter(adapter2);
         btnAlterar = (Button) findViewById(R.id.btnAlterarUser);
         btnVoltar = (Button) findViewById(R.id.btnVoltarUser);
+        db = new DBAdapter(AlterarUser.this);
         Bundle extra = getIntent().getExtras();
         if (extra != null) {
-            codigo = extra.getInt("EXTRA_ID_USER");
+            id = extra.getInt("EXTRA_ID_USER");
             preparaEdicao();
         }
-
-        db = new DBAdapter(AlterarUser.this);
+        btnAlterar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateUsuario();
+            }
+        });
+        btnVoltar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
     }
 
-    public void addUsuario() {
+    public void updateUsuario() {
         try {
-            DatabaseHelper helper = new DatabaseHelper(this);
+
             db.open();
             Usuario usuario = new Usuario();
+            usuario.setId(id);
             usuario.setNome(altNome.getText().toString());
             usuario.setUnidade(altUnidade.getSelectedItem().toString());
             String tipoVeiculo = String.valueOf(altTipoVeiculo.getCheckedRadioButtonId());
-            String veiculoInec = String.valueOf(R.id.veiculoInec);
-            String veiculoProprio = String.valueOf(R.id.veiculoProprio);
-            String veiculoAlternativo = String.valueOf(R.id.veiculoAlternativo);
+            String veiculoInec = String.valueOf(R.id.altVeiculoInec);
+            String veiculoProprio = String.valueOf(R.id.altVeiculoParticular);
+            String veiculoAlternativo = String.valueOf(R.id.altVeiculoAlternativo);
             if (tipoVeiculo.equals(veiculoInec)) {
                 usuario.setTipoVeiculo(Constante.TIPO_VEICULO_INEC);
             } else if (tipoVeiculo.equals(veiculoProprio)) {
@@ -77,9 +92,9 @@ public class AlterarUser extends AppCompatActivity {
             placa = placa.toUpperCase();
             usuario.setPlaca(placa);
             usuario.setGerencia(altGerencia.getSelectedItem().toString());
-            db.updateUser(codigo, usuario);
+            db.updateUser(usuario);
 
-            Toast.makeText(getBaseContext(), "Salvo", Toast.LENGTH_LONG).show();
+            Toast.makeText(getBaseContext(), "Alterado com sucesso!", Toast.LENGTH_LONG).show();
             finish();
         } catch (Exception e) {
             Toast.makeText(getBaseContext(), "Erro ao salvar", Toast.LENGTH_LONG).show();
@@ -88,22 +103,33 @@ public class AlterarUser extends AppCompatActivity {
     }
 
     public void preparaEdicao() {
-
-//        db.read();
-        Cursor c = (Cursor) db.getUsuario(codigo);
+        SQLiteDatabase database = db.read();
+        Cursor c = database.rawQuery("SELECT nome, unidade, tipoVeiculo,funcao,placa,gerencia FROM usuarios WHERE id=?",
+                new String[]{id.toString()});
+        c.moveToFirst();
         altNome.setText(c.getString(c.getColumnIndex(DatabaseHelper.KEY_NOME)));
         altUnidade.setPrompt(c.getString(c.getColumnIndex(DatabaseHelper.KEY_UNIDADE)));
-        if (c.getString(c.getColumnIndex(DatabaseHelper.KEY_TIPO_VEICULO)).equals(Constante.TIPO_VEICULO_INEC)) {
-            altTipoVeiculo.check(R.id.veiculoInec);
-        } else if (c.getString(c.getColumnIndex(DatabaseHelper.KEY_TIPO_VEICULO)).equals(Constante.TIPO_VEICULO_PARTICULAR)) {
-            altTipoVeiculo.check(R.id.veiculoProprio);
-        } else if (c.getString(c.getColumnIndex(DatabaseHelper.KEY_TIPO_VEICULO)).equals(Constante.TIPO_VEICULO_ALTERNATIVO)) {
-            altTipoVeiculo.check(R.id.veiculoAlternativo);
+        String cursorVeiculo = c.getString(2);
+        Integer veiculoInec = R.id.altVeiculoInec;
+        Integer veiculoProprio = R.id.altVeiculoParticular;
+        Integer veiculoAlternativo = R.id.altVeiculoAlternativo;
+        if (cursorVeiculo.equals(Constante.TIPO_VEICULO_INEC)) {
+                altTipoVeiculo.check(veiculoInec);
+        } else if (cursorVeiculo.equals(Constante.TIPO_VEICULO_PARTICULAR)) {
+            altTipoVeiculo.check(veiculoProprio);
+        } else if (cursorVeiculo.equals(Constante.TIPO_VEICULO_ALTERNATIVO)) {
+            altTipoVeiculo.check(veiculoAlternativo);
+        }
+        if(altFuncao.getSelectedItem().equals(c.getString(3))){
+
         }
         altFuncao.setPrompt(c.getString(c.getColumnIndex(DatabaseHelper.KEY_FUNCAO)));
         altPlaca.setText(c.getString(c.getColumnIndex(DatabaseHelper.KEY_PLACA)));
         altGerencia.setPrompt(c.getString(c.getColumnIndex(DatabaseHelper.KEY_GERENCIA)));
-        db.close();
+
+        c.close();
+
+
 
 
     }

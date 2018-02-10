@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
@@ -37,7 +38,7 @@ public class AlterarKm extends AppCompatActivity {
     private TextView txvKmTotal;
     private DBAdapter db;
     private SimpleDateFormat dateFormat;
-    private Integer codigo;
+    private Integer id;
 
 
     @Override
@@ -63,12 +64,12 @@ public class AlterarKm extends AppCompatActivity {
         altItinerario = (EditText) findViewById(R.id.altItinerario);
         altQtdCliente = (EditText) findViewById(R.id.altQtdeCliente);
         txvKmTotal = (TextView) findViewById(R.id.altTxvKmTotal);
-        codigo = getIntent().getExtras().getInt("EXTRA_ID_KM");
-        if (codigo != null){
+        db = new DBAdapter(AlterarKm.this);
+        Bundle extra = getIntent().getExtras();
+        if (extra != null) {
+            id = extra.getInt("EXTRA_ID_KM");
             preparaEdicao();
         }
-
-        db = new DBAdapter(AlterarKm.this);
 
 
         btnAlterar.setOnClickListener(new View.OnClickListener() {
@@ -89,7 +90,6 @@ public class AlterarKm extends AppCompatActivity {
 
         try {
             db.open();
-            Cursor c = (Cursor) db.getKm(codigo);
             String kmIni = altKmInicial.getText().toString();
             int _kmIni = Integer.parseInt(kmIni);
             String kmFim = altKmFinal.getText().toString();
@@ -102,15 +102,18 @@ public class AlterarKm extends AppCompatActivity {
                 String resultado = String.valueOf(diferenca);
                 txvKmTotal.setText(resultado);
                 Km km = new Km();
-                km.setId(c.getInt(c.getColumnIndex(DatabaseHelper.KEY_ROWID)));
-                km.setData(new Date(c.getLong(c.getColumnIndex(DatabaseHelper.KEY_DATA))));
-                km.setItinerario(c.getString(c.getColumnIndex(DatabaseHelper.KEY_ITINERARIO)));
-                km.setQtdCliente(c.getInt(c.getColumnIndex(DatabaseHelper.KEY_QTD_CLIENTE)));
-                km.setKmInicial(c.getString(c.getColumnIndex(DatabaseHelper.KEY_KM_INICIAL)));
-                km.setKmFinal(c.getString(c.getColumnIndex(DatabaseHelper.KEY_KM_FINAL)));
-                km.setKmTotal(c.getString(c.getColumnIndex(DatabaseHelper.KEY_KM_TOTAL)));
-                db.updateKm(codigo, km);
-                Toast.makeText(getBaseContext(), "Alterado", Toast.LENGTH_LONG).show();
+                km.setId(id);
+                DateFormat dateFormat = DateFormat.getDateInstance();
+                edtDataKm = dateFormat.parse(btnData.getText().toString());
+                km.setData(edtDataKm);
+                km.setItinerario(altItinerario.getText().toString());
+                int qtdeCliente = Integer.parseInt(altQtdCliente.getText().toString());
+                km.setQtdCliente(qtdeCliente);
+                km.setKmInicial(altKmInicial.getText().toString());
+                km.setKmFinal(altKmFinal.getText().toString());
+                km.setKmTotal(txvKmTotal.getText().toString());
+                db.updateKm(km);
+                Toast.makeText(getBaseContext(), "Alterado com sucesso!", Toast.LENGTH_LONG).show();
                 finish();
             }
         } catch (Exception ex) {
@@ -122,9 +125,11 @@ public class AlterarKm extends AppCompatActivity {
 
     public void preparaEdicao() {
 
-        db.open();
-        Cursor c = (Cursor) db.getKm(codigo);
-        altIdKm.setText(c.getInt(c.getColumnIndex(DatabaseHelper.KEY_ROWID)));
+        SQLiteDatabase database = db.open();
+
+        Cursor c = database.rawQuery("SELECT _id,data,itinerario,qtdCliente,kmInicial,kmFinal,kmTotal FROM kms WHERE _id=?",
+                new String[]{id.toString()});
+        c.moveToFirst();
         String periodo = dateFormat.format(new Date(c.getLong(c.getColumnIndex(DatabaseHelper.KEY_DATA))));
         btnData.setText(periodo);
         altItinerario.setText(c.getString(c.getColumnIndex(DatabaseHelper.KEY_ITINERARIO)));
@@ -132,7 +137,7 @@ public class AlterarKm extends AppCompatActivity {
         altKmInicial.setText(c.getString(c.getColumnIndex(DatabaseHelper.KEY_KM_INICIAL)));
         altKmFinal.setText(c.getString(c.getColumnIndex(DatabaseHelper.KEY_KM_FINAL)));
         txvKmTotal.setText(c.getString(c.getColumnIndex(DatabaseHelper.KEY_KM_TOTAL)));
-        db.close();
+        c.close();
 
 
     }
@@ -173,4 +178,9 @@ public class AlterarKm extends AppCompatActivity {
                 1).append("/").append(ano).append(""));
     }
 
+    @Override
+    protected void onDestroy() {
+        db.close();
+        super.onDestroy();
+    }
 }

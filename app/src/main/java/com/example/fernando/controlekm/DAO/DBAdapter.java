@@ -175,9 +175,9 @@ public class DBAdapter {
     }
 
 
-    public Object returnIdUser(Integer id){
+    public Object returnIdUser(Integer id) {
         Cursor cursor = read().query(true, DatabaseHelper.DATABASE_TABLE_USERS, new String[]{KEY_ID_USERS,
-                KEY_NOME,KEY_UNIDADE,KEY_TIPO_VEICULO,KEY_FUNCAO,KEY_PLACA,KEY_GERENCIA},
+                        KEY_NOME, KEY_UNIDADE, KEY_TIPO_VEICULO, KEY_FUNCAO, KEY_PLACA, KEY_GERENCIA},
                 DatabaseHelper.KEY_ID_USERS + " = ?",
                 new String[]{id.toString()}, null, null, null, null);
         if (cursor.moveToNext()) {
@@ -188,7 +188,7 @@ public class DBAdapter {
         return null;
     }
 
-    public Object returnIdKm(Integer id){
+    public Object returnIdKm(Integer id) {
         Cursor cursor = read().query(true, DatabaseHelper.DATABASE_TABLE, new String[]{KEY_ROWID, KEY_DATA,
                         KEY_ITINERARIO, KEY_QTD_CLIENTE, KEY_KM_INICIAL, KEY_KM_FINAL, KEY_KM_TOTAL},
                 DatabaseHelper.KEY_ROWID + " = ?",
@@ -200,6 +200,7 @@ public class DBAdapter {
         }
         return null;
     }
+
     //criando arquivo cursor para listar usuarios
     private Usuario criarUser(Cursor cursor) {
         Usuario usuario = new Usuario(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.KEY_ID_USERS)),
@@ -245,26 +246,32 @@ public class DBAdapter {
 
 //    atualizar uma quilometragem
 
-    public boolean updateKm(Integer rowId, Km km) {
+    public long updateKm(Km km) {
+        String selecao = DatabaseHelper.KEY_ROWID + " = ? ";
+        String[] selecaoArgumento = {"" + km.getId()};
         ContentValues args = new ContentValues();
+        args.put(DatabaseHelper.KEY_ROWID, km.getId());
         args.put(DatabaseHelper.KEY_DATA, km.getData().getTime());
         args.put(DatabaseHelper.KEY_ITINERARIO, km.getItinerario());
         args.put(DatabaseHelper.KEY_QTD_CLIENTE, km.getQtdCliente());
         args.put(DatabaseHelper.KEY_KM_INICIAL, km.getKmInicial());
         args.put(DatabaseHelper.KEY_KM_FINAL, km.getKmFinal());
         args.put(DatabaseHelper.KEY_KM_TOTAL, km.getKmTotal());
-        return open().update(DatabaseHelper.DATABASE_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
+        return open().update(DatabaseHelper.DATABASE_TABLE, args, selecao, selecaoArgumento);
     }
 
     //    atualizar um usuario
-    public boolean updateUser(Integer rowId, Usuario usuario) {
+    public long updateUser(Usuario usuario) {
+        String selecao = DatabaseHelper.KEY_ID_USERS + " = ? ";
+        String[] selecaoArgumento = {"" + usuario.getId()};
         ContentValues args = new ContentValues();
+        args.put(DatabaseHelper.KEY_ID_USERS, usuario.getId());
         args.put(DatabaseHelper.KEY_NOME, usuario.getNome());
         args.put(DatabaseHelper.KEY_UNIDADE, usuario.getUnidade());
         args.put(DatabaseHelper.KEY_TIPO_VEICULO, usuario.getTipoVeiculo());
         args.put(DatabaseHelper.KEY_FUNCAO, usuario.getFuncao());
         args.put(DatabaseHelper.KEY_PLACA, usuario.getPlaca());
         args.put(DatabaseHelper.KEY_GERENCIA, usuario.getGerencia());
-        return open().update(DatabaseHelper.DATABASE_TABLE_USERS, args, KEY_ID_USERS + "=" + rowId, null) > 0;
+        return open().update(DatabaseHelper.DATABASE_TABLE_USERS, args, selecao, selecaoArgumento);
     }
 }

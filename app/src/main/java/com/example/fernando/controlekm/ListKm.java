@@ -12,6 +12,9 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -41,26 +44,27 @@ import com.example.fernando.controlekm.dominio.Km;
  */
 
 public class ListKm extends ListActivity implements
-        OnItemClickListener, OnClickListener {
+        OnItemClickListener {
 
-    private AlertDialog dialogConfirmacao;
     private DBAdapter db;
     private List<Map<String, Object>> kms;
     private SimpleDateFormat dateFormat;
-    private AlertDialog alertDialog;
     private int kmSelecionado;
     private Km km;
+    private String data;
     private Integer Id;
-//    public static final String EXTRA_KM_ID = "com.example.fernando.controlekm.EXTRA_KM_ID";
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         db = new DBAdapter(this);
+
         dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
         getListView().setOnItemClickListener(ListKm.this);
-        alertDialog = criaAlertDialog();
-        dialogConfirmacao = criarDialogConfirmacao();
+
+        registerForContextMenu(getListView());
 
         new Task().execute((Void[]) null);
 
@@ -104,60 +108,59 @@ public class ListKm extends ListActivity implements
         return kms;
     }
 
-    private AlertDialog criarDialogConfirmacao() {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.confirmacao_exclusao_km);
-        builder.setPositiveButton(getString(R.string.sim), this);
-        builder.setNegativeButton(getString(R.string.nao), this);
-
-        return builder.create();
-    }
-
-    private AlertDialog criaAlertDialog() {
-        final CharSequence[] items = {getString(R.string.alterar), getString(R.string.remover)};
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.opcoes);
-        builder.setItems(items, this);
-
-        return builder.create();
-
-    }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Map<String, Object> map = kms.get(position);
-        kmSelecionado  = position;
+        kmSelecionado = position;
         Integer codigo = (Integer) map.get("id");
         Id = (Integer) db.returnIdKm(codigo); // validar id do item selecionado
         Toast.makeText(getBaseContext(), "Km selecionado: " + Id, Toast.LENGTH_SHORT).show();
-        alertDialog.show();
     }
 
     @Override
-    public void onClick(DialogInterface dialog, int item) {
-        final int editar = 0;
-        final int excluir = 1;
-        Intent intent;
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        MenuInflater inflater = getMenuInflater();
+        setTitle(R.string.opcoes);
+        menu.setHeaderTitle(R.string.opcoes);
+        inflater.inflate(R.menu.list_km_menu, menu);
+    }
 
-        switch (item) {
-            case editar: //editar
-                intent = new Intent(this,AlterarKm.class);
-                intent.putExtra("EXTRA_ID_KM",Id);
-                startActivity(new Intent(this,AlterarKm.class));
+    @Override
+    public boolean onContextItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.Remover:
+                new AlertDialog.Builder(this).setTitle("Deletando Quilometragem").
+                        setMessage(R.string.confirmacao_exclusao_km).
+                        setPositiveButton(R.string.sim,
+                                new OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        AdapterView.AdapterContextMenuInfo info =
+                                                (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+                                        int position = info.position;
+                                        kms.remove(position);
+                                        getListView().invalidateViews();
+                                        data = "";
+                                        db.deleteKm(Id);
+                                    }
+                                })
+                        .setNegativeButton(R.string.nao, null)
+                        .show();
                 break;
-            case excluir: //confirmacao de exclusao
-                dialogConfirmacao.show();
-                break;
-            case DialogInterface.BUTTON_POSITIVE: //exclusao
-                kms.remove(kmSelecionado);
-                db.deleteKm(Id);
-                getListView().invalidateViews();
-                break;
-            case DialogInterface.BUTTON_NEGATIVE:
-                dialogConfirmacao.dismiss();
+            case R.id.Editar:
+                AdapterView.AdapterContextMenuInfo
+                        info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+                int posicao = info.position;
+                Map<String, Object> map = kms.get(posicao);
+                Integer id = (Integer) map.get("id");
+                Intent intent = new Intent(this, AlterarKm.class);
+                intent.putExtra("EXTRA_ID_KM", id);
+                startActivity(intent);
+                finish();
                 break;
         }
+        return super.onContextItemSelected(item);
     }
 
 }

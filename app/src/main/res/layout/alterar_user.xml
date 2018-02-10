@@ -54,7 +54,7 @@
             android:padding="1dp">
 
             <RadioButton
-                android:id="@+id/veiculoInec"
+                android:id="@+id/altVeiculoInec"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="7dp"
@@ -62,7 +62,7 @@
                 android:textColor="@color/colorTitle" />
 
             <RadioButton
-                android:id="@+id/veiculoProprio"
+                android:id="@+id/altVeiculoParticular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
@@ -71,7 +71,7 @@
                 android:textColor="@color/colorTitle" />
 
             <RadioButton
-                android:id="@+id/veiculoAlternativo"
+                android:id="@+id/altVeiculoAlternativo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="7dp"

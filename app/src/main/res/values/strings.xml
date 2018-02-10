@@ -14,6 +14,7 @@
     <string name="sair">Sair</string>
     <string name="voltar">Voltar</string>
     <string name="confirmacao_exclusao_km">Deseja realmente excluir o km?</string>
+    <string name="confirmacao_exclusao_usuario">Deseja realmente excluir o usuário?</string>
     <string name="sim">Sim</string>
     <string name="nao">Não</string>
     <string name="opcoes">Opções</string>

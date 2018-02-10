@@ -39,7 +39,8 @@
         <activity
             android:name=".Utilitario"
             android:label="Utilitários" />
-        <activity android:name=".AlterarUser"></activity>
+        <activity android:name=".AlterarUser"
+            android:label="@string/alterar"/>
     </application>
 
 </manifest>

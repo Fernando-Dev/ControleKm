@@ -1,9 +1,14 @@
 package com.example.fernando.controlekm;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
+import android.content.DialogInterface.*;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -43,15 +48,29 @@ public class ListUser extends ListActivity implements AdapterView.OnItemClickLis
         super.onCreate(savedInstanceState);
 
         dbAdapter = new DBAdapter(this);
-        String[] de = {"id", "nome", "unidade", "tipoVeiculo", "funcao", "placa", "gerencia"};
-        int[] para = {R.id.lstIdUser, R.id.lstNomeUser, R.id.lstUnidade, R.id.lstTipoVeiculo, R.id.lstFuncao,
-                R.id.lstPlaca, R.id.lstGerencia};
-        SimpleAdapter simpleAdapter = new SimpleAdapter(this, listarUsuario(), R.layout.listar_users, de, para);
-        setListAdapter(simpleAdapter);
+
         getListView().setOnItemClickListener(ListUser.this);
 
         registerForContextMenu(getListView());
 
+        new Task().execute((Void[]) null);
+
+    }
+
+    private class Task extends AsyncTask<Void, Void, List<Map<String, Object>>> {
+        @Override
+        protected List<Map<String, Object>> doInBackground(Void... voids) {
+            return listarUsuario();
+        }
+
+        @Override
+        protected void onPostExecute(List<Map<String, Object>> maps) {
+            String[] de = {"id", "nome", "unidade", "tipoVeiculo", "funcao", "placa", "gerencia"};
+            int[] para = {R.id.lstIdUser, R.id.lstNomeUser, R.id.lstUnidade, R.id.lstTipoVeiculo, R.id.lstFuncao,
+                    R.id.lstPlaca, R.id.lstGerencia};
+            SimpleAdapter simpleAdapter = new SimpleAdapter(ListUser.this, maps, R.layout.listar_users, de, para);
+            setListAdapter(simpleAdapter);
+        }
     }
 
     private List<Map<String, Object>> listarUsuario() {
@@ -60,13 +79,13 @@ public class ListUser extends ListActivity implements AdapterView.OnItemClickLis
         List<Usuario> listaUsuario = dbAdapter.listaUsuario();
         for (Usuario usuario : listaUsuario) {
             Map<String, Object> item = new HashMap<String, Object>();
-            item.put("id",usuario.getId());
-            item.put("nome",usuario.getNome());
-            item.put("unidade",usuario.getUnidade());
-            item.put("tipoVeiculo",usuario.getTipoVeiculo());
-            item.put("funcao",usuario.getFuncao());
-            item.put("placa",usuario.getPlaca());
-            item.put("gerencia",usuario.getGerencia());
+            item.put("id", usuario.getId());
+            item.put("nome", "Nome: " + usuario.getNome());
+            item.put("unidade", "Unidade: " + usuario.getUnidade());
+            item.put("tipoVeiculo", "Veículo: " + usuario.getTipoVeiculo());
+            item.put("funcao", "Função: " + usuario.getFuncao());
+            item.put("placa", "Placa: " + usuario.getPlaca());
+            item.put("gerencia", "Gerência: " + usuario.getGerencia());
 
             usuarios.add(item);
 
@@ -92,31 +111,40 @@ public class ListUser extends ListActivity implements AdapterView.OnItemClickLis
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem item) {
+    public boolean onContextItemSelected(final MenuItem item) {
 
-
-        if (item.getItemId() == R.id.mnRemover) {
-            AdapterView.AdapterContextMenuInfo info =
-                    (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-            int position = info.position;
-            usuarios.remove(position);
-            getListView().invalidateViews();
-            data = "";
-            dbAdapter.deleteUser(Integer.valueOf(Id));
-            return true;
+        switch (item.getItemId()) {
+            case R.id.mnRemover:
+                new AlertDialog.Builder(this).setTitle("Deletando Usuário").
+                        setMessage(R.string.confirmacao_exclusao_usuario).
+                        setPositiveButton(R.string.sim,
+                                new OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        AdapterView.AdapterContextMenuInfo info =
+                                                (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+                                        int position = info.position;
+                                        usuarios.remove(position);
+                                        getListView().invalidateViews();
+                                        data = "";
+                                        dbAdapter.deleteUser(Integer.valueOf(Id));
+                                    }
+                                })
+                        .setNegativeButton(R.string.nao, null)
+                        .show();
+                break;
+            case R.id.mnEditar:
+                AdapterView.AdapterContextMenuInfo
+                        info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+                int posicao = info.position;
+                Map<String, Object> map = usuarios.get(posicao);
+                Integer id = (Integer) map.get("id");
+                Intent intent = new Intent(this, AlterarUser.class);
+                intent.putExtra("EXTRA_ID_USER", id);
+                startActivity(intent);
+                finish();
+                break;
         }
-        if(item.getItemId()== R.id.mnEditar){
-            AdapterView.AdapterContextMenuInfo info=
-                    (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-            int posicao = info.position;
-            Map<String,Object> map = usuarios.get(posicao);
-            Integer id = (Integer) map.get("id");
-            Intent intent = new Intent(this,AlterarUser.class);
-            intent.putExtra("EXTRA_ID_USER",id);
-            startActivity(intent);
-
-        }
-
         return super.onContextItemSelected(item);
     }
 }

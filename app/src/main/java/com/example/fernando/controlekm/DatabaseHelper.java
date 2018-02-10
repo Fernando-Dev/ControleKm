@@ -22,7 +22,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = "DBAdapter";
     private static final String DATABASE_NAME = "ControleKm";
     public static final String DATABASE_TABLE = "kms";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 3;
     private static final String DATABASE_CREATE = "create table kms(_id integer primary key autoincrement,"
             + "data date not null, itinerario text not null, qtdCliente integer not null, kmInicial integer not null, " +
             "kmFinal integer not null, kmTotal integer not null);";
@@ -57,7 +57,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.w(TAG, "Upgrading database from version" + oldVersion + "to"
                 + newVersion + ",wich will destroy all old data");
-        db.execSQL("DROP TABLE IF EXISTS contacts");
+        String sqlUsuarios="DROP TABLE IF EXISTS usuarios";
+        String sqlKms ="DROP TABLE IF EXISTS kms";
+        db.execSQL(sqlUsuarios);
+        db.execSQL(sqlKms);
         onCreate(db);
     }
 }
