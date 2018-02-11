@@ -125,7 +125,7 @@ public class AlterarKm extends AppCompatActivity {
 
     public void preparaEdicao() {
 
-        SQLiteDatabase database = db.open();
+        SQLiteDatabase database = db.read();
 
         Cursor c = database.rawQuery("SELECT _id,data,itinerario,qtdCliente,kmInicial,kmFinal,kmTotal FROM kms WHERE _id=?",
                 new String[]{id.toString()});

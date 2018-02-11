@@ -25,7 +25,7 @@
         <activity
             android:name=".CadastrarKm"
             android:label="@string/cadastrar" />
-        <activity android:name=".ListKm" />
+        <!--<activity android:name=".ListKm" />-->
         <activity
             android:name=".CadastrarUsuario"
             android:label="@string/cadastrar" />
@@ -39,8 +39,10 @@
         <activity
             android:name=".Utilitario"
             android:label="Utilitários" />
-        <activity android:name=".AlterarUser"
-            android:label="@string/alterar"/>
+        <activity
+            android:name=".AlterarUser"
+            android:label="@string/alterar" />
+        <activity android:name=".ListarKm"/>
     </application>
 
 </manifest>

@@ -72,7 +72,7 @@ public class Main extends AppCompatActivity {
                 startActivity(new Intent(this, CadastrarKm.class));
                 break;
             case R.id.ivListkm:
-                startActivity(new Intent(this, ListKm.class));
+                startActivity(new Intent(this, ListarKm.class));
                 break;
             case R.id.ivAddUsuario:
                 startActivity(new Intent(this, CadastrarUsuario.class));
