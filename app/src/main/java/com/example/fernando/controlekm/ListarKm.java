@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.ContextMenu;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,7 +27,7 @@ import java.util.Map;
 
 public class ListarKm extends ListActivity implements AdapterView.OnItemClickListener {
 
-    private DBAdapter db;
+    private DBAdapter dbAdapter;
     private List<Map<String, Object>> kms;
     private SimpleDateFormat dateFormat;
     private String data;
@@ -37,7 +38,7 @@ public class ListarKm extends ListActivity implements AdapterView.OnItemClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        db = new DBAdapter(this);
+        dbAdapter = new DBAdapter(this);
 
         dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.CANADA);
 
@@ -70,7 +71,7 @@ public class ListarKm extends ListActivity implements AdapterView.OnItemClickLis
 
     private List<Map<String, Object>> listarKms() {
         kms = new ArrayList<Map<String, Object>>();
-        List<Km> listaKms = db.getAllKm();
+        List<Km> listaKms = dbAdapter.getAllKm();
         for (Km km : listaKms) {
             Map<String, Object> item = new HashMap<String, Object>();
             String periodo = dateFormat.format(km.getData());
@@ -102,14 +103,14 @@ public class ListarKm extends ListActivity implements AdapterView.OnItemClickLis
 
     @Override
     public boolean onContextItemSelected(final MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info =
+                (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         switch (item.getItemId()) {
             case R.id.Editar:
-                AdapterView.AdapterContextMenuInfo informacao =
-                        (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-                int posicao = informacao.position;
+                int posicao = info.position;
                 Map<String, Object> map = kms.get(posicao);
                 Integer id = (Integer) map.get("id");
-                Intent intent = new Intent(ListarKm.this, AlterarKm.class);
+                Intent intent = new Intent(this, AlterarKm.class);
                 intent.putExtra("EXTRA_ID_KM", id);
                 startActivity(intent);
                 finish();
@@ -126,7 +127,7 @@ public class ListarKm extends ListActivity implements AdapterView.OnItemClickLis
                                 kms.remove(pos);
                                 getListView().invalidateViews();
                                 data = "";
-                                db.deleteKm(Id);
+                                dbAdapter.deleteKm(Id);
                             }
                         })
                         .setNegativeButton(R.string.nao, null)
@@ -134,5 +135,6 @@ public class ListarKm extends ListActivity implements AdapterView.OnItemClickLis
                 break;
         }
         return super.onContextItemSelected(item);
+
     }
 }

@@ -24,6 +24,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 
 /**
@@ -34,7 +35,7 @@ public class AlterarKm extends AppCompatActivity {
     private int ano, mes, dia;
     private Date edtDataKm;
     private Button btnAlterar, btnVoltarKm, btnData;
-    private EditText altIdKm, altKmInicial, altKmFinal, altItinerario, altQtdCliente;
+    private EditText altKmInicial, altKmFinal, altItinerario, altQtdCliente;
     private TextView txvKmTotal;
     private DBAdapter db;
     private SimpleDateFormat dateFormat;
@@ -50,14 +51,14 @@ public class AlterarKm extends AppCompatActivity {
         ano = calendar.get(Calendar.YEAR);
         mes = calendar.get(Calendar.MONTH);
         dia = calendar.get(Calendar.DAY_OF_MONTH);
-        dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        AtualizarData();
+        dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.CANADA);
+
 
 
         btnAlterar = (Button) findViewById(R.id.btnAlterarKm);
         btnVoltarKm = (Button) findViewById(R.id.btnVoltarKm);
 
-        altIdKm = (EditText) findViewById(R.id.altIdKm);
+
         btnData = (Button) findViewById(R.id.altData);
         altKmInicial = (EditText) findViewById(R.id.altKmInicial);
         altKmFinal = (EditText) findViewById(R.id.altKmFinal);
@@ -117,9 +118,8 @@ public class AlterarKm extends AppCompatActivity {
                 finish();
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
             Toast.makeText(getBaseContext(), "Erro ao alterar!", Toast.LENGTH_LONG).show();
-        } finally {
-            db.close();
         }
     }
 
@@ -133,7 +133,8 @@ public class AlterarKm extends AppCompatActivity {
         String periodo = dateFormat.format(new Date(c.getLong(c.getColumnIndex(DatabaseHelper.KEY_DATA))));
         btnData.setText(periodo);
         altItinerario.setText(c.getString(c.getColumnIndex(DatabaseHelper.KEY_ITINERARIO)));
-        altQtdCliente.setText(c.getInt(c.getColumnIndex(DatabaseHelper.KEY_QTD_CLIENTE)));
+        String qdtCliente = String.valueOf(c.getInt(c.getColumnIndex(DatabaseHelper.KEY_QTD_CLIENTE)));
+        altQtdCliente.setText(qdtCliente);
         altKmInicial.setText(c.getString(c.getColumnIndex(DatabaseHelper.KEY_KM_INICIAL)));
         altKmFinal.setText(c.getString(c.getColumnIndex(DatabaseHelper.KEY_KM_FINAL)));
         txvKmTotal.setText(c.getString(c.getColumnIndex(DatabaseHelper.KEY_KM_TOTAL)));
