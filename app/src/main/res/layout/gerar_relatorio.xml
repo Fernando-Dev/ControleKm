@@ -13,38 +13,48 @@
         android:padding="10dp">
 
 
-        <EditText
-            android:id="@+id/edtDataPdf1"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="19dp"
-            android:background="@drawable/edittext_border_radius"
-            android:inputType="date" />
+        <Button
+            android:id="@+id/btnDataPdf2"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/btn_data_boder_radius"
+            android:inputType="date"
+            android:onClick="selecionarData"
+            android:text="@string/segunda_data"
+            android:textColor="@color/colorTitle"
+            android:textStyle="bold"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/textView10"
+            android:layout_marginStart="26dp" />
 
-        <EditText
-            android:id="@+id/edtDataPdf2"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/edtDataPdf1"
-            android:layout_alignBottom="@+id/edtDataPdf1"
-            android:layout_marginEnd="28dp"
+        <Button
+            android:id="@+id/btnDataPdf1"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/btn_data_boder_radius"
+            android:inputType="date"
+            android:onClick="selecionarData"
+            android:text="@string/primeira_data"
+            android:textColor="@color/colorTitle"
+            android:textStyle="bold"
+            android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/textView10"
-            android:background="@drawable/edittext_border_radius"
-            android:inputType="date" />
+            android:layout_marginEnd="26dp" />
+
 
         <TextView
             android:id="@+id/textView10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/edtDataPdf2"
+            android:layout_alignBaseline="@+id/btnDataPdf1"
+            android:layout_alignBottom="@+id/btnDataPdf1"
             android:layout_centerHorizontal="true"
             android:background="@drawable/textview_main"
             android:text="à"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/colorWhite" />
-
-
 
 
     </RelativeLayout>
@@ -55,7 +65,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
         android:layout_gravity="center_horizontal"
-        android:background="@drawable/btn_border_radius"
+        android:background="@drawable/botao"
+        android:onClick="chamaPdf"
         android:text="Filtro"
         android:textColor="@color/colorBtnText" />
 
@@ -65,7 +76,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
-        android:background="@drawable/btn_border_radius"
+        android:background="@drawable/botao"
         android:text="@string/gerar_pdf"
         android:textColor="@color/colorBtnText" />
 
@@ -74,7 +85,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:background="@drawable/btn_border_radius"
+        android:background="@drawable/botao"
         android:text="@string/voltar"
         android:textColor="@color/colorBtnText" />
 

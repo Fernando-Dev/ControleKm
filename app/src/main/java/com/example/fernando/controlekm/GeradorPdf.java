@@ -1,16 +1,20 @@
 package com.example.fernando.controlekm;
 
 import android.Manifest;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -18,6 +22,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -27,6 +32,7 @@ import com.itextpdf.awt.geom.CubicCurve2D;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
+import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -37,9 +43,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Flavia on 30/12/2017.
@@ -53,12 +63,25 @@ public class GeradorPdf extends AppCompatActivity {
     private SimpleDateFormat dateFormat;
     private DBAdapter db;
     private ProgressDialog mProgressDialog;
-
+    private int ano, mes, dia;
+    private Date dataPdf1, dataPdf2;
+    private Button btnPrimeiraData, btnSegundaData;
+    private String data1, data2;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gerar_relatorio);
+
+        Calendar calendar = Calendar.getInstance();
+        ano = calendar.get(Calendar.YEAR);
+        mes = calendar.get(Calendar.MONTH);
+        dia = calendar.get(Calendar.DAY_OF_MONTH);
+        dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.CANADA);
+
+
+        btnPrimeiraData = (Button) findViewById(R.id.btnDataPdf1);
+        btnSegundaData = (Button) findViewById(R.id.btnDataPdf2);
 
 
         db = new DBAdapter(this);
@@ -68,12 +91,12 @@ public class GeradorPdf extends AppCompatActivity {
         Button filtrarData = (Button) findViewById(R.id.btnFiltroPdf);
 
 
-        filtrarData.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getBaseContext(), "Filtro efetuado com sucesso!", Toast.LENGTH_LONG).show();
-            }
-        });
+//        filtrarData.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Toast.makeText(getBaseContext(), "Filtro efetuado com sucesso!", Toast.LENGTH_LONG).show();
+//            }
+//        });
 
         voltarPdf.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,80 +106,100 @@ public class GeradorPdf extends AppCompatActivity {
         });
 
 
-        gerarRelatorio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-//                    PdfWrapper();
-                    mProgressDialog = new ProgressDialog(GeradorPdf.this);
-                    mProgressDialog.setCancelable(false);
-                    mProgressDialog.setTitle("Carregando...");
-                    mProgressDialog.setMessage("Iniciando");
-                    mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                    mProgressDialog.setMax(100);
-                    mProgressDialog.setProgress(0);
-                    mProgressDialog.show();
-                    ProgressData p = new ProgressData();
-                    p.execute(10);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(getBaseContext(), "Algo deu errado, tente mais tarde.", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
+//        gerarRelatorio.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                try {
+//
+//                    mProgressDialog = new ProgressDialog(GeradorPdf.this);
+//                    mProgressDialog.setCancelable(false);
+//                    mProgressDialog.setTitle("Carregando...");
+//                    mProgressDialog.setMessage("Iniciando");
+//                    mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+//                    mProgressDialog.setMax(100);
+//                    mProgressDialog.setProgress(0);
+//                    mProgressDialog.show();
+//                    ProgressData p = new ProgressData();
+//                    p.execute(10);
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    Toast.makeText(getBaseContext(), "Algo deu errado, tente mais tarde.", Toast.LENGTH_LONG).show();
+//                }
+//            }
+//        });
 
 
     }
 
-    private class ProgressData extends AsyncTask<Integer, String, String> {
+    public void chamaPdf(View v) {
+        ProgressData proressData = new ProgressData();
+        proressData.execute((Void[]) null);
+
+
+    }
+
+
+    private class ProgressData extends AsyncTask<Void, Void, Void> {
 
         @Override
-        protected String doInBackground(Integer... integers) {
-            int progress = 0;
-            int total = integers[0];
-            while (progress <= total) {
-                try {
-//                    PdfWrapper();
-                    Thread.sleep(2000); // pausa de 2 segundos
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-//                } catch (FileNotFoundException e) {
-//                    e.printStackTrace();
-//                } catch (DocumentException e) {
-//                    e.printStackTrace();
-                }
-
-                String s = progress % 2 == 0 ? "Por favor aguarde..." : "Construindo relatório";
-
-                //exibindo o progresso
-                this.publishProgress(String.valueOf(progress), String.valueOf(total), s);
-                progress++;
-
+        protected Void doInBackground(Void... params/*Integer... integers*/) {
+            try {
+                PdfWrapper();
+                Looper.prepare();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (DocumentException e) {
+                e.printStackTrace();
             }
-            return "done";
+//            int progress = 0;
+//            int total = integers[0];
+//            while (progress <= total) {
+//                try {
+//
+//                    Thread.sleep(2000); // pausa de 2 segundos
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                String s = progress % 2 == 0 ? "Por favor aguarde..." : "Construindo relatório";
+//
+//                //exibindo o progresso
+//                this.publishProgress(String.valueOf(progress), String.valueOf(total), s);
+//                progress++;
+//
+//
+//            }
+//            return "done";
+            return null;
         }
 
+//        @Override
+//        protected void onProgressUpdate(String... values) {
+//            super.onProgressUpdate(values);
+//            Float progress = Float.valueOf(values[0]);
+//            Float total = Float.valueOf(values[1]);
+//            String message = values[2];
+//            mProgressDialog.setProgress((int) ((progress / total) * 100));
+//            mProgressDialog.setMessage(message);
+//            // mensagem de finalização
+//            String a = "90";
+//            if (values[0].equals(a)) {
+//                mProgressDialog.setMessage("Finalizando...");
+//            }
+//            //se os valores sao iguais terminamos nosso processamento
+//            if (values[0].equals(values[1])) {
+//                //removemos o dialog
+//                mProgressDialog.cancel();
+//            }
+//
+//
+//        }
+
         @Override
-        protected void onProgressUpdate(String... values) {
-            super.onProgressUpdate(values);
-            Float progress = Float.valueOf(values[0]);
-            Float total = Float.valueOf(values[1]);
-            String message = values[2];
-            mProgressDialog.setProgress((int) ((progress / total) * 100));
-            mProgressDialog.setMessage(message);
-            // mensagem de finalização
-            String a = "90";
-            if (values[0].equals(a)) {
-                mProgressDialog.setMessage("Finalizando...");
-            }
-            //se os valores sao iguais terminamos nosso processamento
-            if (values[0].equals(values[1])) {
-                //removemos o dialog
-                mProgressDialog.cancel();
-            }
-
-
+        protected void onPostExecute(Void aVoid) {
+            previaPdf();
+            super.onPostExecute(aVoid);
         }
     }
 
@@ -223,35 +266,63 @@ public class GeradorPdf extends AppCompatActivity {
     }
 
     private void criarPdf() throws FileNotFoundException, DocumentException {
+        SQLiteDatabase database = db.read();
+
+//        try {
+//            data1 = desenverterData(btnPrimeiraData.getText().toString());
+//            data2 = desenverterData(btnSegundaData.getText().toString());
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
 
         File docsFolder = new File(Environment.getExternalStorageDirectory() + "/Documents");
         docsFolder.mkdir();
 
 
-//            c = db.getAllKm(getBaseContext());
-//            db.open();
-//            SQLiteDatabase bd = helper.getWritableDatabase();
-//            String sql = "select * from kms";
-//            c = bd.rawQuery(sql, new String[]{KEY_ROWID, KEY_DATA, KEY_ITINERARIO, KEY_KM_INICIAL, KEY_KM_FINAL});
-//            String sql_consulta = "SELECT id, data, itinerario, kmInicial, kmFinal"
-//                    + " FROM kms ";
         pdfFile = new File(docsFolder.getAbsolutePath(), "RelatórioKm.pdf");
-        c = db.open().rawQuery("SELECT * FROM " + DatabaseHelper.DATABASE_TABLE, null);
+
+        c = database.rawQuery("SELECT * FROM kms WHERE data ORDER BY data", null);
+        Cursor cursor = database.rawQuery("SELECT * FROM usuarios", null);
+
         OutputStream output = new FileOutputStream(pdfFile);
-        Document documento = new Document();
-//            List<Km> listaKm = helper.getReadableDatabase().
+        Document documento = new Document(PageSize.A4.rotate());
+
 
         PdfWriter writer = PdfWriter.getInstance(documento, output);
         PageOrientation event = new PageOrientation();
         writer.setPageEvent(event);
         documento.open();
-//            Paragraph p = new Paragraph();
-//            p.add("Nome: ");
-//            documento.add(p);
-//            c = db.getAllKms();
+
+        PdfPTable table0 = new PdfPTable(1);
+        table0.setWidthPercentage(100f);
+
+        PdfPTable table1 = new PdfPTable(2);
+//        table1.setWidthPercentage(100f);
+//        table1.setWidths(new int[]{70, 30/*, 5, 10, 5, 5*/});
+        cursor.moveToFirst();
+        for (int b = 0; b < cursor.getCount(); b++) {
+            String nome = cursor.getString(1);
+            String unidade = cursor.getString(2);
+//            String tipoVeiculo = cursor.getString(3);
+            String funcao = cursor.getString(3);
+            String placa = cursor.getString(4);
+            String gerencia = cursor.getString(5);
+            table1.addCell(createCell("Nome: " + nome, 1, 1, Element.ALIGN_LEFT));
+            table1.addCell(createCell("Unidade: " + unidade, 1, 1, Element.ALIGN_LEFT));
+            table1.addCell(createCell("Função: " + funcao, 1, 1, Element.ALIGN_LEFT));
+            table1.addCell(createCell("Placa: " + placa, 1, 1, Element.ALIGN_LEFT));
+            table1.addCell(createCell("Gerência: " + gerencia, 1, 1, Element.ALIGN_LEFT));
+            table1.addCell(createCell("", 1, 1, Element.ALIGN_LEFT));
+
+            cursor.moveToNext();
+        }
+        cursor.close();
+        table0.addCell(new PdfPCell(table1));
+
 
         PdfPTable table = new PdfPTable(7);
-        table.setWidths(new int[]{1, 2, 1, 1, 1, 1, 1});
+//        table.setWidthPercentage(100f);
+        table.setWidths(new int[]{1, 2, 10, 2, 2, 2, 2});
         table.addCell(createCell("Id", 2, 1, Element.ALIGN_LEFT));
         table.addCell(createCell("Data", 2, 1, Element.ALIGN_LEFT));
         table.addCell(createCell("Itinerário", 2, 1, Element.ALIGN_LEFT));
@@ -261,66 +332,23 @@ public class GeradorPdf extends AppCompatActivity {
         table.addCell(createCell("Total", 2, 1, Element.ALIGN_LEFT));
 
 
-//            PdfPCell c1 = new PdfPCell(new Phrase("Id"));
-//            c1.setHorizontalAlignment(Element.ALIGN_CENTER);
-//            table.addCell(c1);
-//            PdfPCell c2 = new PdfPCell(new Phrase("Data"));
-//            c1.setHorizontalAlignment(Element.ALIGN_CENTER);
-//            table.addCell(c2);
-//            PdfPCell c3 = new PdfPCell(new Phrase("Itinerário"));
-//            c1.setHorizontalAlignment(Element.ALIGN_CENTER);
-//            table.addCell(c3);
-//            PdfPCell c4 = new PdfPCell(new Phrase("Km inicial"));
-//            c1.setHorizontalAlignment(Element.ALIGN_CENTER);
-//            table.addCell(c4);
-//            PdfPCell c5 = new PdfPCell(new Phrase("Km final"));
-//            c1.setHorizontalAlignment(Element.ALIGN_CENTER);
-//            table.addCell(c5);
-//            table.setHeaderRows(1);
-
-//        while (c.moveToFirst()) {
-//            List<Km> listaKms = db.getAllKm();
-//            for (Km km : listaKms) {
-//
-//
-//                table.addCell(createCell(String.valueOf(km.getId()), 1, 1, Element.ALIGN_LEFT));
-//                String dataKm = dateFormat.format(km.getData());
-//                table.addCell(createCell(dataKm, 1, 1, Element.ALIGN_LEFT));
-//                table.addCell(createCell(km.getItinerario(), 1, 1, Element.ALIGN_LEFT));
-//                table.addCell(createCell(String.valueOf(km.getQtdCliente()), 1, 1, Element.ALIGN_LEFT));
-//                table.addCell(createCell(km.getKmInicial(), 1, 1, Element.ALIGN_LEFT));
-//                table.addCell(createCell(km.getKmFinal(), 1, 1, Element.ALIGN_LEFT));
-//                table.addCell(createCell(km.getKmTotal(), 1, 1, Element.ALIGN_LEFT));
-//
-//                Comparator<Km> comparator = new Comparator<Km>() {
-//                    @Override
-//                    public int compare(Km km, Km t1) {
-//                        if (km.getData().compareTo(t1.getData()) < 0) {
-//                            return -1;
-//                        }
-//                        if (km.getData().compareTo(t1.getData()) > 0) {
-//                            return 1;
-//                        }
-//                        return 0;
-//                    }
-//
-//                };
-//                Collections.sort(listaKms, comparator);
-//            }
-//        while (c.moveToFirst()) {
         c.moveToFirst();
         for (int a = 0; a < c.getCount(); a++) {
 
 
             String id = String.valueOf(c.getInt(c.getColumnIndex(DatabaseHelper.KEY_ROWID)));
-            String data = String.valueOf(new Date(c.getLong(c.getColumnIndex(DatabaseHelper.KEY_DATA))));
+            String data = c.getString(c.getColumnIndex(DatabaseHelper.KEY_DATA));
+            try {
+                data = inverteOrdemData(data);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             String itinerario = c.getString(c.getColumnIndex(DatabaseHelper.KEY_ITINERARIO));
             String qtdCliente = c.getString(c.getColumnIndex(DatabaseHelper.KEY_QTD_CLIENTE));
             String kmInicial = c.getString(c.getColumnIndex(DatabaseHelper.KEY_KM_INICIAL));
             String kmFinal = c.getString(c.getColumnIndex(DatabaseHelper.KEY_KM_FINAL));
             String kmTotal = String.valueOf(c.getInt(c.getColumnIndex(DatabaseHelper.KEY_KM_TOTAL)));
-//            String[][] info = {{id}, {data}, {itinerario}, {qtdCliente}, {kmInicial}, {kmFinal}, {kmTotal}};
-//            for (String[] linha : info) {
+
             table.addCell(createCell(id, 1, 1, Element.ALIGN_LEFT));
             table.addCell(createCell(data, 1, 1, Element.ALIGN_LEFT));
             table.addCell(createCell(itinerario, 1, 1, Element.ALIGN_LEFT));
@@ -328,43 +356,32 @@ public class GeradorPdf extends AppCompatActivity {
             table.addCell(createCell(kmInicial, 1, 1, Element.ALIGN_LEFT));
             table.addCell(createCell(kmFinal, 1, 1, Element.ALIGN_LEFT));
             table.addCell(createCell(kmTotal, 1, 1, Element.ALIGN_LEFT));
-//            }
+
             c.moveToNext();
         }
-//        }
-//                Km kms = new Km();
-//                kms.setId(c.getInt(0));
-//                DateFormat dateFormat = DateFormat.getDateInstance();
-//                kms.setData(dateFormat.parse(c.getString(1)));
-//                kms.setItinerario(c.getString(2));
-//                kms.setKmInicial(c.getString(3));
-//                kms.setKmFinal(c.getString(4));
-//                    documento.add(new Paragraph("Id: " + km.getId().toString()));
-//                    documento.add(new Paragraph("Data: " + km.getData().toString()));
-//                    documento.add(new Paragraph("Itinerario: " + km.getItinerario().toString()));
-//                    documento.add(new Paragraph("Km inicial: " + km.getKmInicial().toString()));
-//                    documento.add(new Paragraph("Km final: " + km.getKmFinal().toString()));
-//                    documento.add(new Paragraph("|____________________________________|"));
-//        }
-
-        documento.add(table);
-        event.setOrientation(PdfPage.LANDSCAPE);
+        c.close();
+        event.setRotation(PdfPage.LANDSCAPE);
+        table0.addCell(new PdfPCell(table));
+        documento.add(table0);
         documento.addCreationDate();
         documento.close();
-        c.close();
-        db.close();
 
-//                document.add(new Paragraph(mContentEditText.getText().toString()));
-//            bd.close();
-//            db.close();
+    }
 
+    private static String inverteOrdemData(String data) throws ParseException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = simpleDateFormat.parse(data);
+        SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("dd/MM/yyyy");
+        String _date = simpleDateFormat1.format(date);
+        return _date;
+    }
 
-//            c.close();
-
-        previaPdf();
-
-
-//        return kms;
+    private static String desenverterData(String data) throws ParseException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = simpleDateFormat.parse(data);
+        SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+        String _date = simpleDateFormat1.format(date);
+        return _date;
     }
 
     private void previaPdf() {
@@ -373,27 +390,16 @@ public class GeradorPdf extends AppCompatActivity {
         Intent testIntent = new Intent(Intent.ACTION_VIEW);
         testIntent.setType("aplicação / pdf");
         List list = packageManager.queryIntentActivities(testIntent, PackageManager.MATCH_DEFAULT_ONLY);
-        if (list.size() > 0) {
+        if (pdfFile.exists()) {
             Intent intent = new Intent();
             intent.setAction(Intent.ACTION_VIEW);
             Uri uri = Uri.fromFile(pdfFile);
             intent.setDataAndType(uri, "aplicação / pdf");
-
             startActivity(intent);
-        } else {
-            Toast.makeText(this, "Baixe um Visualizador de PDF para ver o PDF gerado", Toast.LENGTH_SHORT).show();
-        }
-    }
 
-    private Km criarKm(Cursor cursor) {
-        Km km = new Km(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.KEY_ROWID)),
-                new Date(cursor.getLong(cursor.getColumnIndex(DatabaseHelper.KEY_DATA))),
-                cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_ITINERARIO)),
-                cursor.getInt(cursor.getColumnIndex(DatabaseHelper.KEY_QTD_CLIENTE)),
-                cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_KM_INICIAL)),
-                cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_KM_FINAL)),
-                cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_KM_TOTAL)));
-        return km;
+        } else {
+            Toast.makeText(getBaseContext(), "Baixe um Visualizador de PDF para ver o PDF gerado", Toast.LENGTH_LONG).show();
+        }
     }
 
     public PdfPCell createCell(String content, float borderWidth, int colspan, int alignment) {
@@ -404,4 +410,61 @@ public class GeradorPdf extends AppCompatActivity {
         return cell;
     }
 
+    public void selecionarData(View view) {
+        showDialog(view.getId());
+    }
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+
+        switch (id) {
+            case R.id.btnDataPdf1:
+                return new DatePickerDialog(this, dataPdfPrimeiro, ano, mes, dia);
+            case R.id.btnDataPdf2:
+                return new DatePickerDialog(this, dataPdfSegundo, ano, mes, dia);
+        }
+        return null;
+    }
+
+    private DatePickerDialog.OnDateSetListener dataPdfPrimeiro = new DatePickerDialog.OnDateSetListener() {
+        public void onDateSet(DatePicker view, int anoSelecionado, int mesSelecionado, int diaSelecionado) {
+            ano = anoSelecionado;
+            mes = mesSelecionado;
+            dia = diaSelecionado;
+            dataPdf1 = criarData(anoSelecionado, mesSelecionado, diaSelecionado);
+            AtualizarData1();
+
+        }
+    };
+    private DatePickerDialog.OnDateSetListener dataPdfSegundo = new DatePickerDialog.OnDateSetListener() {
+        public void onDateSet(DatePicker view, int anoSelecionado, int mesSelecionado, int diaSelecionado) {
+            ano = anoSelecionado;
+            mes = mesSelecionado;
+            dia = diaSelecionado;
+            dataPdf2 = criarData(anoSelecionado, mesSelecionado, diaSelecionado);
+            AtualizarData2();
+        }
+    };
+
+    private Date criarData(int anoSelecionado, int mesSelecionado, int diaSelecionado) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(anoSelecionado, mesSelecionado, diaSelecionado);
+        return calendar.getTime();
+    }
+
+    private void AtualizarData1() {
+        btnPrimeiraData.setText(new StringBuilder().append(dia).append("/").append(mes +
+                1).append("/").append(ano).append(""));
+    }
+
+    private void AtualizarData2() {
+        btnSegundaData.setText(new StringBuilder().append(dia).append("/").append(mes +
+                1).append("/").append(ano).append(""));
+    }
+
+    @Override
+    protected void onDestroy() {
+        db.close();
+        super.onDestroy();
+    }
 }

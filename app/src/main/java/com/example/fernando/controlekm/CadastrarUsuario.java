@@ -26,8 +26,8 @@ import java.util.Date;
 public class CadastrarUsuario extends AppCompatActivity {
 
     private EditText edtNome, edtPlaca;
-    private Spinner spUnidade, spFuncao, spGerencia;
-    private RadioGroup rgTipoVeiculo;
+    private EditText edtUnidade, edtFuncao, edtGerencia;
+//    private RadioGroup rgTipoVeiculo;
     private Button btnSalvar, btnVoltar;
     private DBAdapter db;
     private Integer codigo;
@@ -38,20 +38,11 @@ public class CadastrarUsuario extends AppCompatActivity {
         setContentView(R.layout.cadastrar_user);
 
         edtNome = (EditText) findViewById(R.id.edtNome);
-        spUnidade = (Spinner) findViewById(R.id.spUnidade);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this, R.array.tipo_unidade, R.layout.spinner_item);
-        spUnidade.setAdapter(adapter);
-        rgTipoVeiculo = (RadioGroup) findViewById(R.id.rgTipoVeiculo);
-        spFuncao = (Spinner) findViewById(R.id.spFuncao);
-        ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(
-                this, R.array.tipo_funcao, R.layout.spinner_item);
-        spFuncao.setAdapter(adapter1);
+        edtUnidade = (EditText) findViewById(R.id.edtUnidade);
+//        rgTipoVeiculo = (RadioGroup) findViewById(R.id.rgTipoVeiculo);
+        edtFuncao = (EditText)findViewById(R.id.edtFuncao);
         edtPlaca = (EditText) findViewById(R.id.edtPlaca);
-        spGerencia = (Spinner) findViewById(R.id.spGerencia);
-        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(
-                this, R.array.tipo_gerencia, R.layout.spinner_item);
-        spGerencia.setAdapter(adapter2);
+        edtGerencia = (EditText) findViewById(R.id.edtGerencia);
         btnSalvar = (Button) findViewById(R.id.btnSalvarUser);
         btnVoltar = (Button) findViewById(R.id.btnVoltarUser);
 
@@ -78,24 +69,32 @@ public class CadastrarUsuario extends AppCompatActivity {
             DatabaseHelper helper = new DatabaseHelper(this);
             db.open();
             Usuario usuario = new Usuario();
-            usuario.setNome(edtNome.getText().toString());
-            usuario.setUnidade(spUnidade.getSelectedItem().toString());
-            String tipoVeiculo = String.valueOf(rgTipoVeiculo.getCheckedRadioButtonId());
-            String veiculoInec = String.valueOf(R.id.veiculoInec);
-            String veiculoProprio = String.valueOf(R.id.veiculoProprio);
-            String veiculoAlternativo = String.valueOf(R.id.veiculoAlternativo);
-            if (tipoVeiculo.equals(veiculoInec)) {
-                usuario.setTipoVeiculo(Constante.TIPO_VEICULO_INEC);
-            } else if (tipoVeiculo.equals(veiculoProprio)) {
-                usuario.setTipoVeiculo(Constante.TIPO_VEICULO_PARTICULAR);
-            } else if (tipoVeiculo.equals(veiculoAlternativo)) {
-                usuario.setTipoVeiculo(Constante.TIPO_VEICULO_ALTERNATIVO);
-            }
-            usuario.setFuncao(spFuncao.getSelectedItem().toString());
+            String nome  = edtNome.getText().toString();
+            nome = nome.toUpperCase();
+            usuario.setNome(nome);
+            String unidade = edtUnidade.getText().toString();
+            unidade = unidade.toUpperCase();
+            usuario.setUnidade(unidade);
+//            String tipoVeiculo = String.valueOf(rgTipoVeiculo.getCheckedRadioButtonId());
+//            String veiculoInec = String.valueOf(R.id.veiculoInec);
+//            String veiculoProprio = String.valueOf(R.id.veiculoParticular);
+//            String veiculoAlternativo = String.valueOf(R.id.veiculoAlternativo);
+//            if (tipoVeiculo.equals(veiculoInec)) {
+//                usuario.setTipoVeiculo(Constante.TIPO_VEICULO_INEC);
+//            } else if (tipoVeiculo.equals(veiculoProprio)) {
+//                usuario.setTipoVeiculo(Constante.TIPO_VEICULO_PARTICULAR);
+//            } else if (tipoVeiculo.equals(veiculoAlternativo)) {
+//                usuario.setTipoVeiculo(Constante.TIPO_VEICULO_ALTERNATIVO);
+//            }
+            String funcao = edtFuncao.getText().toString();
+            funcao = funcao.toUpperCase();
+            usuario.setFuncao(funcao);
             String placa = edtPlaca.getText().toString();
             placa = placa.toUpperCase();
             usuario.setPlaca(placa);
-            usuario.setGerencia(spGerencia.getSelectedItem().toString());
+            String gerencia = edtGerencia.getText().toString();
+            gerencia = gerencia.toUpperCase();
+            usuario.setGerencia(gerencia);
 
             db.inserirUsuario(usuario);
 

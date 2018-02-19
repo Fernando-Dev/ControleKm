@@ -18,8 +18,10 @@ import android.widget.Toast;
 import com.example.fernando.controlekm.DAO.DBAdapter;
 import com.example.fernando.controlekm.dominio.Km;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -74,9 +76,12 @@ public class ListarKm extends ListActivity implements AdapterView.OnItemClickLis
         List<Km> listaKms = dbAdapter.getAllKm();
         for (Km km : listaKms) {
             Map<String, Object> item = new HashMap<String, Object>();
-            String periodo = dateFormat.format(km.getData());
             item.put("id", km.getId());
-            item.put("data", "Data: " + periodo);
+            try {
+                item.put("data", "Data: " + inverteOrdemData(km.getData()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             item.put("itinerario", "Itinerário: " + km.getItinerario());
             item.put("qtdCliente", "Cliente(s): " + km.getQtdCliente());
             item.put("kms", "Km Inicial: " + km.getKmInicial() + " Km" + " <---> " + "Km Final: " + km.getKmFinal() + " Km ");
@@ -85,6 +90,14 @@ public class ListarKm extends ListActivity implements AdapterView.OnItemClickLis
 
         }
         return kms;
+    }
+
+    private static String inverteOrdemData(String data) throws ParseException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = simpleDateFormat.parse(data);
+        SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("dd/MM/yyyy");
+        String _date = simpleDateFormat1.format(date);
+        return _date;
     }
 
     @Override

@@ -22,20 +22,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = "DBAdapter";
     private static final String DATABASE_NAME = "ControleKm";
     public static final String DATABASE_TABLE = "kms";
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 6;
     private static final String DATABASE_CREATE = "create table kms(_id integer primary key autoincrement,"
-            + "data date not null, itinerario text not null, qtdCliente integer not null, kmInicial integer not null, " +
+            + "data text not null, itinerario text not null, qtdCliente integer not null, kmInicial integer not null, " +
             "kmFinal integer not null, kmTotal integer not null);";
     public static final String KEY_ID_USERS = "id";
     public static final String KEY_NOME = "nome";
     public static final String KEY_UNIDADE = "unidade";
-    public static final String KEY_TIPO_VEICULO = "tipoVeiculo";
     public static final String KEY_FUNCAO = "funcao";
     public static final String KEY_PLACA = "placa";
     public static final String KEY_GERENCIA = "gerencia";
     public static final String DATABASE_TABLE_USERS = "usuarios";
     private static final String DATABASE_CREATE_USERS = "create table usuarios(id integer primary key autoincrement,"
-            + "nome text not null, unidade text not null,tipoVeiculo text not null," +
+            + "nome text not null, unidade text not null," +
             "funcao text not null,placa text not null,gerencia text not null);";
 
     public DatabaseHelper(Context context) {

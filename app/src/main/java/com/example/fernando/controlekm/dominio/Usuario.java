@@ -8,7 +8,6 @@ public class Usuario {
     private Integer id;
     private String nome;
     private String unidade;
-    private String tipoVeiculo;
     private String funcao;
     private String placa;
     private String gerencia;
@@ -17,11 +16,10 @@ public class Usuario {
 
     }
 
-    public Usuario(Integer id, String nome, String unidade, String tipoVeiculo, String funcao, String placa, String gerencia) {
+    public Usuario(Integer id, String nome, String unidade, String funcao, String placa, String gerencia) {
         this.id = id;
         this.nome = nome;
         this.unidade = unidade;
-        this.tipoVeiculo = tipoVeiculo;
         this.funcao = funcao;
         this.placa = placa;
         this.gerencia = gerencia;
@@ -49,14 +47,6 @@ public class Usuario {
 
     public void setUnidade(String unidade) {
         this.unidade = unidade;
-    }
-
-    public String getTipoVeiculo() {
-        return tipoVeiculo;
-    }
-
-    public void setTipoVeiculo(String tipoVeiculo) {
-        this.tipoVeiculo = tipoVeiculo;
     }
 
     public String getFuncao() {

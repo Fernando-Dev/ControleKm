@@ -65,8 +65,8 @@ public class ListUser extends ListActivity implements AdapterView.OnItemClickLis
 
         @Override
         protected void onPostExecute(List<Map<String, Object>> maps) {
-            String[] de = {"id", "nome", "unidade", "tipoVeiculo", "funcao", "placa", "gerencia"};
-            int[] para = {R.id.lstIdUser, R.id.lstNomeUser, R.id.lstUnidade, R.id.lstTipoVeiculo, R.id.lstFuncao,
+            String[] de = {"id", "nome", "unidade", "funcao", "placa", "gerencia"};
+            int[] para = {R.id.lstIdUser, R.id.lstNomeUser, R.id.lstUnidade, R.id.lstFuncao,
                     R.id.lstPlaca, R.id.lstGerencia};
             SimpleAdapter simpleAdapter = new SimpleAdapter(ListUser.this, maps, R.layout.listar_users, de, para);
             setListAdapter(simpleAdapter);
@@ -82,7 +82,7 @@ public class ListUser extends ListActivity implements AdapterView.OnItemClickLis
             item.put("id", usuario.getId());
             item.put("nome", "Nome: " + usuario.getNome());
             item.put("unidade", "Unidade: " + usuario.getUnidade());
-            item.put("tipoVeiculo", "Veículo: " + usuario.getTipoVeiculo());
+//            item.put("tipoVeiculo", "Veículo: " + usuario.getTipoVeiculo());
             item.put("funcao", "Função: " + usuario.getFuncao());
             item.put("placa", "Placa: " + usuario.getPlaca());
             item.put("gerencia", "Gerência: " + usuario.getGerencia());

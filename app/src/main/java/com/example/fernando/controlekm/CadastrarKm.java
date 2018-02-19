@@ -16,8 +16,11 @@ import com.example.fernando.controlekm.DAO.DBAdapter;
 import com.example.fernando.controlekm.dominio.Km;
 
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 
 /**
@@ -26,6 +29,7 @@ import java.util.Date;
 
 public class CadastrarKm extends AppCompatActivity {
     private int ano, mes, dia;
+    private String data;
     private Date edtDataKm;
     private Button btnSalvarKm, btnVoltarKm, btnData;
     private EditText edtKmInicial, edtKmFinal, edtItinerario, qtdCliente;
@@ -66,7 +70,17 @@ public class CadastrarKm extends AppCompatActivity {
         btnSalvarKm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cadastrarKm();
+                if (edtItinerario.getText().toString().isEmpty()) {
+                    edtItinerario.setError("Campo Vazio!");
+                } else if (qtdCliente.getText().toString().isEmpty()) {
+                    qtdCliente.setError("Campo Vazio!");
+                }else if (edtKmInicial.getText().toString().isEmpty()) {
+                    edtKmInicial.setError("Campo Vazio!");
+                }else if (edtKmFinal.getText().toString().isEmpty()) {
+                    edtKmFinal.setError("Campo Vazio!");
+                }else {
+                    cadastrarKm();
+                }
             }
         });
 
@@ -81,12 +95,6 @@ public class CadastrarKm extends AppCompatActivity {
             String kmFim = edtKmFinal.getText().toString();
             int _kmFim = Integer.parseInt(kmFim);
             boolean result = (_kmIni > _kmFim);
-//            String kmData = btnData.getText().toString();
-//            DateFormat dateFormat1 = DateFormat.getDateInstance();
-//            Date dataKm = dateFormat1.parse(kmData);
-//            if (dataKm.equals(helper.KEY_DATA)) {
-//                Toast.makeText(this, "Esta data já existe!", Toast.LENGTH_SHORT).show();
-//            }
             if (result) {
                 Toast.makeText(getBaseContext(), "Km inicial maior!", Toast.LENGTH_LONG).show();
             } else {
@@ -94,9 +102,12 @@ public class CadastrarKm extends AppCompatActivity {
                 String resultado = String.valueOf(diferenca);
                 txvKmTotal.setText(resultado);
                 Km km = new Km();
-                DateFormat dateFormat = DateFormat.getDateInstance();
-                edtDataKm = dateFormat.parse(btnData.getText().toString());
-                km.setData(edtDataKm);
+                try {
+                    data = inverteOrdemData(btnData.getText().toString());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                km.setData(data);
                 km.setItinerario(edtItinerario.getText().toString());
                 int cliente = Integer.parseInt(qtdCliente.getText().toString());
                 km.setQtdCliente(cliente);
@@ -104,14 +115,12 @@ public class CadastrarKm extends AppCompatActivity {
                 km.setKmFinal(edtKmFinal.getText().toString());
                 km.setKmTotal(txvKmTotal.getText().toString());
                 db.inserirKm(km);
-                Toast.makeText(getBaseContext(), "Salvo", Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(), "Salvo com sucesso!", Toast.LENGTH_LONG).show();
 
                 finish();
             }
         } catch (Exception ex) {
             Toast.makeText(getBaseContext(), "Erro ao salvar!", Toast.LENGTH_LONG).show();
-        } finally {
-            db.close();
         }
     }
 
@@ -149,5 +158,19 @@ public class CadastrarKm extends AppCompatActivity {
     private void AtualizarData() {
         btnData.setText(new StringBuilder().append(dia).append("/").append(mes +
                 1).append("/").append(ano).append(""));
+    }
+
+    private static String inverteOrdemData(String data) throws ParseException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = simpleDateFormat.parse(data);
+        SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+        String _date = simpleDateFormat1.format(date);
+        return _date;
+    }
+
+    @Override
+    protected void onDestroy() {
+        db.close();
+        super.onDestroy();
     }
 }

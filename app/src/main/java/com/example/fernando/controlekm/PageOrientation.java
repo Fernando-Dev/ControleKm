@@ -12,16 +12,14 @@ import com.itextpdf.text.pdf.PdfWriter;
  */
 
 public class PageOrientation extends PdfPageEventHelper {
-    protected PdfNumber orientation = PdfPage.LANDSCAPE;
+    protected PdfNumber rotation = PdfPage.LANDSCAPE;
 
-    public void setOrientation(PdfNumber orientation) {
-        this.orientation = orientation;
+    public void setRotation(PdfNumber rotation) {
+        this.rotation = rotation;
     }
 
-    @Override
-    public void onStartPage(PdfWriter writer, Document document) {
-        writer.addPageDictEntry(PdfName.ROTATE, orientation);
-
+    public void onEndPage(PdfWriter writer, Document document) {
+        writer.addPageDictEntry(PdfName.ROTATE, rotation);
     }
 
 

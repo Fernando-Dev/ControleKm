@@ -13,7 +13,7 @@ import java.util.Date;
 
 public class Km implements Serializable {
     private Integer id;
-    private Date data;
+    private String data;
     private String itinerario;
     private Integer qtdCliente;
     private String kmInicial;
@@ -25,7 +25,7 @@ public class Km implements Serializable {
 
     }
 
-    public Km(Integer id, Date data, String itinerario, Integer qtdCliente,
+    public Km(Integer id, String data, String itinerario, Integer qtdCliente,
               String kmInicial, String kmFinal, String kmTotal) {
         this.id = id;
         this.data = data;
@@ -44,11 +44,11 @@ public class Km implements Serializable {
         this.id = id;
     }
 
-    public Date getData() {
+    public String getData() {
         return data;
     }
 
-    public void setData(Date data) {
+    public void setData(String data) {
         this.data = data;
     }
 

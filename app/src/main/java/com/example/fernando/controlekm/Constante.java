@@ -7,7 +7,7 @@ package com.example.fernando.controlekm;
 public class Constante {
     public static final String KEY_ROWID = "km_id";
     public static final String KEY_USER_ID = "user_id";
-    public static final String TIPO_VEICULO_INEC = "Inec";
-    public static final String TIPO_VEICULO_PARTICULAR = "Particular";
-    public static final String TIPO_VEICULO_ALTERNATIVO = "Alternativo";
+    public static final String TIPO_VEICULO_INEC = "INEC";
+    public static final String TIPO_VEICULO_PARTICULAR = "PARTICULAR";
+    public static final String TIPO_VEICULO_ALTERNATIVO = "ALTERNATIVO";
 }

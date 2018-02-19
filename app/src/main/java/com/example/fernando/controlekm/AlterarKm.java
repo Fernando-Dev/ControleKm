@@ -21,6 +21,7 @@ import com.example.fernando.controlekm.DAO.DBAdapter;
 import com.example.fernando.controlekm.dominio.Km;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -33,6 +34,7 @@ import java.util.Locale;
 
 public class AlterarKm extends AppCompatActivity {
     private int ano, mes, dia;
+    private String data;
     private Date edtDataKm;
     private Button btnAlterar, btnVoltarKm, btnData;
     private EditText altKmInicial, altKmFinal, altItinerario, altQtdCliente;
@@ -104,9 +106,8 @@ public class AlterarKm extends AppCompatActivity {
                 txvKmTotal.setText(resultado);
                 Km km = new Km();
                 km.setId(id);
-                DateFormat dateFormat = DateFormat.getDateInstance();
-                edtDataKm = dateFormat.parse(btnData.getText().toString());
-                km.setData(edtDataKm);
+                data = inverteData(btnData.getText().toString());
+                km.setData(data);
                 km.setItinerario(altItinerario.getText().toString());
                 int qtdeCliente = Integer.parseInt(altQtdCliente.getText().toString());
                 km.setQtdCliente(qtdeCliente);
@@ -130,8 +131,12 @@ public class AlterarKm extends AppCompatActivity {
         Cursor c = database.rawQuery("SELECT _id,data,itinerario,qtdCliente,kmInicial,kmFinal,kmTotal FROM kms WHERE _id=?",
                 new String[]{id.toString()});
         c.moveToFirst();
-        String periodo = dateFormat.format(new Date(c.getLong(c.getColumnIndex(DatabaseHelper.KEY_DATA))));
-        btnData.setText(periodo);
+        String periodo = c.getString(c.getColumnIndex(DatabaseHelper.KEY_DATA));
+        try {
+            btnData.setText(inverteOrdemData(periodo));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         altItinerario.setText(c.getString(c.getColumnIndex(DatabaseHelper.KEY_ITINERARIO)));
         String qdtCliente = String.valueOf(c.getInt(c.getColumnIndex(DatabaseHelper.KEY_QTD_CLIENTE)));
         altQtdCliente.setText(qdtCliente);
@@ -141,6 +146,20 @@ public class AlterarKm extends AppCompatActivity {
         c.close();
 
 
+    }
+    private static String inverteOrdemData(String data) throws ParseException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = simpleDateFormat.parse(data);
+        SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("dd/MM/yyyy");
+        String _date = simpleDateFormat1.format(date);
+        return _date;
+    }
+    private static String inverteData(String data) throws ParseException{
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = simpleDateFormat.parse(data);
+        SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+        String _date = simpleDateFormat1.format(date);
+        return _date;
     }
 
 

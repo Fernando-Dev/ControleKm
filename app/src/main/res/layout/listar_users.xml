@@ -2,81 +2,103 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorTitle"
     android:orientation="vertical"
+    android:padding="@dimen/padding_5dp"
     android:weightSum="1">
 
-    <LinearLayout
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/padding_5dp">
+        app:cardBackgroundColor="@color/colorPrimary"
+        app:cardCornerRadius="@dimen/padding_padrao">
 
-
-        <TextView
-            android:id="@+id/lstIdUser"
-            android:layout_width="wrap_content"
+    <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="@color/colorWhite"
-            android:textStyle="bold" />
+            android:padding="@dimen/padding_5dp">
+            <TextView
+                android:id="@+id/txtId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/id"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/lstIdUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/txtId"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold" />
 
 
-        <TextView
-            android:id="@+id/lstNomeUser"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="@color/colorWhite"
-            android:textStyle="bold" />
+            <TextView
+                android:id="@+id/lstNomeUser"
+                android:layout_below="@+id/lstIdUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold" />
 
 
-        <TextView
-            android:id="@+id/lstUnidade"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="@color/colorWhite"
-            android:textStyle="bold" />
+            <TextView
+                android:id="@+id/lstUnidade"
+                android:layout_below="@+id/lstNomeUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold" />
 
 
-        <TextView
-            android:id="@+id/lstTipoVeiculo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="@color/colorWhite"
-            android:textStyle="bold" />
+            <!--<TextView-->
+                <!--android:id="@+id/lstTipoVeiculo"-->
+                <!--android:layout_below="@+id/lstUnidade"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textAppearance="@style/TextAppearance.AppCompat.Small"-->
+                <!--android:textColor="@color/colorWhite"-->
+                <!--android:textStyle="bold" />-->
 
 
-        <TextView
-            android:id="@+id/lstFuncao"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="@color/colorWhite"
-            android:textStyle="bold" />
+            <TextView
+                android:id="@+id/lstFuncao"
+                android:layout_below="@+id/lstUnidade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold" />
 
 
-        <TextView
-            android:id="@+id/lstPlaca"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="@color/colorWhite"
-            android:textStyle="bold" />
+            <TextView
+                android:id="@+id/lstPlaca"
+                android:layout_below="@+id/lstFuncao"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold" />
 
 
-        <TextView
-            android:id="@+id/lstGerencia"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="@color/colorWhite"
-            android:textStyle="bold" />
+            <TextView
+                android:id="@+id/lstGerencia"
+                android:layout_below="@+id/lstPlaca"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold" />
 
 
-    </LinearLayout>
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
 
 
 </LinearLayout>

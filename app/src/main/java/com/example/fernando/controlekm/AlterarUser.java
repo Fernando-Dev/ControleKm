@@ -17,8 +17,8 @@ import com.example.fernando.controlekm.dominio.Usuario;
 
 public class AlterarUser extends AppCompatActivity {
     private EditText altNome, altPlaca;
-    private Spinner altUnidade, altFuncao, altGerencia;
-    private RadioGroup altTipoVeiculo;
+    private EditText altUnidade, altFuncao, altGerencia;
+//    private RadioGroup altTipoVeiculo;
     private Button btnAlterar, btnVoltar;
     private DBAdapter db;
     private Integer id;
@@ -31,20 +31,11 @@ public class AlterarUser extends AppCompatActivity {
 
 
         altNome = (EditText) findViewById(R.id.altNome);
-        altUnidade = (Spinner) findViewById(R.id.altUnidade);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this, R.array.tipo_unidade, R.layout.spinner_item);
-        altUnidade.setAdapter(adapter);
-        altTipoVeiculo = (RadioGroup) findViewById(R.id.altTipoVeiculo);
-        altFuncao = (Spinner) findViewById(R.id.altFuncao);
-        ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(
-                this, R.array.tipo_funcao, R.layout.spinner_item);
-        altFuncao.setAdapter(adapter1);
+        altUnidade = (EditText)findViewById(R.id.altUnidade);
+//        altTipoVeiculo = (RadioGroup) findViewById(R.id.altTipoVeiculo);
+        altFuncao = (EditText) findViewById(R.id.altFuncao);
         altPlaca = (EditText) findViewById(R.id.altPlaca);
-        altGerencia = (Spinner) findViewById(R.id.altGerencia);
-        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(
-                this, R.array.tipo_gerencia, R.layout.spinner_item);
-        altGerencia.setAdapter(adapter2);
+        altGerencia = (EditText)findViewById(R.id.altGerencia);
         btnAlterar = (Button) findViewById(R.id.btnAlterarUser);
         btnVoltar = (Button) findViewById(R.id.btnVoltarUser);
         db = new DBAdapter(AlterarUser.this);
@@ -74,24 +65,32 @@ public class AlterarUser extends AppCompatActivity {
             db.open();
             Usuario usuario = new Usuario();
             usuario.setId(id);
-            usuario.setNome(altNome.getText().toString());
-            usuario.setUnidade(altUnidade.getSelectedItem().toString());
-            String tipoVeiculo = String.valueOf(altTipoVeiculo.getCheckedRadioButtonId());
-            String veiculoInec = String.valueOf(R.id.altVeiculoInec);
-            String veiculoProprio = String.valueOf(R.id.altVeiculoParticular);
-            String veiculoAlternativo = String.valueOf(R.id.altVeiculoAlternativo);
-            if (tipoVeiculo.equals(veiculoInec)) {
-                usuario.setTipoVeiculo(Constante.TIPO_VEICULO_INEC);
-            } else if (tipoVeiculo.equals(veiculoProprio)) {
-                usuario.setTipoVeiculo(Constante.TIPO_VEICULO_PARTICULAR);
-            } else if (tipoVeiculo.equals(veiculoAlternativo)) {
-                usuario.setTipoVeiculo(Constante.TIPO_VEICULO_ALTERNATIVO);
-            }
-            usuario.setFuncao(altFuncao.getSelectedItem().toString());
+            String nome  = altNome.getText().toString();
+            nome = nome.toUpperCase();
+            usuario.setNome(nome);
+            String unidade = altUnidade.getText().toString();
+            unidade = unidade.toUpperCase();
+            usuario.setUnidade(unidade);
+//            String tipoVeiculo = String.valueOf(altTipoVeiculo.getCheckedRadioButtonId());
+//            String veiculoInec = String.valueOf(R.id.altVeiculoInec);
+//            String veiculoProprio = String.valueOf(R.id.altVeiculoParticular);
+//            String veiculoAlternativo = String.valueOf(R.id.altVeiculoAlternativo);
+//            if (tipoVeiculo.equals(veiculoInec)) {
+//                usuario.setTipoVeiculo(Constante.TIPO_VEICULO_INEC);
+//            } else if (tipoVeiculo.equals(veiculoProprio)) {
+//                usuario.setTipoVeiculo(Constante.TIPO_VEICULO_PARTICULAR);
+//            } else if (tipoVeiculo.equals(veiculoAlternativo)) {
+//                usuario.setTipoVeiculo(Constante.TIPO_VEICULO_ALTERNATIVO);
+//            }
+            String funcao = altFuncao.getText().toString();
+            funcao = funcao.toUpperCase();
+            usuario.setFuncao(funcao);
             String placa = altPlaca.getText().toString();
             placa = placa.toUpperCase();
             usuario.setPlaca(placa);
-            usuario.setGerencia(altGerencia.getSelectedItem().toString());
+            String gerencia = altGerencia.getText().toString();
+            gerencia = gerencia.toUpperCase();
+            usuario.setGerencia(gerencia);
             db.updateUser(usuario);
 
             Toast.makeText(getBaseContext(), "Alterado com sucesso!", Toast.LENGTH_LONG).show();
@@ -108,30 +107,23 @@ public class AlterarUser extends AppCompatActivity {
                 new String[]{id.toString()});
         c.moveToFirst();
         altNome.setText(c.getString(c.getColumnIndex(DatabaseHelper.KEY_NOME)));
-        altUnidade.setPrompt(c.getString(c.getColumnIndex(DatabaseHelper.KEY_UNIDADE)));
-        String cursorVeiculo = c.getString(2);
-        Integer veiculoInec = R.id.altVeiculoInec;
-        Integer veiculoProprio = R.id.altVeiculoParticular;
-        Integer veiculoAlternativo = R.id.altVeiculoAlternativo;
-        if (cursorVeiculo.equals(Constante.TIPO_VEICULO_INEC)) {
-                altTipoVeiculo.check(veiculoInec);
-        } else if (cursorVeiculo.equals(Constante.TIPO_VEICULO_PARTICULAR)) {
-            altTipoVeiculo.check(veiculoProprio);
-        } else if (cursorVeiculo.equals(Constante.TIPO_VEICULO_ALTERNATIVO)) {
-            altTipoVeiculo.check(veiculoAlternativo);
-        }
-        if(altFuncao.getSelectedItem().equals(c.getString(3))){
-
-        }
-        altFuncao.setPrompt(c.getString(c.getColumnIndex(DatabaseHelper.KEY_FUNCAO)));
+        altUnidade.setText(c.getString(c.getColumnIndex(DatabaseHelper.KEY_UNIDADE)));
+//        String cursorVeiculo = c.getString(2);
+//        Integer veiculoInec = R.id.altVeiculoInec;
+//        Integer veiculoProprio = R.id.altVeiculoParticular;
+//        Integer veiculoAlternativo = R.id.altVeiculoAlternativo;
+//        if (cursorVeiculo.equals(Constante.TIPO_VEICULO_INEC)) {
+//                altTipoVeiculo.check(veiculoInec);
+//        } else if (cursorVeiculo.equals(Constante.TIPO_VEICULO_PARTICULAR)) {
+//            altTipoVeiculo.check(veiculoProprio);
+//        } else if (cursorVeiculo.equals(Constante.TIPO_VEICULO_ALTERNATIVO)) {
+//            altTipoVeiculo.check(veiculoAlternativo);
+//        }
+        altFuncao.setText(c.getString(c.getColumnIndex(DatabaseHelper.KEY_FUNCAO)));
         altPlaca.setText(c.getString(c.getColumnIndex(DatabaseHelper.KEY_PLACA)));
-        altGerencia.setPrompt(c.getString(c.getColumnIndex(DatabaseHelper.KEY_GERENCIA)));
+        altGerencia.setText(c.getString(c.getColumnIndex(DatabaseHelper.KEY_GERENCIA)));
 
         c.close();
-
-
-
-
     }
 
     @Override

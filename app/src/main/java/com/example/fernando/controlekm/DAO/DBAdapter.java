@@ -34,7 +34,6 @@ import static com.example.fernando.controlekm.DatabaseHelper.KEY_NOME;
 import static com.example.fernando.controlekm.DatabaseHelper.KEY_PLACA;
 import static com.example.fernando.controlekm.DatabaseHelper.KEY_QTD_CLIENTE;
 import static com.example.fernando.controlekm.DatabaseHelper.KEY_ROWID;
-import static com.example.fernando.controlekm.DatabaseHelper.KEY_TIPO_VEICULO;
 import static com.example.fernando.controlekm.DatabaseHelper.KEY_UNIDADE;
 
 
@@ -77,7 +76,7 @@ public class DBAdapter {
     //    INSERINDO quilometragem NO BANCO DE DADOS
     public long inserirKm(Km km) {
         ContentValues initialValues = new ContentValues();
-        initialValues.put(DatabaseHelper.KEY_DATA, km.getData().getTime());
+        initialValues.put(DatabaseHelper.KEY_DATA, km.getData());
         initialValues.put(DatabaseHelper.KEY_ITINERARIO, km.getItinerario());
         initialValues.put(DatabaseHelper.KEY_QTD_CLIENTE, km.getQtdCliente());
         initialValues.put(DatabaseHelper.KEY_KM_INICIAL, km.getKmInicial());
@@ -91,7 +90,6 @@ public class DBAdapter {
         ContentValues initialValues = new ContentValues();
         initialValues.put(DatabaseHelper.KEY_NOME, usuario.getNome());
         initialValues.put(DatabaseHelper.KEY_UNIDADE, usuario.getUnidade());
-        initialValues.put(DatabaseHelper.KEY_TIPO_VEICULO, usuario.getTipoVeiculo());
         initialValues.put(DatabaseHelper.KEY_FUNCAO, usuario.getFuncao());
         initialValues.put(DatabaseHelper.KEY_PLACA, usuario.getPlaca());
         initialValues.put(DatabaseHelper.KEY_GERENCIA, usuario.getGerencia());
@@ -108,7 +106,7 @@ public class DBAdapter {
     //    retornando todos os usuarios
     public Cursor getAllUsers() {
         return db.query(DATABASE_TABLE_USERS,
-                new String[]{KEY_ID_USERS, KEY_NOME, KEY_UNIDADE, KEY_TIPO_VEICULO, KEY_FUNCAO, KEY_PLACA, KEY_GERENCIA}, null, null, null,
+                new String[]{KEY_ID_USERS, KEY_NOME, KEY_UNIDADE, KEY_FUNCAO, KEY_PLACA, KEY_GERENCIA}, null, null, null,
                 null, null, null);
     }
 
@@ -122,8 +120,8 @@ public class DBAdapter {
         return removidos > 0;
     }
 
-    //    DELELTANDO UM USUARIO
     public boolean deleteUser(Integer rowId) {
+        //    DELELTANDO UM USUARIO
         String whereClause = DatabaseHelper.KEY_ID_USERS + " = ?";
         String[] whereArgs = new String[]{rowId.toString()};
         int removidos = open().delete(DatabaseHelper.DATABASE_TABLE_USERS,
@@ -149,7 +147,7 @@ public class DBAdapter {
     //criando arquivo cursor para listar quilometragens
     private Km criarKm(Cursor cursor) {
         Km km = new Km(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.KEY_ROWID)),
-                new Date(cursor.getLong(cursor.getColumnIndex(DatabaseHelper.KEY_DATA))),
+                cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_DATA)),
                 cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_ITINERARIO)),
                 cursor.getInt(cursor.getColumnIndex(DatabaseHelper.KEY_QTD_CLIENTE)),
                 cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_KM_INICIAL)),
@@ -161,7 +159,7 @@ public class DBAdapter {
 
     public List<Usuario> listaUsuario() {
         Cursor cursor = read().query(DatabaseHelper.DATABASE_TABLE_USERS, new String[]{KEY_ID_USERS,
-                KEY_NOME, KEY_UNIDADE, KEY_TIPO_VEICULO, KEY_FUNCAO,
+                KEY_NOME, KEY_UNIDADE, KEY_FUNCAO,
                 KEY_PLACA, KEY_GERENCIA}, null, null, null, null, null);
         List<Usuario> usuarios = new ArrayList<Usuario>();
         while (cursor.moveToNext()) {
@@ -177,7 +175,7 @@ public class DBAdapter {
 
     public Object returnIdUser(Integer id) {
         Cursor cursor = read().query(true, DatabaseHelper.DATABASE_TABLE_USERS, new String[]{KEY_ID_USERS,
-                        KEY_NOME, KEY_UNIDADE, KEY_TIPO_VEICULO, KEY_FUNCAO, KEY_PLACA, KEY_GERENCIA},
+                        KEY_NOME, KEY_UNIDADE, KEY_FUNCAO, KEY_PLACA, KEY_GERENCIA},
                 DatabaseHelper.KEY_ID_USERS + " = ?",
                 new String[]{id.toString()}, null, null, null, null);
         if (cursor.moveToNext()) {
@@ -206,7 +204,6 @@ public class DBAdapter {
         Usuario usuario = new Usuario(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.KEY_ID_USERS)),
                 cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_NOME)),
                 cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_UNIDADE)),
-                cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_TIPO_VEICULO)),
                 cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_FUNCAO)),
                 cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_PLACA)),
                 cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_GERENCIA)));
@@ -232,7 +229,7 @@ public class DBAdapter {
 
     public Usuario getUsuario(Integer id) {
         Cursor cursor = read().query(true, DatabaseHelper.DATABASE_TABLE_USERS, new String[]{KEY_ID_USERS, KEY_NOME,
-                        KEY_UNIDADE, KEY_TIPO_VEICULO, KEY_FUNCAO, KEY_PLACA, KEY_GERENCIA},
+                        KEY_UNIDADE, KEY_FUNCAO, KEY_PLACA, KEY_GERENCIA},
                 DatabaseHelper.KEY_ROWID + " = ?",
                 new String[]{id.toString()}, null, null, null, null);
         if (cursor.moveToNext()) {
@@ -251,7 +248,7 @@ public class DBAdapter {
         String[] selecaoArgumento = {"" + km.getId()};
         ContentValues args = new ContentValues();
         args.put(DatabaseHelper.KEY_ROWID, km.getId());
-        args.put(DatabaseHelper.KEY_DATA, km.getData().getTime());
+        args.put(DatabaseHelper.KEY_DATA, km.getData());
         args.put(DatabaseHelper.KEY_ITINERARIO, km.getItinerario());
         args.put(DatabaseHelper.KEY_QTD_CLIENTE, km.getQtdCliente());
         args.put(DatabaseHelper.KEY_KM_INICIAL, km.getKmInicial());
@@ -268,7 +265,6 @@ public class DBAdapter {
         args.put(DatabaseHelper.KEY_ID_USERS, usuario.getId());
         args.put(DatabaseHelper.KEY_NOME, usuario.getNome());
         args.put(DatabaseHelper.KEY_UNIDADE, usuario.getUnidade());
-        args.put(DatabaseHelper.KEY_TIPO_VEICULO, usuario.getTipoVeiculo());
         args.put(DatabaseHelper.KEY_FUNCAO, usuario.getFuncao());
         args.put(DatabaseHelper.KEY_PLACA, usuario.getPlaca());
         args.put(DatabaseHelper.KEY_GERENCIA, usuario.getGerencia());

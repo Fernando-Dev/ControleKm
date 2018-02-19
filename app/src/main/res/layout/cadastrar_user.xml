@@ -27,64 +27,78 @@
 
         <requestFocus />
 
-        <Spinner
-            android:id="@+id/spUnidade"
+        <EditText
+            android:id="@+id/edtUnidade"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@drawable/edittext_border_radius"
-            android:padding="7dp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/tipo_veiculo"
+            android:ems="10"
+            android:hint="@string/unidade"
+            android:inputType="text"
+            android:padding="7dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@color/colorWhite" />
+            android:textColorHint="@color/colorTitle" />
 
-        <RadioGroup
-            android:id="@+id/rgTipoVeiculo"
+        <requestFocus />
+
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:text="@string/tipo_veiculo"-->
+            <!--android:textAppearance="@style/TextAppearance.AppCompat.Medium"-->
+            <!--android:textColor="@color/colorWhite" />-->
+
+        <!--<RadioGroup-->
+            <!--android:id="@+id/rgTipoVeiculo"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:background="@drawable/edittext_border_radius"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:padding="1dp">-->
+
+            <!--<RadioButton-->
+                <!--android:id="@+id/veiculoInec"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:padding="7dp"-->
+                <!--android:text="@string/inec"-->
+                <!--android:textColor="@color/colorTitle" />-->
+
+            <!--<RadioButton-->
+                <!--android:id="@+id/veiculoParticular"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:checked="true"-->
+                <!--android:padding="7dp"-->
+                <!--android:text="@string/particular"-->
+                <!--android:textColor="@color/colorTitle" />-->
+
+            <!--<RadioButton-->
+                <!--android:id="@+id/veiculoAlternativo"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:padding="7dp"-->
+                <!--android:text="@string/alternativo"-->
+                <!--android:textColor="@color/colorTitle" />-->
+        <!--</RadioGroup>-->
+
+        <EditText
+            android:id="@+id/edtFuncao"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@drawable/edittext_border_radius"
-            android:orientation="horizontal"
-            android:padding="1dp">
+            android:ems="10"
+            android:hint="@string/funcao"
+            android:inputType="text"
+            android:padding="7dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColorHint="@color/colorTitle" />
 
-            <RadioButton
-                android:id="@+id/veiculoInec"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="7dp"
-                android:text="@string/inec"
-                android:textColor="@color/colorTitle" />
-
-            <RadioButton
-                android:id="@+id/veiculoProprio"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:padding="7dp"
-                android:text="@string/particular"
-                android:textColor="@color/colorTitle" />
-
-            <RadioButton
-                android:id="@+id/veiculoAlternativo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="7dp"
-                android:text="@string/alternativo"
-                android:textColor="@color/colorTitle" />
-        </RadioGroup>
-
-        <Spinner
-            android:id="@+id/spFuncao"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/edittext_border_radius"
-            android:padding="7dp" />
+        <requestFocus />
 
         <EditText
             android:id="@+id/edtPlaca"
@@ -100,21 +114,27 @@
             android:textColorHint="@color/colorTitle" />
 
         <requestFocus />
-
-        <Spinner
-            android:id="@+id/spGerencia"
+        <EditText
+            android:id="@+id/edtGerencia"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@drawable/edittext_border_radius"
-            android:padding="7dp" />
+            android:ems="10"
+            android:hint="@string/gerencia"
+            android:inputType="text"
+            android:padding="7dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColorHint="@color/colorTitle" />
+
+        <requestFocus />
 
         <Button
             android:id="@+id/btnSalvarUser"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="22dp"
-            android:background="@drawable/btn_border_radius"
+            android:background="@drawable/botao"
             android:text="@string/salvar"
             android:textColor="@color/colorBtnText" />
 
@@ -123,7 +143,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="22dp"
-            android:background="@drawable/btn_border_radius"
+            android:background="@drawable/botao"
             android:text="@string/voltar"
             android:textColor="@color/colorBtnText" />
 

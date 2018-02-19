@@ -21,7 +21,7 @@
     <string name="editar">Editar</string>
     <string name="remover">Remover</string>
     <string name="alterar">Alterar</string>
-    <string name="id">Id</string>
+    <string name="id">Id: </string>
     <string name="listar">Listar</string>
     <string name="gerar_pdf">Gerar PDF</string>
     <string name="empty">Sem eventos!</string>
@@ -34,34 +34,14 @@
     <string name="qtde_cliente"> Quant. de clientes</string>
     <string name="realatorio">Relatório</string>
     <string name="listar_usuario">Usuários</string>
+    <string name="primeira_data">1ª Data</string>
+    <string name="segunda_data">2ª Data</string>
+    <string name="gerencia">Gerência</string>
+    <string name="unidade">Unidade</string>
+    <string name="funcao">Função</string>
 
 
-    <string-array name="tipo_unidade">
-        <item>Unidade</item>
-        <item>Caxias</item>
 
-
-    </string-array>
-    <string-array name="tipo_funcao">
-        <item>Função</item>
-        <item>Agente de crédito</item>
-        <item>Coordenador</item>
-    </string-array>
-
-    <string-array name="tipo_gerencia">
-        <item>Gerencia</item>
-        <item>Alagoas</item>
-        <item>Bahia</item>
-        <item>Ceará</item>
-        <item>Espírito Santo</item>
-        <item>Maranhão</item>
-        <item>Minas Gerais</item>
-        <item>Paraíba</item>
-        <item>Pernambuco</item>
-        <item>Piauí</item>
-        <item>Rio Grande do Norte</item>
-        <item>Sergipe</item>
-    </string-array>
 
 
 </resources>
