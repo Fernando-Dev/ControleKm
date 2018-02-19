@@ -268,20 +268,19 @@ public class GeradorPdf extends AppCompatActivity {
     private void criarPdf() throws FileNotFoundException, DocumentException {
         SQLiteDatabase database = db.read();
 
-//        try {
-//            data1 = desenverterData(btnPrimeiraData.getText().toString());
-//            data2 = desenverterData(btnSegundaData.getText().toString());
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            data1 = desenverterData(btnPrimeiraData.getText().toString());
+            data2 = desenverterData(btnSegundaData.getText().toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         File docsFolder = new File(Environment.getExternalStorageDirectory() + "/Documents");
         docsFolder.mkdir();
 
 
         pdfFile = new File(docsFolder.getAbsolutePath(), "RelatórioKm.pdf");
-
-        c = database.rawQuery("SELECT * FROM kms WHERE data ORDER BY data", null);
+        c = database.rawQuery("SELECT * FROM kms WHERE data BETWEEN '" + data1 + "' AND '" + data2 + "' ORDER BY data", null);
         Cursor cursor = database.rawQuery("SELECT * FROM usuarios", null);
 
         OutputStream output = new FileOutputStream(pdfFile);
@@ -297,13 +296,10 @@ public class GeradorPdf extends AppCompatActivity {
         table0.setWidthPercentage(100f);
 
         PdfPTable table1 = new PdfPTable(2);
-//        table1.setWidthPercentage(100f);
-//        table1.setWidths(new int[]{70, 30/*, 5, 10, 5, 5*/});
         cursor.moveToFirst();
         for (int b = 0; b < cursor.getCount(); b++) {
             String nome = cursor.getString(1);
             String unidade = cursor.getString(2);
-//            String tipoVeiculo = cursor.getString(3);
             String funcao = cursor.getString(3);
             String placa = cursor.getString(4);
             String gerencia = cursor.getString(5);
@@ -321,7 +317,7 @@ public class GeradorPdf extends AppCompatActivity {
 
 
         PdfPTable table = new PdfPTable(7);
-//        table.setWidthPercentage(100f);
+
         table.setWidths(new int[]{1, 2, 10, 2, 2, 2, 2});
         table.addCell(createCell("Id", 2, 1, Element.ALIGN_LEFT));
         table.addCell(createCell("Data", 2, 1, Element.ALIGN_LEFT));
