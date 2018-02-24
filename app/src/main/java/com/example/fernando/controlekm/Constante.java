@@ -5,6 +5,7 @@ package com.example.fernando.controlekm;
  */
 
 public class Constante {
+    public static final Double VALOR_KM_RODADO = 0.35;
     public static final String KEY_ROWID = "km_id";
     public static final String KEY_USER_ID = "user_id";
     public static final String TIPO_VEICULO_INEC = "INEC";

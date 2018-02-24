@@ -39,7 +39,7 @@ public class ListarKm extends ListActivity implements AdapterView.OnItemClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
 
         dbAdapter = new DBAdapter(this);
 

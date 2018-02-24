@@ -4,10 +4,12 @@ import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -17,6 +19,7 @@ import android.os.Environment;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +27,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fernando.controlekm.DAO.DBAdapter;
@@ -44,6 +48,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -58,20 +64,24 @@ import java.util.Locale;
 public class GeradorPdf extends AppCompatActivity {
     private Cursor c;
     private static final String TAG = "PdfCreatorActivity";
-    private File pdfFile;
+    private File pdfFile, docsFolder;
     final private int REQUEST_CODE_ASK_PERMISSIONS = 111;
     private SimpleDateFormat dateFormat;
     private DBAdapter db;
-    private ProgressDialog mProgressDialog;
+    private SQLiteDatabase database;
+    private ProgressBar progressBar;
     private int ano, mes, dia;
     private Date dataPdf1, dataPdf2;
     private Button btnPrimeiraData, btnSegundaData;
-    private String data1, data2;
+    private String data1, data2, maxData, minData;
+    private TextView txtError1, txtError2;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gerar_relatorio);
+        db = new DBAdapter(this);
 
         Calendar calendar = Calendar.getInstance();
         ano = calendar.get(Calendar.YEAR);
@@ -82,26 +92,38 @@ public class GeradorPdf extends AppCompatActivity {
 
         btnPrimeiraData = (Button) findViewById(R.id.btnDataPdf1);
         btnSegundaData = (Button) findViewById(R.id.btnDataPdf2);
+        txtError1 = (TextView) findViewById(R.id.txtError1);
+        txtError2 = (TextView) findViewById(R.id.txtError2);
 
 
-        db = new DBAdapter(this);
+//        GeradorPdf geradorPdf = new GeradorPdf();
+//        btnPrimeiraData.setText(geradorPdf.firstData());
+//        btnSegundaData.setText(geradorPdf.lastData());
+
 
         Button gerarRelatorio = (Button) findViewById(R.id.btnGerarPdf);
         Button voltarPdf = (Button) findViewById(R.id.btnVoltarPdf);
-        Button filtrarData = (Button) findViewById(R.id.btnFiltroPdf);
-
-
-//        filtrarData.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Toast.makeText(getBaseContext(), "Filtro efetuado com sucesso!", Toast.LENGTH_LONG).show();
-//            }
-//        });
 
         voltarPdf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
+            }
+        });
+        gerarRelatorio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (btnPrimeiraData.getText().toString().isEmpty()) {
+                    txtError1.setText(R.string.campo_vazio);
+                } else {
+                    txtError1.setText("");
+                }
+                if (btnSegundaData.getText().toString().isEmpty()) {
+                    txtError2.setText(R.string.campo_vazio);
+                } else {
+                    txtError2.setText("");
+                    chamaPdf();
+                }
             }
         });
 
@@ -132,7 +154,7 @@ public class GeradorPdf extends AppCompatActivity {
 
     }
 
-    public void chamaPdf(View v) {
+    public void chamaPdf() {
         ProgressData proressData = new ProgressData();
         proressData.execute((Void[]) null);
 
@@ -140,18 +162,41 @@ public class GeradorPdf extends AppCompatActivity {
     }
 
 
-    private class ProgressData extends AsyncTask<Void, Void, Void> {
+    private class ProgressData extends AsyncTask<Void, Integer, Void> {
+        int barraMax = 100;
 
         @Override
-        protected Void doInBackground(Void... params/*Integer... integers*/) {
-            try {
-                PdfWrapper();
-                Looper.prepare();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (DocumentException e) {
-                e.printStackTrace();
-            }
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressBar = (ProgressBar) findViewById(R.id.progressBar2);
+            progressBar.setVisibility(View.VISIBLE);
+            progressBar.setMax(barraMax);
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values[0]);
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+                try {
+                    PdfWrapper();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (DocumentException e) {
+                    e.printStackTrace();
+                }
+//                try {
+//                    Looper.prepare();
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                } catch (DocumentException e) {
+//                    e.printStackTrace();
+//                }
+                this.publishProgress(params);
+
 //            int progress = 0;
 //            int total = integers[0];
 //            while (progress <= total) {
@@ -172,6 +217,10 @@ public class GeradorPdf extends AppCompatActivity {
 //            }
 //            return "done";
             return null;
+        }
+
+        private Void[] publishProgress(Void[] params) {
+            return params;
         }
 
 //        @Override
@@ -198,6 +247,7 @@ public class GeradorPdf extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void aVoid) {
+            progressBar.setVisibility(View.INVISIBLE);
             previaPdf();
             super.onPostExecute(aVoid);
         }
@@ -265,8 +315,47 @@ public class GeradorPdf extends AppCompatActivity {
                 .show();
     }
 
+//    private String firstData() {
+//        DatabaseHelper databaseHelper = new DatabaseHelper(this);
+////        SQLiteDatabase database = databaseHelper.getReadableDatabase();
+//        SQLiteDatabase database = db.read();
+//        Cursor cs = database.rawQuery("SELECT MIN(data) FROM kms", null);
+//
+//        cs.moveToFirst();
+//        for (int i = 1; i < cs.getCount(); i++) {
+//            minData = cs.getString(cs.getColumnIndex(DatabaseHelper.KEY_DATA));
+//            try {
+//                minData = inverteOrdemData(minData);
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+//            cs.moveToNext();
+//        }
+//        cs.close();
+//        return minData;
+//    }
+
+//    private String lastData() {
+//        DatabaseHelper databaseHelper = new DatabaseHelper(this);
+//        SQLiteDatabase database = databaseHelper.getReadableDatabase();
+////        SQLiteDatabase database = db.read();
+//        Cursor cr = database.rawQuery("SELECT MAX(data) FROM kms", null);
+//        cr.moveToFirst();
+//        for (int d = 1; d < cr.getCount(); d++) {
+//            maxData = cr.getString(1);
+//            try {
+//                maxData = inverteOrdemData(maxData);
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+//            cr.moveToNext();
+//        }
+//        cr.close();
+//        return maxData;
+//    }
+
     private void criarPdf() throws FileNotFoundException, DocumentException {
-        SQLiteDatabase database = db.read();
+        database = db.read();
 
         try {
             data1 = desenverterData(btnPrimeiraData.getText().toString());
@@ -275,7 +364,7 @@ public class GeradorPdf extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        File docsFolder = new File(Environment.getExternalStorageDirectory() + "/Documents");
+        docsFolder = new File(Environment.getExternalStorageDirectory() + "/Documents");
         docsFolder.mkdir();
 
 
@@ -295,7 +384,7 @@ public class GeradorPdf extends AppCompatActivity {
         PdfPTable table0 = new PdfPTable(1);
         table0.setWidthPercentage(100f);
 
-        PdfPTable table1 = new PdfPTable(2);
+        PdfPTable table1 = new PdfPTable(3);
         cursor.moveToFirst();
         for (int b = 0; b < cursor.getCount(); b++) {
             String nome = cursor.getString(1);
@@ -308,7 +397,7 @@ public class GeradorPdf extends AppCompatActivity {
             table1.addCell(createCell("Função: " + funcao, 1, 1, Element.ALIGN_LEFT));
             table1.addCell(createCell("Placa: " + placa, 1, 1, Element.ALIGN_LEFT));
             table1.addCell(createCell("Gerência: " + gerencia, 1, 1, Element.ALIGN_LEFT));
-            table1.addCell(createCell("", 1, 1, Element.ALIGN_LEFT));
+            table1.addCell(createCell("Mês de Competência: ", 1, 1, Element.ALIGN_LEFT));
 
             cursor.moveToNext();
         }
@@ -316,15 +405,16 @@ public class GeradorPdf extends AppCompatActivity {
         table0.addCell(new PdfPCell(table1));
 
 
-        PdfPTable table = new PdfPTable(7);
+        PdfPTable table = new PdfPTable(8);
 
-        table.setWidths(new int[]{1, 2, 10, 2, 2, 2, 2});
+        table.setWidths(new int[]{1, 2, 10, 2, 2, 2, 2, 2});
         table.addCell(createCell("Id", 2, 1, Element.ALIGN_LEFT));
         table.addCell(createCell("Data", 2, 1, Element.ALIGN_LEFT));
         table.addCell(createCell("Itinerário", 2, 1, Element.ALIGN_LEFT));
         table.addCell(createCell("Quant. Clientes", 2, 1, Element.ALIGN_LEFT));
         table.addCell(createCell("Km inicial", 2, 1, Element.ALIGN_LEFT));
         table.addCell(createCell("Km final", 2, 1, Element.ALIGN_LEFT));
+        table.addCell(createCell("Km Percorrido", 2, 1, Element.ALIGN_LEFT));
         table.addCell(createCell("Total", 2, 1, Element.ALIGN_LEFT));
 
 
@@ -343,14 +433,18 @@ public class GeradorPdf extends AppCompatActivity {
             String qtdCliente = c.getString(c.getColumnIndex(DatabaseHelper.KEY_QTD_CLIENTE));
             String kmInicial = c.getString(c.getColumnIndex(DatabaseHelper.KEY_KM_INICIAL));
             String kmFinal = c.getString(c.getColumnIndex(DatabaseHelper.KEY_KM_FINAL));
+            String kmPercorrido = String.valueOf(c.getInt(c.getColumnIndex(DatabaseHelper.KEY_KM_TOTAL)));
             String kmTotal = String.valueOf(c.getInt(c.getColumnIndex(DatabaseHelper.KEY_KM_TOTAL)));
-
+            Double _kmTotal = Double.parseDouble(kmTotal);
+            _kmTotal = _kmTotal * Constante.VALOR_KM_RODADO;
+            kmTotal = formatoMoeda(_kmTotal);
             table.addCell(createCell(id, 1, 1, Element.ALIGN_LEFT));
             table.addCell(createCell(data, 1, 1, Element.ALIGN_LEFT));
             table.addCell(createCell(itinerario, 1, 1, Element.ALIGN_LEFT));
             table.addCell(createCell(qtdCliente, 1, 1, Element.ALIGN_LEFT));
             table.addCell(createCell(kmInicial, 1, 1, Element.ALIGN_LEFT));
             table.addCell(createCell(kmFinal, 1, 1, Element.ALIGN_LEFT));
+            table.addCell(createCell(kmPercorrido, 1, 1, Element.ALIGN_LEFT));
             table.addCell(createCell(kmTotal, 1, 1, Element.ALIGN_LEFT));
 
             c.moveToNext();
@@ -362,6 +456,12 @@ public class GeradorPdf extends AppCompatActivity {
         documento.addCreationDate();
         documento.close();
 
+    }
+
+    private static String formatoMoeda(Double valor) {
+        Locale ptBr = new Locale("pt", "BR");
+        String vlr = NumberFormat.getCurrencyInstance(ptBr).format(valor);
+        return vlr;
     }
 
     private static String inverteOrdemData(String data) throws ParseException {
@@ -381,20 +481,19 @@ public class GeradorPdf extends AppCompatActivity {
     }
 
     private void previaPdf() {
-
-        PackageManager packageManager = getPackageManager();
-        Intent testIntent = new Intent(Intent.ACTION_VIEW);
-        testIntent.setType("aplicação / pdf");
-        List list = packageManager.queryIntentActivities(testIntent, PackageManager.MATCH_DEFAULT_ONLY);
         if (pdfFile.exists()) {
-            Intent intent = new Intent();
-            intent.setAction(Intent.ACTION_VIEW);
-            Uri uri = Uri.fromFile(pdfFile);
-            intent.setDataAndType(uri, "aplicação / pdf");
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/PDF";
+            new File(path, "RelatórioKm.pdf");
+            intent.setDataAndType(Uri.fromFile(pdfFile), "application/pdf");
             startActivity(intent);
-
         } else {
-            Toast.makeText(getBaseContext(), "Baixe um Visualizador de PDF para ver o PDF gerado", Toast.LENGTH_LONG).show();
+            new AlertDialog.Builder(this)
+                    .setMessage("Baixe um visualizador de PDF para ver o PDF gerado")
+                    .setPositiveButton("OK", null)
+                    .create()
+                    .show();
+
         }
     }
 

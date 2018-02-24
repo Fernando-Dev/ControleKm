@@ -29,7 +29,9 @@
         <activity
             android:name=".CadastrarUsuario"
             android:label="@string/cadastrar" />
-        <activity android:name=".ListUser" />
+        <activity android:name=".ListUser"
+            android:label="@string/listar"
+            android:theme="@style/AppTheme"/>
         <activity
             android:name=".GeradorPdf"
             android:label="@string/realatorio" />
@@ -42,7 +44,9 @@
         <activity
             android:name=".AlterarUser"
             android:label="@string/alterar" />
-        <activity android:name=".ListarKm"/>
+        <activity android:name=".ListarKm"
+            android:label="@string/listar"
+            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>

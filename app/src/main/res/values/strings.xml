@@ -39,6 +39,9 @@
     <string name="gerencia">Gerência</string>
     <string name="unidade">Unidade</string>
     <string name="funcao">Função</string>
+    <string name="data_inicial">Data Inicial</string>
+    <string name="data_final">Data Final</string>
+    <string name="campo_vazio">Campo Vazio!</string>
 
 
 

@@ -10,6 +10,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:padding="10dp">
 
 
@@ -21,7 +22,7 @@
             android:background="@drawable/btn_data_boder_radius"
             android:inputType="date"
             android:onClick="selecionarData"
-            android:text="@string/segunda_data"
+            android:hint="@string/data_final"
             android:textColor="@color/colorTitle"
             android:textStyle="bold"
             android:layout_alignParentTop="true"
@@ -36,10 +37,10 @@
             android:background="@drawable/btn_data_boder_radius"
             android:inputType="date"
             android:onClick="selecionarData"
-            android:text="@string/primeira_data"
+            android:hint="@string/data_inicial"
             android:textColor="@color/colorTitle"
             android:textStyle="bold"
-            android:layout_centerVertical="true"
+            android:layout_alignParentTop="true"
             android:layout_toStartOf="@+id/textView10"
             android:layout_marginEnd="26dp" />
 
@@ -55,27 +56,42 @@
             android:text="à"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/colorWhite" />
+        <TextView
+            android:id="@+id/txtError1"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btnDataPdf1"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@color/colorError"
+            android:layout_alignEnd="@+id/btnDataPdf1"
+            android:layout_alignParentStart="true" />
+        <TextView
+            android:id="@+id/txtError2"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btnDataPdf2"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@color/colorError"
+            android:layout_alignParentEnd="true"
+            android:layout_alignStart="@+id/btnDataPdf2" />
 
 
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/btnFiltroPdf"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/botao"
-        android:onClick="chamaPdf"
-        android:text="Filtro"
-        android:textColor="@color/colorBtnText" />
 
+    <ProgressBar
+        android:id="@+id/progressBar2"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:max="100"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/btnGerarPdf"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/botao"
         android:text="@string/gerar_pdf"
         android:textColor="@color/colorBtnText" />

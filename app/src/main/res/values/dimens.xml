@@ -2,4 +2,5 @@
 <resources>
     <dimen name="padding_padrao">10dp</dimen>
     <dimen name="padding_5dp">5dp</dimen>
+    <dimen name="fonteError">10sp</dimen>
 </resources>
