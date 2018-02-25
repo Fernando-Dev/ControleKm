@@ -42,6 +42,8 @@
     <string name="data_inicial">Data Inicial</string>
     <string name="data_final">Data Final</string>
     <string name="campo_vazio">Campo Vazio!</string>
+    <string name="texto_info_inicio">Carregando... Aguarde por favor!</string>
+    <string name="texto_info_final">Finalizando...</string>
 
 
 
