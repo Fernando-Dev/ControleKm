@@ -11,8 +11,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.view.ContextMenu;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,25 +40,38 @@ import java.util.Map;
  * Created by Flavia on 01/01/2018.
  */
 
-public class ListUser extends ListActivity implements AdapterView.OnItemClickListener {
+public class ListUser extends ActionBarActivity implements AdapterView.OnItemClickListener {
 
     private List<Map<String, Object>> usuarios;
     private DBAdapter dbAdapter;
     private String data;
     private String Id;
+    private ListView listView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.consulta_user);
 
         dbAdapter = new DBAdapter(this);
 
-        getListView().setOnItemClickListener(ListUser.this);
+        listView = (ListView) findViewById(R.id.lv);
 
-        registerForContextMenu(getListView());
+        listView.setOnItemClickListener(ListUser.this);
+
+        registerForContextMenu(listView);
 
         new Task().execute((Void[]) null);
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.lista_usuario_menu_busca, menu);
+        MenuItem searchItem = menu.findItem(R.id.buscarUsuario);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        //        searchView.setOnQueryTextListener(this);
+        return super.onCreateOptionsMenu(menu);
     }
 
     private class Task extends AsyncTask<Void, Void, List<Map<String, Object>>> {
@@ -69,7 +86,7 @@ public class ListUser extends ListActivity implements AdapterView.OnItemClickLis
             int[] para = {R.id.lstIdUser, R.id.lstNomeUser, R.id.lstUnidade, R.id.lstFuncao,
                     R.id.lstPlaca, R.id.lstGerencia};
             SimpleAdapter simpleAdapter = new SimpleAdapter(ListUser.this, maps, R.layout.listar_users, de, para);
-            setListAdapter(simpleAdapter);
+            listView.setAdapter(simpleAdapter);
         }
     }
 
@@ -82,7 +99,6 @@ public class ListUser extends ListActivity implements AdapterView.OnItemClickLis
             item.put("id", usuario.getId());
             item.put("nome", "Nome: " + usuario.getNome());
             item.put("unidade", "Unidade: " + usuario.getUnidade());
-//            item.put("tipoVeiculo", "Veículo: " + usuario.getTipoVeiculo());
             item.put("funcao", "Função: " + usuario.getFuncao());
             item.put("placa", "Placa: " + usuario.getPlaca());
             item.put("gerencia", "Gerência: " + usuario.getGerencia());
@@ -105,7 +121,6 @@ public class ListUser extends ListActivity implements AdapterView.OnItemClickLis
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         MenuInflater inflater = getMenuInflater();
-        setTitle(R.string.opcoes);
         menu.setHeaderTitle(R.string.opcoes);
         inflater.inflate(R.menu.lista_usuario_menu, menu);
     }
@@ -125,7 +140,7 @@ public class ListUser extends ListActivity implements AdapterView.OnItemClickLis
                                                 (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
                                         int position = info.position;
                                         usuarios.remove(position);
-                                        getListView().invalidateViews();
+                                        listView.invalidateViews();
                                         data = "";
                                         dbAdapter.deleteUser(Integer.valueOf(Id));
                                     }

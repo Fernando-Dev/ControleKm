@@ -1,18 +1,26 @@
 package com.example.fernando.controlekm;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fernando.controlekm.DAO.DBAdapter;
@@ -27,31 +35,112 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class ListarKm extends ListActivity implements AdapterView.OnItemClickListener {
+public class ListarKm extends AppCompatActivity implements AdapterView.OnItemClickListener/*,
+        SearchView.OnQueryTextListener*/ {
 
     private DBAdapter dbAdapter;
     private List<Map<String, Object>> kms;
     private SimpleDateFormat dateFormat;
     private String data;
     private Integer Id;
+    private ListView listView;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+        setContentView(R.layout.consulta_km);
+
+
+        listView = (ListView) findViewById(R.id.listView);
 
         dbAdapter = new DBAdapter(this);
 
         dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.CANADA);
 
-        getListView().setOnItemClickListener(ListarKm.this);
+        listView.setOnItemClickListener(ListarKm.this);
 
-        registerForContextMenu(getListView());
-
+        registerForContextMenu(listView);
         new Task().execute((Void[]) null);
 
+//        if (savedInstanceState == null) {
+//            getSupportFragmentManager().beginTransaction()
+//                    .add(R.id.listView, new PlaceholderFragment())
+//                    .commit();
+//
+//
+//        }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.lista_km_menu_buscar, menu);
+        MenuItem searchItem = menu.findItem(R.id.buscarKm);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+//        searchView.setOnQueryTextListener(this);
+        return super.onCreateOptionsMenu(menu);
+    }
+//
+//    @Override
+//    public boolean onQueryTextSubmit(String query) {
+//        query = query.toLowerCase();
+//        TextView text = (TextView) getSupportFragmentManager()
+//                .findFragmentById(R.id.listView).getView()
+//                .findViewById(R.id.search_result);
+//        kms = new ArrayList<Map<String, Object>>();
+//        List<Km> listaKms = dbAdapter.getAllKm();
+//        for (Km km : listaKms) {
+//            if (km.getId().equals(query)) {
+//                String result = getString(R.string.results_found, query);
+//                text.setText(result);
+//                return true;
+//            } else if (km.getData().equals(query)) {
+//                String result = getString(R.string.results_found, query);
+//                text.setText(result);
+//                return true;
+//            } else if (km.getItinerario().equals(query)) {
+//                String result = getString(R.string.results_found, query);
+//                text.setText(result);
+//                return true;
+//            } else if (km.getQtdCliente().equals(query)) {
+//                String result = getString(R.string.results_found, query);
+//                text.setText(result);
+//                return true;
+//            } else if (km.getKmInicial().equals(query)) {
+//                String result = getString(R.string.results_found, query);
+//                text.setText(result);
+//                return true;
+//            } else if (km.getKmFinal().equals(query)) {
+//                String result = getString(R.string.results_found, query);
+//                text.setText(result);
+//                return true;
+//            } else if (km.getKmTotal().equals(query)) {
+//                String result = getString(R.string.results_found, query);
+//                text.setText(result);
+//                return true;
+//            }
+//        }
+//        String result = getString(R.string.results_not_found, query);
+//        text.setText(result);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onQueryTextChange(String newText) {
+//        return false;
+//    }
+//    public static class PlaceholderFragment extends android.support.v4.app.Fragment {
+//
+//        public PlaceholderFragment() {
+//        }
+//
+//        @Override
+//        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+//                                 Bundle savedInstanceState) {
+//            View rootView = inflater.inflate(R.layout.fragment_lista_km, container, false);
+//            return rootView;
+//        }
+//    }
 
     private class Task extends AsyncTask<Void, Void, List<Map<String, Object>>> {
 
@@ -67,7 +156,7 @@ public class ListarKm extends ListActivity implements AdapterView.OnItemClickLis
             int[] para = {R.id.lstIdKm, R.id.lstDataKm, R.id.lstItinerario,
                     R.id.lstQtdCliente, R.id.lstKm, R.id.lstKmTotal};
             SimpleAdapter simpleAdapter = new SimpleAdapter(ListarKm.this, result, R.layout.lista_km, de, para);
-            setListAdapter(simpleAdapter);
+            listView.setAdapter(simpleAdapter);
         }
 
     }
@@ -139,7 +228,7 @@ public class ListarKm extends ListActivity implements AdapterView.OnItemClickLis
                                         AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
                                 int pos = information.position;
                                 kms.remove(pos);
-                                getListView().invalidateViews();
+                                listView.invalidateViews();
                                 data = "";
                                 dbAdapter.deleteKm(Id);
                             }

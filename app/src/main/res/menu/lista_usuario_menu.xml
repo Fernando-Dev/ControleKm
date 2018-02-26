@@ -3,12 +3,14 @@
 
     <item
         android:id="@+id/mnEditar"
+        android:title="@string/editar"
         android:icon="@android:drawable/ic_menu_edit"
-        android:title="@string/editar"/>
+        />
     <item
         android:id="@+id/mnRemover"
+        android:title="@string/remover"
         android:icon="@android:drawable/ic_menu_delete"
-        android:title="@string/remover" />
+        />
 
 
 </menu>

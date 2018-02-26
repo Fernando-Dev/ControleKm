@@ -6,7 +6,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorTitle"
     android:orientation="vertical"
-    android:padding="@dimen/padding_5dp"
     tools:context="com.example.fernando.controlekm.ListarKm">
 
     <android.support.v7.widget.CardView

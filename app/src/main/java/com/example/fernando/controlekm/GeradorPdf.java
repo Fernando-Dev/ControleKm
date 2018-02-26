@@ -69,7 +69,6 @@ public class GeradorPdf extends AppCompatActivity {
     private SimpleDateFormat dateFormat;
     private DBAdapter db;
     private SQLiteDatabase database;
-    private ProgressBar progressBar;
     private int ano, mes, dia;
     private Date dataPdf1, dataPdf2;
     private Button btnPrimeiraData, btnSegundaData;
@@ -94,9 +93,6 @@ public class GeradorPdf extends AppCompatActivity {
         btnSegundaData = (Button) findViewById(R.id.btnDataPdf2);
         txtError1 = (TextView) findViewById(R.id.txtError1);
         txtError2 = (TextView) findViewById(R.id.txtError2);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar2);
-        progressBar.setScaleY(3f);
-        textoInfo = (TextView) findViewById(R.id.textInfo);
         lastData();
 
 
@@ -144,7 +140,6 @@ public class GeradorPdf extends AppCompatActivity {
 
     public void chamaPdf() {
         ProgressData proressData = new ProgressData();
-        proressData.setProgressBar(progressBar);
         proressData.execute();
 
 
@@ -152,47 +147,36 @@ public class GeradorPdf extends AppCompatActivity {
 
 
     private class ProgressData extends AsyncTask<Void, Integer, Void> {
-        private ProgressBar progressBar;
-
-        public void setProgressBar(ProgressBar progressBar) {
-            this.progressBar = progressBar;
-        }
+        private ProgressDialog p;
 
         @Override
         protected void onPreExecute() {
-            progressBar.setVisibility(View.VISIBLE);
-            this.progressBar.setProgress(0);
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            if (this.progressBar != null) {
-                this.progressBar.setProgress(values[0]);
-            }
+            super.onPreExecute();
+            p = new ProgressDialog(GeradorPdf.this);
+            p.setMessage("Carregando... Por favor aguarde!");
+            p.setIndeterminate(false);
+            p.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            p.setCancelable(false);
+            p.show();
         }
 
         @Override
         protected Void doInBackground(Void... integers) {
-            for (int i = 24; i < 101; i++) {
+
                 try {
                     PdfWrapper();
-                    i = i + 24;
-                    this.publishProgress(i);
                     criarPdf();
-                    i = i + 52;
-                    this.publishProgress(i);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (DocumentException e) {
                     e.printStackTrace();
                 }
-            }
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            progressBar.setVisibility(View.INVISIBLE);
+            p.dismiss();
             previaPdf();
             super.onPostExecute(aVoid);
         }

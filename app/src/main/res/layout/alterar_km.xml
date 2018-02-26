@@ -28,6 +28,7 @@
             android:layout_gravity="center_horizontal"
             android:onClick="selecionarData"
             android:textColor="#000000"
+            android:background="@drawable/btn_data"
             android:inputType="date"
             android:text="@string/selecione"
             android:textStyle="bold" />

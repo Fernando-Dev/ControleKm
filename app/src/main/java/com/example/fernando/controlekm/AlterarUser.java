@@ -18,7 +18,6 @@ import com.example.fernando.controlekm.dominio.Usuario;
 public class AlterarUser extends AppCompatActivity {
     private EditText altNome, altPlaca;
     private EditText altUnidade, altFuncao, altGerencia;
-//    private RadioGroup altTipoVeiculo;
     private Button btnAlterar, btnVoltar;
     private DBAdapter db;
     private Integer id;
@@ -32,7 +31,6 @@ public class AlterarUser extends AppCompatActivity {
 
         altNome = (EditText) findViewById(R.id.altNome);
         altUnidade = (EditText)findViewById(R.id.altUnidade);
-//        altTipoVeiculo = (RadioGroup) findViewById(R.id.altTipoVeiculo);
         altFuncao = (EditText) findViewById(R.id.altFuncao);
         altPlaca = (EditText) findViewById(R.id.altPlaca);
         altGerencia = (EditText)findViewById(R.id.altGerencia);
@@ -71,17 +69,6 @@ public class AlterarUser extends AppCompatActivity {
             String unidade = altUnidade.getText().toString();
             unidade = unidade.toUpperCase();
             usuario.setUnidade(unidade);
-//            String tipoVeiculo = String.valueOf(altTipoVeiculo.getCheckedRadioButtonId());
-//            String veiculoInec = String.valueOf(R.id.altVeiculoInec);
-//            String veiculoProprio = String.valueOf(R.id.altVeiculoParticular);
-//            String veiculoAlternativo = String.valueOf(R.id.altVeiculoAlternativo);
-//            if (tipoVeiculo.equals(veiculoInec)) {
-//                usuario.setTipoVeiculo(Constante.TIPO_VEICULO_INEC);
-//            } else if (tipoVeiculo.equals(veiculoProprio)) {
-//                usuario.setTipoVeiculo(Constante.TIPO_VEICULO_PARTICULAR);
-//            } else if (tipoVeiculo.equals(veiculoAlternativo)) {
-//                usuario.setTipoVeiculo(Constante.TIPO_VEICULO_ALTERNATIVO);
-//            }
             String funcao = altFuncao.getText().toString();
             funcao = funcao.toUpperCase();
             usuario.setFuncao(funcao);
@@ -103,22 +90,11 @@ public class AlterarUser extends AppCompatActivity {
 
     public void preparaEdicao() {
         SQLiteDatabase database = db.read();
-        Cursor c = database.rawQuery("SELECT nome, unidade, tipoVeiculo,funcao,placa,gerencia FROM usuarios WHERE id=?",
+        Cursor c = database.rawQuery("SELECT nome, unidade,funcao,placa,gerencia FROM usuarios WHERE id=?",
                 new String[]{id.toString()});
         c.moveToFirst();
         altNome.setText(c.getString(c.getColumnIndex(DatabaseHelper.KEY_NOME)));
         altUnidade.setText(c.getString(c.getColumnIndex(DatabaseHelper.KEY_UNIDADE)));
-//        String cursorVeiculo = c.getString(2);
-//        Integer veiculoInec = R.id.altVeiculoInec;
-//        Integer veiculoProprio = R.id.altVeiculoParticular;
-//        Integer veiculoAlternativo = R.id.altVeiculoAlternativo;
-//        if (cursorVeiculo.equals(Constante.TIPO_VEICULO_INEC)) {
-//                altTipoVeiculo.check(veiculoInec);
-//        } else if (cursorVeiculo.equals(Constante.TIPO_VEICULO_PARTICULAR)) {
-//            altTipoVeiculo.check(veiculoProprio);
-//        } else if (cursorVeiculo.equals(Constante.TIPO_VEICULO_ALTERNATIVO)) {
-//            altTipoVeiculo.check(veiculoAlternativo);
-//        }
         altFuncao.setText(c.getString(c.getColumnIndex(DatabaseHelper.KEY_FUNCAO)));
         altPlaca.setText(c.getString(c.getColumnIndex(DatabaseHelper.KEY_PLACA)));
         altGerencia.setText(c.getString(c.getColumnIndex(DatabaseHelper.KEY_GERENCIA)));

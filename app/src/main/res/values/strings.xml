@@ -22,7 +22,8 @@
     <string name="remover">Remover</string>
     <string name="alterar">Alterar</string>
     <string name="id">Id: </string>
-    <string name="listar">Listar</string>
+    <string name="listar_km">Listar Km</string>
+    <string name="lista_usuario">Listar Usuário</string>
     <string name="gerar_pdf">Gerar PDF</string>
     <string name="empty">Sem eventos!</string>
     <string name="inec">Inec</string>
@@ -44,9 +45,13 @@
     <string name="campo_vazio">Campo Vazio!</string>
     <string name="texto_info_inicio">Carregando... Aguarde por favor!</string>
     <string name="texto_info_final">Finalizando...</string>
-
-
-
+    <string name="buscar">Buscar</string>
+    <string name="results_found">
+    Results found: <b>%s</b>
+    </string>
+    <string name="results_not_found">
+    Results not found: <b>%s</b>
+    </string>
 
 
 </resources>

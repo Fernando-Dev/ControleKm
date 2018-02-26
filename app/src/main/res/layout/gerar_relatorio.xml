@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorTitle"
@@ -22,7 +22,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginStart="26dp"
             android:layout_toEndOf="@+id/textView10"
-            android:background="@drawable/btn_data_boder_radius"
+            android:background="@drawable/btn_data"
             android:hint="@string/data_final"
             android:inputType="date"
             android:onClick="selecionarData"
@@ -37,7 +37,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginEnd="26dp"
             android:layout_toStartOf="@+id/textView10"
-            android:background="@drawable/btn_data_boder_radius"
+            android:background="@drawable/btn_data"
             android:hint="@string/data_inicial"
             android:inputType="date"
             android:onClick="selecionarData"
@@ -62,65 +62,40 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_alignEnd="@+id/btnDataPdf1"
-            android:layout_alignParentStart="true"
             android:layout_below="@+id/btnDataPdf1"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="@color/colorError" />
+            android:textColor="@color/colorError"
+            android:layout_alignStart="@+id/btnDataPdf1" />
 
         <TextView
             android:id="@+id/txtError2"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
             android:layout_alignStart="@+id/btnDataPdf2"
             android:layout_below="@+id/btnDataPdf2"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="@color/colorError" />
+            android:textColor="@color/colorError"
+            android:layout_alignEnd="@+id/btnDataPdf2" />
 
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/padding_padrao">
-
-        <TextView
-            android:id="@+id/textoInfo"
+        <Button
+            android:id="@+id/btnGerarPdf"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/progressBar2"
-            android:gravity="center_horizontal"
-            android:text="@string/texto_info_inicio"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-            android:textColor="@android:color/holo_red_dark" />
+            android:layout_below="@+id/txtError1"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/botao"
+            android:text="@string/gerar_pdf"
+            android:textColor="@color/colorBtnText" />
 
-        <ProgressBar
-            android:id="@+id/progressBar2"
-            style="?android:attr/progressBarStyleHorizontal"
+        <Button
+            android:id="@+id/btnVoltarPdf"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:max="100" />
+            android:layout_below="@+id/btnGerarPdf"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/botao"
+            android:text="@string/voltar"
+            android:textColor="@color/colorBtnText" />
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/btnGerarPdf"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/botao"
-        android:text="@string/gerar_pdf"
-        android:textColor="@color/colorBtnText" />
-
-    <Button
-        android:id="@+id/btnVoltarPdf"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/botao"
-        android:text="@string/voltar"
-        android:textColor="@color/colorBtnText" />
-
-
-</LinearLayout>
+</ScrollView>
