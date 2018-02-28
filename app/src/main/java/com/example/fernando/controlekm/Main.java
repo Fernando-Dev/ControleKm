@@ -84,7 +84,7 @@ public class Main extends AppCompatActivity {
                 startActivity(new Intent(this, GeradorPdf.class));
                 break;
             case R.id.ivUtils:
-                startActivity(new Intent(this, RecyclerViewKm.class));
+                startActivity(new Intent(this, Utilitario.class));
                 break;
         }
     }
