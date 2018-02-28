@@ -1,25 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/colorTitle"
-    android:orientation="vertical"
-    tools:context="com.example.fernando.controlekm.ListarKm">
+    android:foreground="?android:attr/selectableItemBackground"
+    android:focusable="true"
+    android:clickable="true"
+    app:cardBackgroundColor="@color/colorPrimary"
+    app:cardCornerRadius="4dp"
+    app:cardElevation="5dp"
+    app:cardPreventCornerOverlap="false">
 
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/colorPrimary"
-        app:cardCornerRadius="@dimen/padding_padrao"
-        app:cardElevation="@dimen/cardview_default_elevation">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
+        android:layout_height="match_parent"
         android:padding="@dimen/padding_5dp">
+
 
         <TextView
             android:id="@+id/txtId"
@@ -31,7 +29,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/lstIdKm"
+            android:id="@+id/rvIdKm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@+id/txtId"
@@ -41,53 +39,61 @@
 
 
         <TextView
-            android:id="@+id/lstDataKm"
+            android:id="@+id/rvDataKm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/txtId"
+            android:layout_below="@+id/rvIdKm"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textColor="@color/colorWhite"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/lstItinerario"
+            android:id="@+id/rvItinerario"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/lstDataKm"
+            android:layout_below="@+id/rvDataKm"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textColor="@color/colorWhite"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/lstQtdCliente"
+            android:id="@+id/rvQtdCliente"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/lstItinerario"
+            android:layout_below="@+id/rvItinerario"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textColor="@color/colorWhite"
             android:textStyle="bold" />
 
 
         <TextView
-            android:id="@+id/lstKm"
+            android:id="@+id/rvKmInicial"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/lstQtdCliente"
+            android:layout_below="@+id/rvQtdCliente"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@color/colorWhite"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/rvKmFinal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/rvKmInicial"
+            android:layout_alignBottom="@+id/rvKmInicial"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textColor="@color/colorWhite"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/lstKmTotal"
+            android:id="@+id/rvKmTotal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/lstKm"
+            android:layout_below="@+id/rvKmInicial"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textColor="@color/colorWhite"
             android:textStyle="bold" />
+
 
     </RelativeLayout>
-    </android.support.v7.widget.CardView>
 
-
-</LinearLayout>
+</android.support.v7.widget.CardView>

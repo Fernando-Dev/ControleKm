@@ -72,7 +72,7 @@ public class Main extends AppCompatActivity {
                 startActivity(new Intent(this, CadastrarKm.class));
                 break;
             case R.id.ivListkm:
-                startActivity(new Intent(this, ListarKm.class));
+                startActivity(new Intent(this, RecyclerViewKm.class));
                 break;
             case R.id.ivAddUsuario:
                 startActivity(new Intent(this, CadastrarUsuario.class));
@@ -84,7 +84,7 @@ public class Main extends AppCompatActivity {
                 startActivity(new Intent(this, GeradorPdf.class));
                 break;
             case R.id.ivUtils:
-                startActivity(new Intent(this, Utilitario.class));
+                startActivity(new Intent(this, RecyclerViewKm.class));
                 break;
         }
     }

@@ -72,7 +72,7 @@ public class GeradorPdf extends AppCompatActivity {
     private int ano, mes, dia;
     private Date dataPdf1, dataPdf2;
     private Button btnPrimeiraData, btnSegundaData;
-    private String data1, data2, _maxData, minData;
+    private String data1, data2, _maxData, _minData;
     private TextView txtError1, txtError2, textoInfo;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -94,6 +94,7 @@ public class GeradorPdf extends AppCompatActivity {
         txtError1 = (TextView) findViewById(R.id.txtError1);
         txtError2 = (TextView) findViewById(R.id.txtError2);
         lastData();
+        firstData();
 
 
         Button gerarRelatorio = (Button) findViewById(R.id.btnGerarPdf);
@@ -258,6 +259,23 @@ public class GeradorPdf extends AppCompatActivity {
             e.printStackTrace();
         }
         btnSegundaData.setText(_maxData);
+    }
+    private void firstData(){
+        SQLiteDatabase database = db.read();
+        Cursor minData = database.rawQuery("SELECT data FROM kms WHERE kmInicial = (SELECT MIN(kmInicial) FROM kms)", null);
+        minData.moveToFirst();
+        for (int i =0;i<minData.getCount();i++) {
+            data1 = minData.getString(minData.getColumnIndex(DatabaseHelper.KEY_DATA));
+            minData.moveToNext();
+        }
+        minData.close();
+
+        try {
+            _minData = inverteOrdemData(data1);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        btnPrimeiraData.setText(_minData);
     }
 
 
