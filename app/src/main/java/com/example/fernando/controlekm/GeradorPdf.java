@@ -88,7 +88,6 @@ public class GeradorPdf extends AppCompatActivity {
         dia = calendar.get(Calendar.DAY_OF_MONTH);
 
 
-
         btnPrimeiraData = (Button) findViewById(R.id.btnDataPdf1);
         btnSegundaData = (Button) findViewById(R.id.btnDataPdf2);
         txtError1 = (TextView) findViewById(R.id.txtError1);
@@ -130,7 +129,7 @@ public class GeradorPdf extends AppCompatActivity {
                             .setPositiveButton("OK", null)
                             .create()
                             .show();
-                } else if(btnPrimeiraData.getText().toString().compareTo(btnSegundaData.getText().toString()) < 0) {
+                } else if (btnPrimeiraData.getText().toString().compareTo(btnSegundaData.getText().toString()) < 0) {
                     txtError1.setText("");
                     txtError2.setText("");
                     chamaPdf();
@@ -164,14 +163,14 @@ public class GeradorPdf extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... integers) {
 
-                try {
-                    PdfWrapper();
-                    criarPdf();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (DocumentException e) {
-                    e.printStackTrace();
-                }
+            try {
+                PdfWrapper();
+                criarPdf();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (DocumentException e) {
+                e.printStackTrace();
+            }
             return null;
         }
 
@@ -243,11 +242,12 @@ public class GeradorPdf extends AppCompatActivity {
                 .create()
                 .show();
     }
-    private void lastData(){
+
+    private void lastData() {
         SQLiteDatabase database = db.read();
         Cursor maxData = database.rawQuery("SELECT data FROM kms WHERE kmFinal = (SELECT MAX(kmFinal) FROM kms)", null);
         maxData.moveToFirst();
-        for (int i =0;i<maxData.getCount();i++) {
+        for (int i = 0; i < maxData.getCount(); i++) {
             data2 = maxData.getString(maxData.getColumnIndex(DatabaseHelper.KEY_DATA));
             maxData.moveToNext();
         }
@@ -261,11 +261,12 @@ public class GeradorPdf extends AppCompatActivity {
         }
         btnSegundaData.setText(_maxData);
     }
-    private void firstData(){
+
+    private void firstData() {
         SQLiteDatabase database = db.read();
         Cursor minData = database.rawQuery("SELECT data FROM kms WHERE kmInicial = (SELECT MIN(kmInicial) FROM kms)", null);
         minData.moveToFirst();
-        for (int i =0;i<minData.getCount();i++) {
+        for (int i = 0; i < minData.getCount(); i++) {
             data1 = minData.getString(minData.getColumnIndex(DatabaseHelper.KEY_DATA));
             minData.moveToNext();
         }
@@ -447,6 +448,7 @@ public class GeradorPdf extends AppCompatActivity {
         String _date = simpleDateFormat1.format(date);
         return _date;
     }
+
     private static Date dataFiltroBanco(String data) throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date date = simpleDateFormat.parse(data);
@@ -464,14 +466,30 @@ public class GeradorPdf extends AppCompatActivity {
 
     private void previaPdf() {
         if (pdfFile.exists()) {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/PDF";
-            new File(path, "RelatórioKm.pdf");
-            intent.setDataAndType(Uri.fromFile(pdfFile), "application/pdf");
-            startActivity(intent);
+            new AlertDialog.Builder(this)
+                    .setMessage("O RelatórioKm.pdf foi gerado e está salvo neste caminho " + docsFolder + ". Deseja abrir o relatório?")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/PDF";
+                            new File(path, "RelatórioKm.pdf");
+                            intent.setDataAndType(Uri.fromFile(pdfFile), "application/pdf");
+                            startActivity(intent);
+                        }
+                    }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    finish();
+                }
+            })
+                    .create()
+                    .show();
+
+
         } else {
             new AlertDialog.Builder(this)
-                    .setMessage("Baixe um visualizador de PDF para ver o PDF gerado")
+                    .setMessage("O RelatórioKm está salvo em " + docsFolder + " e baixe um visualizador de PDF para ver o PDF gerado")
                     .setPositiveButton("OK", null)
                     .create()
                     .show();
