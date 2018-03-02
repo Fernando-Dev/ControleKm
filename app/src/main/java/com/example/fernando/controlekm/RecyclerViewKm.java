@@ -5,6 +5,8 @@ package com.example.fernando.controlekm;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.MenuCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -19,6 +21,7 @@ import android.view.ContextMenu;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -36,7 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RecyclerViewKm extends ActionBarActivity implements RecyclerView.OnItemTouchListener {
+public class RecyclerViewKm extends ActionBarActivity implements SearchView.OnQueryTextListener {
     private RecyclerView rv;
     private List<Map<String, Object>> kms;
     private GestureDetectorCompat detector;
@@ -49,16 +52,58 @@ public class RecyclerViewKm extends ActionBarActivity implements RecyclerView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recycler_view_km);
         db = new DBAdapter(this);
+        if (db.getAllKm().isEmpty()) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Atenção")
+                    .setMessage("Lista vazia! Por favor cadastre um km.")
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            finish();
+                        }
+                    })
+                    .create()
+                    .show();
+        }
 
         rv = (RecyclerView) findViewById(R.id.rv);
-        detector = new GestureDetectorCompat(this, new GridGestureDetector());
-        rv.addOnItemTouchListener(this);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         rv.setLayoutManager(layoutManager);
 
         GridAdapter adapter = new GridAdapter(listarKms());
         rv.setAdapter(adapter);
+
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.lista_km_menu_buscar, menu);
+        MenuItem searchItem = menu.findItem(R.id.buscarKm);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        //searchView.setOnQueryTextListener(RecyclerViewUsuario.this);
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
+    }
+
+    public static class PlaceholderFragment extends Fragment {
+        public PlaceholderFragment() {
+        }
+
+        @Nullable
+        @Override
+        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_lista_usuario, container, false);
+            return rootView;
+        }
 
     }
 
@@ -92,40 +137,6 @@ public class RecyclerViewKm extends ActionBarActivity implements RecyclerView.On
         return _date;
     }
 
-    @Override
-    public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-        detector.onTouchEvent(e);
-        return false;
-    }
-
-    @Override
-    public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-
-    }
-
-    @Override
-    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-    }
-
-    private class GridGestureDetector extends GestureDetector.SimpleOnGestureListener {
-        /*
-        * verificamos qual view se
-        encontra nas coordenadas X e Y do evento de toque disparado pelo
-        usuário, e posteriormente buscamos qual é a posição na grade do
-        item que foi selecionado. Uma vez que temos a posição do item,
-        basta obtê-lo da nossa lista de livros.
-        * */
-        @Override
-        public boolean onSingleTapConfirmed(MotionEvent e) {
-            View v = rv.findChildViewUnder(e.getX(), e.getY());
-            int i = rv.getChildPosition(v);
-            Map<String, Object> km = kms.get(i);
-            Id = (Integer) km.get("id");
-            Toast.makeText(RecyclerViewKm.this, "Km selecionado: " + km.get("id"), Toast.LENGTH_SHORT).show();
-            return super.onSingleTapConfirmed(e);
-        }
-    }
 
     public static class GridViewHolder extends RecyclerView.ViewHolder {
         protected TextView id;
@@ -198,7 +209,7 @@ public class RecyclerViewKm extends ActionBarActivity implements RecyclerView.On
             holder.kmTotal.setText((String) km.get("kmTotal"));
 
 //            codigo para chamar o menupopup na recyclerview
-            holder.card.setOnLongClickListener(new View.OnLongClickListener() {
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
                     PopupMenu popupMenu = new PopupMenu(RecyclerViewKm.this, view);
@@ -209,7 +220,7 @@ public class RecyclerViewKm extends ActionBarActivity implements RecyclerView.On
                         public boolean onMenuItemClick(MenuItem item) {
                             switch (item.getItemId()) {
                                 case R.id.Editar:
-                                    Map<String, Object> map = kms.get(position);
+                                    Map<String, Object> map = kms.get(holder.getAdapterPosition());
                                     Integer id = (Integer) map.get("id");
                                     Intent intent = new Intent(RecyclerViewKm.this, AlterarKm.class);
                                     intent.putExtra("EXTRA_ID_KM", id);
@@ -222,10 +233,12 @@ public class RecyclerViewKm extends ActionBarActivity implements RecyclerView.On
                                             setPositiveButton(R.string.sim, new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                                    kms.remove(position);
+                                                    Map<String, Object> map = kms.get(holder.getAdapterPosition());
+                                                    Integer id = (Integer) map.get("id");
+                                                    kms.remove(holder.getAdapterPosition());
                                                     rv.invalidate();
                                                     data = "";
-                                                    db.deleteKm(Id);
+                                                    db.deleteKm(id);
                                                     notifyDataSetChanged();
                                                 }
                                             })

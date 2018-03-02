@@ -78,7 +78,7 @@ public class Main extends AppCompatActivity {
                 startActivity(new Intent(this, CadastrarUsuario.class));
                 break;
             case R.id.ivListUser:
-                startActivity(new Intent(this,ListUser.class));
+                startActivity(new Intent(this,RecyclerViewUsuario.class));
                 break;
             case R.id.ivRelatorio:
                 startActivity(new Intent(this, GeradorPdf.class));

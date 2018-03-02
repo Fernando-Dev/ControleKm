@@ -86,7 +86,7 @@ public class GeradorPdf extends AppCompatActivity {
         ano = calendar.get(Calendar.YEAR);
         mes = calendar.get(Calendar.MONTH);
         dia = calendar.get(Calendar.DAY_OF_MONTH);
-        dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.CANADA);
+
 
 
         btnPrimeiraData = (Button) findViewById(R.id.btnDataPdf1);
@@ -255,6 +255,7 @@ public class GeradorPdf extends AppCompatActivity {
 
         try {
             _maxData = inverteOrdemData(data2);
+            dataPdf2 = dataFiltroBanco(_maxData);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -272,6 +273,7 @@ public class GeradorPdf extends AppCompatActivity {
 
         try {
             _minData = inverteOrdemData(data1);
+            dataPdf1 = dataFiltroBanco(_minData);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -445,6 +447,12 @@ public class GeradorPdf extends AppCompatActivity {
         String _date = simpleDateFormat1.format(date);
         return _date;
     }
+    private static Date dataFiltroBanco(String data) throws ParseException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = simpleDateFormat.parse(data);
+        return date;
+    }
+
 
     private static String desenverterData(String data) throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");

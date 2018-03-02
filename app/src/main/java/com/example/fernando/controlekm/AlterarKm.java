@@ -56,7 +56,6 @@ public class AlterarKm extends AppCompatActivity {
         dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.CANADA);
 
 
-
         btnAlterar = (Button) findViewById(R.id.btnAlterarKm);
         btnVoltarKm = (Button) findViewById(R.id.btnVoltarKm);
 
@@ -78,6 +77,17 @@ public class AlterarKm extends AppCompatActivity {
         btnAlterar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (altItinerario.getText().toString().isEmpty()) {
+                    altItinerario.setError("Campo vazio!");
+                }else if (altQtdCliente.getText().toString().isEmpty()){
+                    altQtdCliente.setError("Campo vazio!");
+                } else if (altKmInicial.getText().toString().isEmpty()) {
+                    altKmInicial.setError("Campo vazio!");
+                } else if (altKmFinal.getText().toString().isEmpty()) {
+                    altKmFinal.setError("Campo vazio!");
+                } else if (txvKmTotal.getText().toString().isEmpty()) {
+                    txvKmTotal.setError("Campo vazio!");
+                }
                 alterarKm();
             }
         });
@@ -147,6 +157,7 @@ public class AlterarKm extends AppCompatActivity {
 
 
     }
+
     private static String inverteOrdemData(String data) throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date date = simpleDateFormat.parse(data);
@@ -154,7 +165,8 @@ public class AlterarKm extends AppCompatActivity {
         String _date = simpleDateFormat1.format(date);
         return _date;
     }
-    private static String inverteData(String data) throws ParseException{
+
+    private static String inverteData(String data) throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date date = simpleDateFormat.parse(data);
         SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("yyyy-MM-dd");

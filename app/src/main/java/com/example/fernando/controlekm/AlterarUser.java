@@ -30,22 +30,34 @@ public class AlterarUser extends AppCompatActivity {
 
 
         altNome = (EditText) findViewById(R.id.altNome);
-        altUnidade = (EditText)findViewById(R.id.altUnidade);
+        altUnidade = (EditText) findViewById(R.id.altUnidade);
         altFuncao = (EditText) findViewById(R.id.altFuncao);
         altPlaca = (EditText) findViewById(R.id.altPlaca);
-        altGerencia = (EditText)findViewById(R.id.altGerencia);
+        altGerencia = (EditText) findViewById(R.id.altGerencia);
         btnAlterar = (Button) findViewById(R.id.btnAlterarUser);
         btnVoltar = (Button) findViewById(R.id.btnVoltarUser);
         db = new DBAdapter(AlterarUser.this);
         Bundle extra = getIntent().getExtras();
         if (extra != null) {
-            id = extra.getInt("EXTRA_ID_USER");
+            id = extra.getInt("EXTRA_ID_USUARIO");
             preparaEdicao();
         }
         btnAlterar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                updateUsuario();
+                if (altNome.getText().toString().isEmpty()) {
+                    altNome.setError("Campo vazio!");
+                } else if (altUnidade.getText().toString().isEmpty()) {
+                    altUnidade.setError("Campo vazio!");
+                } else if (altFuncao.getText().toString().isEmpty()) {
+                    altFuncao.setError("Campo vazio!");
+                } else if (altPlaca.getText().toString().isEmpty()) {
+                    altPlaca.setError("Campo vazio!");
+                } else if (altGerencia.getText().toString().isEmpty()) {
+                    altGerencia.setError("Campo vazio!");
+                } else {
+                    updateUsuario();
+                }
             }
         });
         btnVoltar.setOnClickListener(new View.OnClickListener() {
@@ -63,7 +75,7 @@ public class AlterarUser extends AppCompatActivity {
             db.open();
             Usuario usuario = new Usuario();
             usuario.setId(id);
-            String nome  = altNome.getText().toString();
+            String nome = altNome.getText().toString();
             nome = nome.toUpperCase();
             usuario.setNome(nome);
             String unidade = altUnidade.getText().toString();
@@ -83,7 +95,7 @@ public class AlterarUser extends AppCompatActivity {
             Toast.makeText(getBaseContext(), "Alterado com sucesso!", Toast.LENGTH_LONG).show();
             finish();
         } catch (Exception e) {
-            Toast.makeText(getBaseContext(), "Erro ao salvar", Toast.LENGTH_LONG).show();
+            Toast.makeText(getBaseContext(), "Erro ao alterar", Toast.LENGTH_LONG).show();
         }
 
     }

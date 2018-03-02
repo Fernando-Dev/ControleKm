@@ -27,7 +27,6 @@ public class CadastrarUsuario extends AppCompatActivity {
 
     private EditText edtNome, edtPlaca;
     private EditText edtUnidade, edtFuncao, edtGerencia;
-//    private RadioGroup rgTipoVeiculo;
     private Button btnSalvar, btnVoltar;
     private DBAdapter db;
     private Integer codigo;
@@ -39,7 +38,6 @@ public class CadastrarUsuario extends AppCompatActivity {
 
         edtNome = (EditText) findViewById(R.id.edtNome);
         edtUnidade = (EditText) findViewById(R.id.edtUnidade);
-//        rgTipoVeiculo = (RadioGroup) findViewById(R.id.rgTipoVeiculo);
         edtFuncao = (EditText)findViewById(R.id.edtFuncao);
         edtPlaca = (EditText) findViewById(R.id.edtPlaca);
         edtGerencia = (EditText) findViewById(R.id.edtGerencia);
@@ -51,7 +49,19 @@ public class CadastrarUsuario extends AppCompatActivity {
         btnSalvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addUsuario();
+                if (edtNome.getText().toString().isEmpty()){
+                    edtNome.setError("Campo vazio!");
+                }else if (edtUnidade.getText().toString().isEmpty()){
+                    edtUnidade.setError("Campo vazio!");
+                }else if (edtFuncao.getText().toString().isEmpty()){
+                    edtFuncao.setError("Campo vazio!");
+                }else if (edtPlaca.getText().toString().isEmpty()){
+                    edtPlaca.setError("Campo vazio!");
+                }else if (edtGerencia.getText().toString().isEmpty()){
+                    edtGerencia.setError("Campo vazio!");
+                }else{
+                    addUsuario();
+                }
             }
         });
         btnVoltar.setOnClickListener(new View.OnClickListener() {
@@ -75,17 +85,6 @@ public class CadastrarUsuario extends AppCompatActivity {
             String unidade = edtUnidade.getText().toString();
             unidade = unidade.toUpperCase();
             usuario.setUnidade(unidade);
-//            String tipoVeiculo = String.valueOf(rgTipoVeiculo.getCheckedRadioButtonId());
-//            String veiculoInec = String.valueOf(R.id.veiculoInec);
-//            String veiculoProprio = String.valueOf(R.id.veiculoParticular);
-//            String veiculoAlternativo = String.valueOf(R.id.veiculoAlternativo);
-//            if (tipoVeiculo.equals(veiculoInec)) {
-//                usuario.setTipoVeiculo(Constante.TIPO_VEICULO_INEC);
-//            } else if (tipoVeiculo.equals(veiculoProprio)) {
-//                usuario.setTipoVeiculo(Constante.TIPO_VEICULO_PARTICULAR);
-//            } else if (tipoVeiculo.equals(veiculoAlternativo)) {
-//                usuario.setTipoVeiculo(Constante.TIPO_VEICULO_ALTERNATIVO);
-//            }
             String funcao = edtFuncao.getText().toString();
             funcao = funcao.toUpperCase();
             usuario.setFuncao(funcao);
@@ -98,7 +97,7 @@ public class CadastrarUsuario extends AppCompatActivity {
 
             db.inserirUsuario(usuario);
 
-            Toast.makeText(getBaseContext(), "Salvo", Toast.LENGTH_LONG).show();
+            Toast.makeText(getBaseContext(), "Salvo com sucesso!", Toast.LENGTH_LONG).show();
             finish();
         } catch (Exception e) {
             Toast.makeText(getBaseContext(), "Erro ao salvar", Toast.LENGTH_LONG).show();

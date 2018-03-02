@@ -137,7 +137,7 @@ public class ListarKm extends AppCompatActivity implements AdapterView.OnItemCli
 //        @Override
 //        public View onCreateView(LayoutInflater inflater, ViewGroup container,
 //                                 Bundle savedInstanceState) {
-//            View rootView = inflater.inflate(R.layout.fragment_lista_km, container, false);
+//            View rootView = inflater.inflate(R.layout.fragment_lista_usuario, container, false);
 //            return rootView;
 //        }
 //    }
