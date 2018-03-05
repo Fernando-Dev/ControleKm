@@ -5,6 +5,7 @@
         android:id="@+id/buscarKm"
         android:icon="@android:drawable/ic_menu_search"
         android:title="@string/buscar"
-        app:actionViewClass="android.suport.v7.widget.SearchView"
+        android:actionViewClass="android.support.v7.widget.SearchView"
+        app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView" />
 </menu>

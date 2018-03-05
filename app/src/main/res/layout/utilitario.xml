@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/utilitario_xml"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorTitle"
     android:orientation="vertical"
-    android:padding="@dimen/padding_padrao">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    android:background="@color/colorTitle"
+    tools:context=".Utilitario">
 
 
-    </RelativeLayout>
 
-
-</ScrollView>
+</LinearLayout>

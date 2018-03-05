@@ -62,28 +62,28 @@ public class Main extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.activity_main);
 
     }
 
     public void selecionarOpcao(View v) {
         switch (v.getId()) {
-            case R.id.ivAddkm:
+            case R.id.card_add_km:
                 startActivity(new Intent(this, CadastrarKm.class));
                 break;
-            case R.id.ivListkm:
+            case R.id.card_listar_km:
                 startActivity(new Intent(this, RecyclerViewKm.class));
                 break;
-            case R.id.ivAddUsuario:
+            case R.id.card_add_user:
                 startActivity(new Intent(this, CadastrarUsuario.class));
                 break;
-            case R.id.ivListUser:
+            case R.id.card_listar_user:
                 startActivity(new Intent(this,RecyclerViewUsuario.class));
                 break;
-            case R.id.ivRelatorio:
+            case R.id.card_relatorio:
                 startActivity(new Intent(this, GeradorPdf.class));
                 break;
-            case R.id.ivUtils:
+            case R.id.card_utils:
                 startActivity(new Intent(this, Utilitario.class));
                 break;
         }

@@ -1,10 +1,12 @@
 package com.example.fernando.controlekm;
 
 
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GestureDetectorCompat;
@@ -12,6 +14,7 @@ import android.support.v4.view.MenuCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
@@ -29,8 +32,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.example.fernando.controlekm.DAO.DBAdapter;
 import com.example.fernando.controlekm.dominio.Km;
+import com.example.fernando.controlekm.dominio.Usuario;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,10 +45,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RecyclerViewKm extends ActionBarActivity implements SearchView.OnQueryTextListener {
+public class RecyclerViewKm extends AppCompatActivity implements SearchView.OnQueryTextListener {
     private RecyclerView rv;
+    private List<Km> kmList;
+    private Cursor cursor;
     private List<Map<String, Object>> kms;
-    private GestureDetectorCompat detector;
+    private GridAdapter adapter;
+    private SearchView searchView;
     private DBAdapter db;
     private String data;
     private Integer Id;
@@ -71,16 +80,18 @@ public class RecyclerViewKm extends ActionBarActivity implements SearchView.OnQu
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         rv.setLayoutManager(layoutManager);
 
-        GridAdapter adapter = new GridAdapter(listarKms());
+        adapter = new GridAdapter(loadKM());
         rv.setAdapter(adapter);
 
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.lista_km_menu_buscar, menu);
         MenuItem searchItem = menu.findItem(R.id.buscarKm);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        //searchView.setOnQueryTextListener(RecyclerViewUsuario.this);
+        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        trocaCorTextoBuscado(searchView);
+        searchView.setOnQueryTextListener(RecyclerViewKm.this);
         return true;
     }
 
@@ -91,44 +102,77 @@ public class RecyclerViewKm extends ActionBarActivity implements SearchView.OnQu
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        return false;
+        newText = newText.toLowerCase();
+        List<Km> newList = new ArrayList<>();
+        for (Km km : kmList) {
+            String id = km.getId().toString().toLowerCase();
+            String data = km.getData().toLowerCase();
+            String itinerario = km.getItinerario().toLowerCase();
+            String qtdClientes = km.getQtdCliente().toString().toLowerCase();
+            String kmInicial = km.getKmInicial().toLowerCase();
+            String kmFinal = km.getKmFinal().toLowerCase();
+            String kmTotal = km.getKmTotal().toLowerCase();
+            if (id.contains(newText) || data.contains(newText) || itinerario.contains(newText)
+                    || qtdClientes.contains(newText) || kmInicial.contains(newText) || kmFinal.contains(newText)
+                    || kmTotal.contains(newText)) {
+                newList.add(km);
+            }
+        }
+        adapter.setFilter(newList);
+        return true;
     }
 
-    public static class PlaceholderFragment extends Fragment {
-        public PlaceholderFragment() {
-        }
 
-        @Nullable
-        @Override
-        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_lista_usuario, container, false);
-            return rootView;
-        }
-
-    }
-
-
-    private List<Map<String, Object>> listarKms() {
-        kms = new ArrayList<Map<String, Object>>();
-        List<Km> listaKms = db.getAllKm();
-        for (Km km : listaKms) {
-            Map<String, Object> item = new HashMap<String, Object>();
-            item.put("id", km.getId());
+    private List<Km> loadKM() {
+        kmList = new ArrayList<>();
+        SQLiteDatabase sqLiteDatabase = db.read();
+        cursor = sqLiteDatabase.rawQuery("SELECT * FROM kms", null);
+        cursor.moveToFirst();
+        for (int i = 0; i < cursor.getCount(); i++) {
+            Km km = new Km();
+            Integer id = cursor.getInt(0);
+            String data = cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_DATA));
+            String itinerario = cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_ITINERARIO));
+            Integer qtdCliente = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.KEY_QTD_CLIENTE));
+            String kmInicial = cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_KM_INICIAL));
+            String kmFinal = cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_KM_FINAL));
+            String kmTotal = cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_KM_TOTAL));
+            km.setId(id);
             try {
-                item.put("data", "Data: " + inverteOrdemData(km.getData()));
+                data = inverteOrdemData(data);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            item.put("itinerario", "Itinerário: " + km.getItinerario());
-            item.put("qtdCliente", "Quant. Clientes: " + km.getQtdCliente());
-            item.put("kmInicial", "Km Inicial: " + km.getKmInicial() + " Km ");
-            item.put("kmFinal", "<--> Km Final: " + km.getKmFinal() + " Km ");
-            item.put("kmTotal", "Distância Total: " + km.getKmTotal() + " Km ");
-            kms.add(item);
-
+            km.setData(data);
+            km.setItinerario(itinerario);
+            km.setQtdCliente(qtdCliente);
+            km.setKmInicial(kmInicial);
+            km.setKmFinal(kmFinal);
+            km.setKmTotal(kmTotal);
+            kmList.add(km);
+            cursor.moveToNext();
         }
-        return kms;
+        cursor.close();
+
+        return kmList;
+
+
     }
+
+    private void trocaCorTextoBuscado(View view) {
+        if (view != null) {
+            if (view instanceof TextView) {
+                ((TextView) view).setTextColor(Color.GREEN);
+                return;
+            } else if (view instanceof ViewGroup) {
+                ViewGroup viewGroup = (ViewGroup) view;
+                for (int i = 0; i < viewGroup.getChildCount(); i++) {
+                    trocaCorTextoBuscado(viewGroup.getChildAt(i));
+                }
+            }
+        }
+    }
+
     private static String inverteOrdemData(String data) throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date date = simpleDateFormat.parse(data);
@@ -170,17 +214,25 @@ public class RecyclerViewKm extends ActionBarActivity implements SearchView.OnQu
     * metodo de criacao de um adapter para recycler view
     * */
     public class GridAdapter extends RecyclerView.Adapter<GridViewHolder> {
-        private List<Map<String, Object>> kms;
+        private List<Km> kmList;
 
-        public GridAdapter(List<Map<String, Object>> kms) {
-            this.kms = kms;
+        public GridAdapter(List<Km> kmList) {
+            this.kmList = kmList;
         }
 
 
         /*devolve a quantidade de elementos*/
         @Override
         public int getItemCount() {
-            return kms.size();
+            return kmList.size();
+        }
+
+
+        //        metodo para atribuir o filtro
+        public void setFilter(List<Km> list) {
+            kmList = new ArrayList<>();
+            kmList.addAll(list);
+            notifyDataSetChanged();
         }
 
         /*
@@ -199,14 +251,14 @@ public class RecyclerViewKm extends ActionBarActivity implements SearchView.OnQu
         * */
         @Override
         public void onBindViewHolder(final GridViewHolder holder, final int position) {
-            Map<String, Object> km = kms.get(position);
-            holder.id.setText(String.valueOf(km.get("id")));
-            holder.data.setText((String) km.get("data"));
-            holder.itinerario.setText((String) km.get("itinerario"));
-            holder.qtdCliente.setText(String.valueOf(km.get("qtdCliente")));
-            holder.kmInicial.setText((String) km.get("kmInicial"));
-            holder.kmFinal.setText((String) km.get("kmFinal"));
-            holder.kmTotal.setText((String) km.get("kmTotal"));
+
+            holder.id.setText(String.valueOf(kmList.get(position).getId()));
+            holder.data.setText("Data: " + kmList.get(position).getData());
+            holder.itinerario.setText("Itinerário: " + kmList.get(position).getItinerario());
+            holder.qtdCliente.setText("Clientes: " + String.valueOf(kmList.get(position).getQtdCliente()));
+            holder.kmInicial.setText("Km Inicial: " + kmList.get(position).getKmInicial());
+            holder.kmFinal.setText("Km Final: " + kmList.get(position).getKmFinal());
+            holder.kmTotal.setText("Distância Percorrida: " + kmList.get(position).getKmTotal());
 
 //            codigo para chamar o menupopup na recyclerview
             holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -220,8 +272,7 @@ public class RecyclerViewKm extends ActionBarActivity implements SearchView.OnQu
                         public boolean onMenuItemClick(MenuItem item) {
                             switch (item.getItemId()) {
                                 case R.id.Editar:
-                                    Map<String, Object> map = kms.get(holder.getAdapterPosition());
-                                    Integer id = (Integer) map.get("id");
+                                    Integer id = (kmList.get(position).getId());
                                     Intent intent = new Intent(RecyclerViewKm.this, AlterarKm.class);
                                     intent.putExtra("EXTRA_ID_KM", id);
                                     startActivity(intent);
@@ -233,9 +284,8 @@ public class RecyclerViewKm extends ActionBarActivity implements SearchView.OnQu
                                             setPositiveButton(R.string.sim, new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                                    Map<String, Object> map = kms.get(holder.getAdapterPosition());
-                                                    Integer id = (Integer) map.get("id");
-                                                    kms.remove(holder.getAdapterPosition());
+                                                    Integer id = (kmList.get(position).getId());
+                                                    kms.remove(position);
                                                     rv.invalidate();
                                                     data = "";
                                                     db.deleteKm(id);

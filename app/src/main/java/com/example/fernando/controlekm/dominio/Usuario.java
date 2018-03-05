@@ -1,5 +1,7 @@
 package com.example.fernando.controlekm.dominio;
 
+import java.util.Map;
+
 /**
  * Created by Flavia on 25/12/2017.
  */

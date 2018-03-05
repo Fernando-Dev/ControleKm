@@ -21,7 +21,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Main" />
+        <activity android:name=".Main"
+            android:theme="@style/AppCompat.TelaCheia"/>
         <activity
             android:name=".CadastrarKm"
             android:label="@string/cadastrar" />

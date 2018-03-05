@@ -279,6 +279,21 @@ public class GeradorPdf extends AppCompatActivity {
             e.printStackTrace();
         }
         btnPrimeiraData.setText(_minData);
+//        try {
+//            ano = pegaAno(btnPrimeiraData.getText().toString());
+//            mes = pegaMes(btnPrimeiraData.getText().toString());
+//            dia = pegaDia(btnPrimeiraData.getText().toString());
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//        Date date = criarData(ano,mes,dia);
+//        String _date = "";
+//        try {
+//            _date = trasnformaDate(date);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//        btnPrimeiraData.setText(_date);
     }
 
 
@@ -447,6 +462,35 @@ public class GeradorPdf extends AppCompatActivity {
         SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("dd/MM/yyyy");
         String _date = simpleDateFormat1.format(date);
         return _date;
+    }
+    private static String trasnformaDate(Date date)throws ParseException{
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String _date = simpleDateFormat.format(date);
+        return  _date;
+    }
+    private static Integer pegaDia(String data) throws ParseException{
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = simpleDateFormat.parse(data);
+        SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("dd");
+        String _date = simpleDateFormat1.format(date);
+        Integer dia = Integer.valueOf(_date);
+        return dia;
+    }
+    private static Integer pegaMes(String data) throws ParseException{
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = simpleDateFormat.parse(data);
+        SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("MM");
+        String _date = simpleDateFormat1.format(date);
+        Integer mes = Integer.valueOf(_date);
+        return mes;
+    }
+    private static Integer pegaAno(String data) throws ParseException{
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = simpleDateFormat.parse(data);
+        SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("yyyy");
+        String _date = simpleDateFormat1.format(date);
+        Integer ano = Integer.valueOf(_date);
+        return ano;
     }
 
     private static Date dataFiltroBanco(String data) throws ParseException {
