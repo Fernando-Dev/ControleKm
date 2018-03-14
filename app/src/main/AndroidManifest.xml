@@ -21,8 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Main"
-            android:theme="@style/AppCompat.TelaCheia"/>
+        <activity
+            android:name=".Main"
+            android:theme="@style/AppCompat.TelaCheia" />
         <activity
             android:name=".CadastrarKm"
             android:label="@string/cadastrar" />
@@ -52,8 +53,15 @@
         <activity
             android:name=".RecyclerViewKm"
             android:label="@string/listar_km" />
-        <activity android:name=".RecyclerViewUsuario"
-            android:label="@string/listar_usuario"/>
+        <activity
+            android:name=".RecyclerViewUsuario"
+            android:label="@string/listar_usuario" />
+        <activity
+            android:name=".TrocaOleo"
+            android:label="@string/troca_oleo" />
+        <activity
+            android:name=".Manutencao"
+            android:label="@string/manutencao" />
     </application>
 
 </manifest>

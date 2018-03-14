@@ -49,7 +49,6 @@ public class RecyclerViewKm extends AppCompatActivity implements SearchView.OnQu
     private RecyclerView rv;
     private List<Km> kmList;
     private Cursor cursor;
-    private List<Map<String, Object>> kms;
     private GridAdapter adapter;
     private SearchView searchView;
     private DBAdapter db;
@@ -256,8 +255,8 @@ public class RecyclerViewKm extends AppCompatActivity implements SearchView.OnQu
             holder.data.setText("Data: " + kmList.get(position).getData());
             holder.itinerario.setText("Itinerário: " + kmList.get(position).getItinerario());
             holder.qtdCliente.setText("Clientes: " + String.valueOf(kmList.get(position).getQtdCliente()));
-            holder.kmInicial.setText("Km Inicial: " + kmList.get(position).getKmInicial());
-            holder.kmFinal.setText("Km Final: " + kmList.get(position).getKmFinal());
+            holder.kmInicial.setText("Km Inicial: " + kmList.get(position).getKmInicial() + " Km " + "<-->");
+            holder.kmFinal.setText("Km Final: " + kmList.get(position).getKmFinal() + " Km ");
             holder.kmTotal.setText("Distância Percorrida: " + kmList.get(position).getKmTotal());
 
 //            codigo para chamar o menupopup na recyclerview
@@ -285,7 +284,7 @@ public class RecyclerViewKm extends AppCompatActivity implements SearchView.OnQu
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
                                                     Integer id = (kmList.get(position).getId());
-                                                    kms.remove(position);
+                                                    kmList.remove(position);
                                                     rv.invalidate();
                                                     data = "";
                                                     db.deleteKm(id);

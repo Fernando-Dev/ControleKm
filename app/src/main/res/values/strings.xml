@@ -45,6 +45,14 @@
     <string name="campo_vazio">Campo Vazio!</string>
     <string name="texto_info_inicio">Carregando... Aguarde por favor!</string>
     <string name="texto_info_final">Finalizando...</string>
+    <string name="troca_oleo">Troca de Óleo</string>
+    <string name="ultima_troca_oleo">Ultima troca de óleo realizada</string>
+    <string name="manutencao">Manutenção</string>
+    <string name="ultima_manutencao">Ultima manutenção realizada</string>
+    <string name="proxima_troca_oleo">Próxima troca de óleo</string>
+    <string name="proxima_manutencao">Próxima manutenção</string>
+
+
     <string name="buscar">Buscar</string>
     <string name="results_found">
     Results found: <b>%s</b>

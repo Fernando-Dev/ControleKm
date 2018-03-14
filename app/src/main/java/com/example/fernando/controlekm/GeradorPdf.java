@@ -38,11 +38,13 @@ import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfCopy;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfPage;
 import com.itextpdf.text.pdf.PdfWriter;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -62,18 +64,19 @@ import java.util.Locale;
  */
 
 public class GeradorPdf extends AppCompatActivity {
-    private Cursor c;
+    private Cursor c, cc, cursor;
     private static final String TAG = "PdfCreatorActivity";
     private File pdfFile, docsFolder;
     final private int REQUEST_CODE_ASK_PERMISSIONS = 111;
     private SimpleDateFormat dateFormat;
     private DBAdapter db;
     private SQLiteDatabase database;
-    private int ano, mes, dia;
+    private int ano1, ano2, mes1, mes2, dia1, dia2;
     private Date dataPdf1, dataPdf2;
     private Button btnPrimeiraData, btnSegundaData;
     private String data1, data2, _maxData, _minData;
     private TextView txtError1, txtError2, textoInfo;
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -82,19 +85,38 @@ public class GeradorPdf extends AppCompatActivity {
         setContentView(R.layout.gerar_relatorio);
         db = new DBAdapter(this);
 
-        Calendar calendar = Calendar.getInstance();
-        ano = calendar.get(Calendar.YEAR);
-        mes = calendar.get(Calendar.MONTH);
-        dia = calendar.get(Calendar.DAY_OF_MONTH);
+        if (lastData()==null/*  || db.getAllKm().size() == 0*/) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Atenção!")
+                    .setMessage("Não há quilometragem ou usuário cadastrado para gerar relatório")
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            finish();
+                        }
+                    })
+                    .create()
+                    .show();
 
+        }
 
         btnPrimeiraData = (Button) findViewById(R.id.btnDataPdf1);
         btnSegundaData = (Button) findViewById(R.id.btnDataPdf2);
         txtError1 = (TextView) findViewById(R.id.txtError1);
         txtError2 = (TextView) findViewById(R.id.txtError2);
-        lastData();
-        firstData();
+        btnSegundaData.setText(lastData());
+        btnPrimeiraData.setText(firstData());
 
+        try {
+            ano2 = pegaAno(lastData());
+            mes2 = pegaMes(lastData());
+            dia2 = pegaDia(lastData());
+            ano1 = pegaAno(firstData());
+            mes1 = pegaMes(firstData());
+            dia1 = pegaDia(firstData());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         Button gerarRelatorio = (Button) findViewById(R.id.btnGerarPdf);
         Button voltarPdf = (Button) findViewById(R.id.btnVoltarPdf);
@@ -243,7 +265,34 @@ public class GeradorPdf extends AppCompatActivity {
                 .show();
     }
 
-    private void lastData() {
+    private static Integer pegaDia(String data) throws ParseException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = simpleDateFormat.parse(data);
+        SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("dd");
+        String _date = simpleDateFormat1.format(date);
+        Integer dia = Integer.valueOf(_date);
+        return dia;
+    }
+
+    private static Integer pegaMes(String data) throws ParseException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = simpleDateFormat.parse(data);
+        SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("MM");
+        String _date = simpleDateFormat1.format(date);
+        Integer mes = Integer.valueOf(_date);
+        return mes - 1;
+    }
+
+    private static Integer pegaAno(String data) throws ParseException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = simpleDateFormat.parse(data);
+        SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("yyyy");
+        String _date = simpleDateFormat1.format(date);
+        Integer ano = Integer.valueOf(_date);
+        return ano;
+    }
+
+    private String lastData() {
         SQLiteDatabase database = db.read();
         Cursor maxData = database.rawQuery("SELECT data FROM kms WHERE kmFinal = (SELECT MAX(kmFinal) FROM kms)", null);
         maxData.moveToFirst();
@@ -255,14 +304,13 @@ public class GeradorPdf extends AppCompatActivity {
 
         try {
             _maxData = inverteOrdemData(data2);
-            dataPdf2 = dataFiltroBanco(_maxData);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        btnSegundaData.setText(_maxData);
+        return _maxData;
     }
 
-    private void firstData() {
+    private String firstData() {
         SQLiteDatabase database = db.read();
         Cursor minData = database.rawQuery("SELECT data FROM kms WHERE kmInicial = (SELECT MIN(kmInicial) FROM kms)", null);
         minData.moveToFirst();
@@ -274,26 +322,10 @@ public class GeradorPdf extends AppCompatActivity {
 
         try {
             _minData = inverteOrdemData(data1);
-            dataPdf1 = dataFiltroBanco(_minData);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        btnPrimeiraData.setText(_minData);
-//        try {
-//            ano = pegaAno(btnPrimeiraData.getText().toString());
-//            mes = pegaMes(btnPrimeiraData.getText().toString());
-//            dia = pegaDia(btnPrimeiraData.getText().toString());
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        Date date = criarData(ano,mes,dia);
-//        String _date = "";
-//        try {
-//            _date = trasnformaDate(date);
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        btnPrimeiraData.setText(_date);
+        return _minData;
     }
 
 
@@ -312,12 +344,11 @@ public class GeradorPdf extends AppCompatActivity {
 
         pdfFile = new File(docsFolder.getAbsolutePath(), "RelatórioKm.pdf");
         c = database.rawQuery("SELECT * FROM kms WHERE data BETWEEN '" + data1 + "' AND '" + data2 + "' ORDER BY data", null);
-        Cursor cc = database.rawQuery("SELECT * FROM kms WHERE data BETWEEN '" + data1 + "' AND '" + data2 + "' ORDER BY data", null);
-        Cursor cursor = database.rawQuery("SELECT * FROM usuarios", null);
+        cc = database.rawQuery("SELECT * FROM kms WHERE data BETWEEN '" + data1 + "' AND '" + data2 + "' ORDER BY data", null);
+        cursor = database.rawQuery("SELECT * FROM usuarios", null);
 
-        OutputStream output = new FileOutputStream(pdfFile);
+        FileOutputStream output = new FileOutputStream(pdfFile);
         Document documento = new Document(PageSize.A4.rotate());
-
 
         PdfWriter writer = PdfWriter.getInstance(documento, output);
         PageOrientation event = new PageOrientation();
@@ -393,7 +424,6 @@ public class GeradorPdf extends AppCompatActivity {
 
             c.moveToNext();
         }
-
         c.close();
         table0.addCell(new PdfPCell(table));
 
@@ -426,6 +456,7 @@ public class GeradorPdf extends AppCompatActivity {
         table2.addCell(createCell("-", 1, 1, Element.ALIGN_CENTER));
         table2.addCell(createCell(totalKm.toString() + " Km", 1, 1, Element.ALIGN_CENTER));
         table2.addCell(createCell(vlrDeslocamento, 1, 1, Element.ALIGN_CENTER));
+
         table0.addCell(new PdfPCell(table2));
 
         PdfPTable table3 = new PdfPTable(2);
@@ -463,42 +494,6 @@ public class GeradorPdf extends AppCompatActivity {
         String _date = simpleDateFormat1.format(date);
         return _date;
     }
-    private static String trasnformaDate(Date date)throws ParseException{
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        String _date = simpleDateFormat.format(date);
-        return  _date;
-    }
-    private static Integer pegaDia(String data) throws ParseException{
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = simpleDateFormat.parse(data);
-        SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("dd");
-        String _date = simpleDateFormat1.format(date);
-        Integer dia = Integer.valueOf(_date);
-        return dia;
-    }
-    private static Integer pegaMes(String data) throws ParseException{
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = simpleDateFormat.parse(data);
-        SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("MM");
-        String _date = simpleDateFormat1.format(date);
-        Integer mes = Integer.valueOf(_date);
-        return mes;
-    }
-    private static Integer pegaAno(String data) throws ParseException{
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = simpleDateFormat.parse(data);
-        SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("yyyy");
-        String _date = simpleDateFormat1.format(date);
-        Integer ano = Integer.valueOf(_date);
-        return ano;
-    }
-
-    private static Date dataFiltroBanco(String data) throws ParseException {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        Date date = simpleDateFormat.parse(data);
-        return date;
-    }
-
 
     private static String desenverterData(String data) throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -558,18 +553,18 @@ public class GeradorPdf extends AppCompatActivity {
 
         switch (id) {
             case R.id.btnDataPdf1:
-                return new DatePickerDialog(this, dataPdfPrimeiro, ano, mes, dia);
+                return new DatePickerDialog(this, dataPdfPrimeiro, ano1, mes1, dia1);
             case R.id.btnDataPdf2:
-                return new DatePickerDialog(this, dataPdfSegundo, ano, mes, dia);
+                return new DatePickerDialog(this, dataPdfSegundo, ano2, mes2, dia2);
         }
         return null;
     }
 
     private DatePickerDialog.OnDateSetListener dataPdfPrimeiro = new DatePickerDialog.OnDateSetListener() {
         public void onDateSet(DatePicker view, int anoSelecionado, int mesSelecionado, int diaSelecionado) {
-            ano = anoSelecionado;
-            mes = mesSelecionado;
-            dia = diaSelecionado;
+            ano1 = anoSelecionado;
+            mes1 = mesSelecionado;
+            dia1 = diaSelecionado;
             dataPdf1 = criarData(anoSelecionado, mesSelecionado, diaSelecionado);
             AtualizarData1();
 
@@ -577,9 +572,9 @@ public class GeradorPdf extends AppCompatActivity {
     };
     private DatePickerDialog.OnDateSetListener dataPdfSegundo = new DatePickerDialog.OnDateSetListener() {
         public void onDateSet(DatePicker view, int anoSelecionado, int mesSelecionado, int diaSelecionado) {
-            ano = anoSelecionado;
-            mes = mesSelecionado;
-            dia = diaSelecionado;
+            ano2 = anoSelecionado;
+            mes2 = mesSelecionado;
+            dia2 = diaSelecionado;
             dataPdf2 = criarData(anoSelecionado, mesSelecionado, diaSelecionado);
             AtualizarData2();
         }
@@ -592,13 +587,13 @@ public class GeradorPdf extends AppCompatActivity {
     }
 
     private void AtualizarData1() {
-        btnPrimeiraData.setText(new StringBuilder().append(dia).append("/").append(mes +
-                1).append("/").append(ano).append(""));
+        btnPrimeiraData.setText(new StringBuilder().append(dia1).append("/").append(mes1 +
+                1).append("/").append(ano1).append(""));
     }
 
     private void AtualizarData2() {
-        btnSegundaData.setText(new StringBuilder().append(dia).append("/").append(mes +
-                1).append("/").append(ano).append(""));
+        btnSegundaData.setText(new StringBuilder().append(dia2).append("/").append(mes2 +
+                1).append("/").append(ano2).append(""));
     }
 
     @Override

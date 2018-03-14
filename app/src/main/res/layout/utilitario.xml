@@ -1,14 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/utilitario_xml"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/colorTitle"
+    android:orientation="vertical"
+    android:padding="@dimen/padding_padrao"
     tools:context=".Utilitario">
 
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_5dp">
+
+        <Button
+            android:id="@+id/btnTrocaOleo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/troca_oleo"
+            android:onClick="selecionarOpcao"
+            android:background="@drawable/botao"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorWhite" />
+
+        <TextView
+            android:id="@+id/lvUltimaTrocaOleo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_padrao"
+            android:text="@string/ultima_troca_oleo"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorWhite" />
+
+        <TextView
+            android:id="@+id/ultimaTrocaOleo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorWhite" />
+
+        <TextView
+            android:id="@+id/lvProximaTrocaOleo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/proxima_troca_oleo"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorWhite" />
+
+        <TextView
+            android:id="@+id/proximaTrocaOleo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorWhite" />
+
+        <Button
+            android:id="@+id/btnManutencao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/manutencao"
+            android:layout_marginTop="@dimen/padding_padrao"
+            android:onClick="selecionarOpcao"
+            android:background="@drawable/botao"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorWhite" />
+
+        <TextView
+            android:id="@+id/lvUltimaManutencao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_padrao"
+            android:text="@string/ultima_manutencao"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorWhite" />
+
+        <TextView
+            android:id="@+id/ultimaManutencao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorWhite" />
+
+        <TextView
+            android:id="@+id/lvProximaManutencao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/proxima_manutencao"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorWhite" />
+
+        <TextView
+            android:id="@+id/proximaManutencao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorWhite" />
+    </TableLayout>
 
 
-</LinearLayout>
+</ScrollView>

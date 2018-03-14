@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/troca_oleo"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+        android:textColor="@color/colorTitle" />
+    <EditText
+        android:id="@+id/edtKmTrocaOleo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:textColor="@color/colorTitle"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Com quantos km sera trocado o oleo?"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+        android:textColor="@color/colorTitle" />
+    <RadioGroup
+        android:id="@+id/rg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/rb1000"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1000 Km"
+            android:checked="true"
+            />
+        <RadioButton
+            android:id="@+id/rb2000"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2000 Km"/>
+    </RadioGroup>
+</LinearLayout>

@@ -34,7 +34,7 @@ import java.util.Locale;
 
 public class AlterarKm extends AppCompatActivity {
     private int ano, mes, dia;
-    private String data;
+    private String data, periodo;
     private Date edtDataKm;
     private Button btnAlterar, btnVoltarKm, btnData;
     private EditText altKmInicial, altKmFinal, altItinerario, altQtdCliente;
@@ -49,17 +49,8 @@ public class AlterarKm extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.alterar_km);
 
-        Calendar calendar = Calendar.getInstance();
-        ano = calendar.get(Calendar.YEAR);
-        mes = calendar.get(Calendar.MONTH);
-        dia = calendar.get(Calendar.DAY_OF_MONTH);
-        dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.CANADA);
-
-
         btnAlterar = (Button) findViewById(R.id.btnAlterarKm);
         btnVoltarKm = (Button) findViewById(R.id.btnVoltarKm);
-
-
         btnData = (Button) findViewById(R.id.altData);
         altKmInicial = (EditText) findViewById(R.id.altKmInicial);
         altKmFinal = (EditText) findViewById(R.id.altKmFinal);
@@ -67,6 +58,7 @@ public class AlterarKm extends AppCompatActivity {
         altQtdCliente = (EditText) findViewById(R.id.altQtdeCliente);
         txvKmTotal = (TextView) findViewById(R.id.altTxvKmTotal);
         db = new DBAdapter(AlterarKm.this);
+
         Bundle extra = getIntent().getExtras();
         if (extra != null) {
             id = extra.getInt("EXTRA_ID_KM");
@@ -79,7 +71,7 @@ public class AlterarKm extends AppCompatActivity {
             public void onClick(View v) {
                 if (altItinerario.getText().toString().isEmpty()) {
                     altItinerario.setError("Campo vazio!");
-                }else if (altQtdCliente.getText().toString().isEmpty()){
+                } else if (altQtdCliente.getText().toString().isEmpty()) {
                     altQtdCliente.setError("Campo vazio!");
                 } else if (altKmInicial.getText().toString().isEmpty()) {
                     altKmInicial.setError("Campo vazio!");
@@ -141,9 +133,12 @@ public class AlterarKm extends AppCompatActivity {
         Cursor c = database.rawQuery("SELECT _id,data,itinerario,qtdCliente,kmInicial,kmFinal,kmTotal FROM kms WHERE _id=?",
                 new String[]{id.toString()});
         c.moveToFirst();
-        String periodo = c.getString(c.getColumnIndex(DatabaseHelper.KEY_DATA));
+        periodo = c.getString(c.getColumnIndex(DatabaseHelper.KEY_DATA));
         try {
             btnData.setText(inverteOrdemData(periodo));
+            ano = pegaAno(btnData.getText().toString());
+            mes = pegaMes(btnData.getText().toString());
+            dia = pegaDia(btnData.getText().toString());
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -154,8 +149,33 @@ public class AlterarKm extends AppCompatActivity {
         altKmFinal.setText(c.getString(c.getColumnIndex(DatabaseHelper.KEY_KM_FINAL)));
         txvKmTotal.setText(c.getString(c.getColumnIndex(DatabaseHelper.KEY_KM_TOTAL)));
         c.close();
+    }
 
+    private static Integer pegaDia(String data) throws ParseException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = simpleDateFormat.parse(data);
+        SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("dd");
+        String _date = simpleDateFormat1.format(date);
+        Integer dia = Integer.valueOf(_date);
+        return dia;
+    }
 
+    private static Integer pegaMes(String data) throws ParseException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = simpleDateFormat.parse(data);
+        SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("MM");
+        String _date = simpleDateFormat1.format(date);
+        Integer mes = Integer.valueOf(_date);
+        return mes - 1;
+    }
+
+    private static Integer pegaAno(String data) throws ParseException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = simpleDateFormat.parse(data);
+        SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("yyyy");
+        String _date = simpleDateFormat1.format(date);
+        Integer ano = Integer.valueOf(_date);
+        return ano;
     }
 
     private static String inverteOrdemData(String data) throws ParseException {

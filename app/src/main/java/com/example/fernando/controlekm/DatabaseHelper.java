@@ -22,7 +22,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = "DBAdapter";
     private static final String DATABASE_NAME = "ControleKm";
     public static final String DATABASE_TABLE = "kms";
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 7;
     private static final String DATABASE_CREATE = "create table kms(_id integer primary key autoincrement,"
             + "data text not null, itinerario text not null, qtdCliente integer not null, kmInicial integer not null, " +
             "kmFinal integer not null, kmTotal integer not null);";

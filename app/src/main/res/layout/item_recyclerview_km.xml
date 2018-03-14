@@ -78,6 +78,7 @@
             android:id="@+id/rvKmFinal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding_5dp"
             android:layout_toEndOf="@+id/rvKmInicial"
             android:layout_alignBottom="@+id/rvKmInicial"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"

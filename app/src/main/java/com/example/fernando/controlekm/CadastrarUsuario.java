@@ -1,9 +1,11 @@
 package com.example.fernando.controlekm;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -38,7 +40,7 @@ public class CadastrarUsuario extends AppCompatActivity {
 
         edtNome = (EditText) findViewById(R.id.edtNome);
         edtUnidade = (EditText) findViewById(R.id.edtUnidade);
-        edtFuncao = (EditText)findViewById(R.id.edtFuncao);
+        edtFuncao = (EditText) findViewById(R.id.edtFuncao);
         edtPlaca = (EditText) findViewById(R.id.edtPlaca);
         edtGerencia = (EditText) findViewById(R.id.edtGerencia);
         btnSalvar = (Button) findViewById(R.id.btnSalvarUser);
@@ -46,20 +48,34 @@ public class CadastrarUsuario extends AppCompatActivity {
 
         db = new DBAdapter(CadastrarUsuario.this);
 
+        if (db.listaUsuario().size() == 1) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Atenção!")
+                    .setMessage("Não é permitido fazer cadastro de mais de um usuário!")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            finish();
+                        }
+                    })
+                    .create()
+                    .show();
+        }
+
         btnSalvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (edtNome.getText().toString().isEmpty()){
+                if (edtNome.getText().toString().isEmpty()) {
                     edtNome.setError("Campo vazio!");
-                }else if (edtUnidade.getText().toString().isEmpty()){
+                } else if (edtUnidade.getText().toString().isEmpty()) {
                     edtUnidade.setError("Campo vazio!");
-                }else if (edtFuncao.getText().toString().isEmpty()){
+                } else if (edtFuncao.getText().toString().isEmpty()) {
                     edtFuncao.setError("Campo vazio!");
-                }else if (edtPlaca.getText().toString().isEmpty()){
+                } else if (edtPlaca.getText().toString().isEmpty()) {
                     edtPlaca.setError("Campo vazio!");
-                }else if (edtGerencia.getText().toString().isEmpty()){
+                } else if (edtGerencia.getText().toString().isEmpty()) {
                     edtGerencia.setError("Campo vazio!");
-                }else{
+                } else {
                     addUsuario();
                 }
             }
@@ -79,7 +95,7 @@ public class CadastrarUsuario extends AppCompatActivity {
             DatabaseHelper helper = new DatabaseHelper(this);
             db.open();
             Usuario usuario = new Usuario();
-            String nome  = edtNome.getText().toString();
+            String nome = edtNome.getText().toString();
             nome = nome.toUpperCase();
             usuario.setNome(nome);
             String unidade = edtUnidade.getText().toString();
