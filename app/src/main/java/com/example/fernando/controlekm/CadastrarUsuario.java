@@ -50,6 +50,7 @@ public class CadastrarUsuario extends AppCompatActivity {
 
         if (db.listaUsuario().size() == 1) {
             new AlertDialog.Builder(this)
+                    .setCancelable(false)
                     .setTitle("Atenção!")
                     .setMessage("Não é permitido fazer cadastro de mais de um usuário!")
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
