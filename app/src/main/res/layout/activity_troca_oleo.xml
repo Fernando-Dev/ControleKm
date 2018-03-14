@@ -1,9 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorTitle"
+    android:gravity="center_horizontal"
+    android:padding="@dimen/padding_padrao"
     tools:context="com.example.fernando.controlekm.TrocaOleo">
 
-</android.support.constraint.ConstraintLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:id="@+id/txtkmtroca"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/edtKmTrocaOleo"
+            android:layout_alignBottom="@+id/edtKmTrocaOleo"
+            android:layout_alignParentStart="true"
+            android:text="Km da troca de óleo:"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorWhite"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/edtKmTrocaOleo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@+id/txtdateTroca"
+            android:background="@drawable/edittext_border_radius"
+            android:hint="Ex.: 15241"
+            android:inputType="number"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorTitle"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtdateTroca"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtkmtroca"
+            android:layout_marginTop="@dimen/padding_padrao"
+            android:text="Data da troca de óleo"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorWhite"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:id="@+id/txtDatatroca"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtdateTroca"
+            android:layout_marginTop="@dimen/padding_padrao"
+            android:inputType="date"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@android:color/holo_green_dark"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtquantKmTroca"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtDatatroca"
+            android:layout_marginTop="@dimen/padding_padrao"
+            android:padding="@dimen/padding_5dp"
+            android:text="Quantidade de km para troca deste lubrificante? "
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorWhite"
+            android:textStyle="bold" />
+
+
+        <RadioGroup
+            android:id="@+id/radio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/edtKmTrocaOleo"
+            android:layout_below="@+id/txtquantKmTroca"
+            android:layout_marginTop="@dimen/padding_padrao"
+            android:layout_toEndOf="@+id/txtDatatroca"
+            android:background="@drawable/edittext_border_radius"
+            android:gravity="center|center_horizontal"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rb1000"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="1.000 km"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textStyle="bold" />
+
+            <RadioButton
+                android:id="@+id/rb2000"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:text="2.000 km"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textStyle="bold" />
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/btnSalvarTroca"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/radio"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/botao"
+            android:text="@string/salvar"
+            android:textColor="@color/colorWhite" />
+
+        <Button
+            android:id="@+id/btnVoltarTroca"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btnSalvarTroca"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/botao"
+            android:text="@string/voltar"
+            android:textColor="@color/colorWhite" />
+
+
+    </RelativeLayout>
+
+</ScrollView>
