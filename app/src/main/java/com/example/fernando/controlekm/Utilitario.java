@@ -14,13 +14,9 @@ import android.view.View;
 import android.widget.Button;
 
 
-
-
 import android.widget.TextView;
 
 import com.example.fernando.controlekm.DAO.DBAdapter;
-
-
 
 
 /**
@@ -28,8 +24,8 @@ import com.example.fernando.controlekm.DAO.DBAdapter;
  */
 
 public class Utilitario extends AppCompatActivity {
-    private TextView ultimaTrocaOleo, proximaTrocaOleo, ultimaManutencao, proximaManutencao;
-    private Button btnTrocaOleo, btnManutencao;
+    private TextView ultimaTrocaOleo, ultimoKmTrocaOleo, proximaTrocaOleo, ultimaManutencao, proximaManutencao;
+    private Button btnTrocaOleo, btnManutencao, btnVoltarUtils;
     private DBAdapter db;
 
     @Override
@@ -51,6 +47,7 @@ public class Utilitario extends AppCompatActivity {
 
 
         ultimaTrocaOleo = (TextView) findViewById(R.id.ultimaTrocaOleo);
+        ultimoKmTrocaOleo = (TextView) findViewById(R.id.ultimoKmTrocaOleo);
         proximaTrocaOleo = (TextView) findViewById(R.id.proximaTrocaOleo);
         ultimaManutencao = (TextView) findViewById(R.id.ultimaManutencao);
         proximaManutencao = (TextView) findViewById(R.id.proximaManutencao);
@@ -58,15 +55,32 @@ public class Utilitario extends AppCompatActivity {
 
         btnTrocaOleo = (Button) findViewById(R.id.btnTrocaOleo);
         btnManutencao = (Button) findViewById(R.id.btnManutencao);
+        btnVoltarUtils = (Button) findViewById(R.id.btnVoltarUtils);
+
+        Bundle extra = getIntent().getExtras();
+        if (extra != null) {
+            ultimaTrocaOleo.setText(extra.getString("ULTIMA_TROCA_OLEO"));
+            ultimoKmTrocaOleo.setText(String.valueOf(extra.getInt("KM_ULTIMA_TROCA_OLEO")));
+            proximaTrocaOleo.setText(String.valueOf(extra.getInt("KM_PROXIMA_TROCA_OLEO")));
+        }
+
+        btnVoltarUtils.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+
     }
 
     public void selecionarOpcao(View v) {
         switch (v.getId()) {
             case R.id.btnTrocaOleo:
-                startActivity(new Intent(this, TrocaOleo.class));
+                startActivity(new Intent(this, CadastrarTrocaOleo.class));
                 break;
             case R.id.btnManutencao:
-                startActivity(new Intent(this, Manutencao.class));
+                startActivity(new Intent(this, CadastrarManutencao.class));
                 break;
         }
     }

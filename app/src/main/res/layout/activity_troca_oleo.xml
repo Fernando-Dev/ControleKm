@@ -7,12 +7,13 @@
     android:background="@color/colorTitle"
     android:gravity="center_horizontal"
     android:padding="@dimen/padding_padrao"
-    tools:context="com.example.fernando.controlekm.TrocaOleo">
+    tools:context="com.example.fernando.controlekm.CadastrarTrocaOleo">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:padding="@dimen/padding_5dp">
 
         <TextView
             android:id="@+id/txtkmtroca"
@@ -45,6 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/txtkmtroca"
             android:layout_marginTop="@dimen/padding_padrao"
+            android:padding="@dimen/padding_5dp"
             android:text="Data da troca de óleo"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
             android:textColor="@color/colorWhite"
@@ -57,6 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/txtdateTroca"
             android:layout_marginTop="@dimen/padding_padrao"
+            android:padding="@dimen/padding_5dp"
             android:inputType="date"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
             android:textColor="@android:color/holo_green_dark"
@@ -69,7 +72,7 @@
             android:layout_below="@+id/txtDatatroca"
             android:layout_marginTop="@dimen/padding_padrao"
             android:padding="@dimen/padding_5dp"
-            android:text="Quantidade de km para troca deste lubrificante? "
+            android:text="Quantidade de km para para próxima troca de óleo? "
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
             android:textColor="@color/colorWhite"
             android:textStyle="bold" />
@@ -85,7 +88,8 @@
             android:layout_toEndOf="@+id/txtDatatroca"
             android:background="@drawable/edittext_border_radius"
             android:gravity="center|center_horizontal"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_alignParentStart="true">
 
             <RadioButton
                 android:id="@+id/rb1000"

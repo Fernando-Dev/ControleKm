@@ -57,10 +57,10 @@
             android:name=".RecyclerViewUsuario"
             android:label="@string/listar_usuario" />
         <activity
-            android:name=".TrocaOleo"
+            android:name=".CadastrarTrocaOleo"
             android:label="@string/troca_oleo" />
         <activity
-            android:name=".Manutencao"
+            android:name=".CadastrarManutencao"
             android:label="@string/manutencao" />
     </application>
 

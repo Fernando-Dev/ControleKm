@@ -3,7 +3,7 @@ package com.example.fernando.controlekm;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class Manutencao extends AppCompatActivity {
+public class CadastrarManutencao extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
