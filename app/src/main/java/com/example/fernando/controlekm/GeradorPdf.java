@@ -85,10 +85,15 @@ public class GeradorPdf extends AppCompatActivity {
         setContentView(R.layout.gerar_relatorio);
         db = new DBAdapter(this);
 
-        if (lastData()==null/*  || db.getAllKm().size() == 0*/) {
+        btnPrimeiraData = (Button) findViewById(R.id.btnDataPdf1);
+        btnSegundaData = (Button) findViewById(R.id.btnDataPdf2);
+        txtError1 = (TextView) findViewById(R.id.txtError1);
+        txtError2 = (TextView) findViewById(R.id.txtError2);
+        if (db.listaUsuario().isEmpty() || db.getAllKm().isEmpty()) {
             new AlertDialog.Builder(this)
+                    .setCancelable(false)
                     .setTitle("Atenção!")
-                    .setMessage("Não há quilometragem ou usuário cadastrado para gerar relatório")
+                    .setMessage("Não há quilometragem ou usuário cadastrado para gerar o relatório")
                     .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -97,26 +102,21 @@ public class GeradorPdf extends AppCompatActivity {
                     })
                     .create()
                     .show();
-
+        } else {
+            btnSegundaData.setText(lastData());
+            btnPrimeiraData.setText(firstData());
+            try {
+                ano2 = pegaAno(lastData());
+                mes2 = pegaMes(lastData());
+                dia2 = pegaDia(lastData());
+                ano1 = pegaAno(firstData());
+                mes1 = pegaMes(firstData());
+                dia1 = pegaDia(firstData());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
 
-        btnPrimeiraData = (Button) findViewById(R.id.btnDataPdf1);
-        btnSegundaData = (Button) findViewById(R.id.btnDataPdf2);
-        txtError1 = (TextView) findViewById(R.id.txtError1);
-        txtError2 = (TextView) findViewById(R.id.txtError2);
-        btnSegundaData.setText(lastData());
-        btnPrimeiraData.setText(firstData());
-
-        try {
-            ano2 = pegaAno(lastData());
-            mes2 = pegaMes(lastData());
-            dia2 = pegaDia(lastData());
-            ano1 = pegaAno(firstData());
-            mes1 = pegaMes(firstData());
-            dia1 = pegaDia(firstData());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
 
         Button gerarRelatorio = (Button) findViewById(R.id.btnGerarPdf);
         Button voltarPdf = (Button) findViewById(R.id.btnVoltarPdf);

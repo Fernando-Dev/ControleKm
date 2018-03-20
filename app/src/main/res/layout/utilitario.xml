@@ -137,7 +137,7 @@
             android:textColor="@color/colorWhite" />
 
         <TextView
-            android:id="@+id/proximaManutencao"
+            android:id="@+id/kmProximaManutencao"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_padrao"

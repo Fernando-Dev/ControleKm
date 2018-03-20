@@ -11,12 +11,25 @@ public class TrocaOleo {
     private Integer kmTroca;
     private String dataTroca;
     private Integer vidaUtilOleo;
+    private Integer proximaTroca;
 
-    public TrocaOleo(Integer idTroca, Integer kmTroca, String dataTroca, Integer vidaUtilOleo) {
+    public TrocaOleo(Integer idTroca, Integer kmTroca, String dataTroca, Integer vidaUtilOleo, Integer proximaTroca) {
         this.idTroca = idTroca;
         this.kmTroca = kmTroca;
         this.dataTroca = dataTroca;
         this.vidaUtilOleo = vidaUtilOleo;
+        this.proximaTroca = proximaTroca;
+    }
+
+    public TrocaOleo() {
+    }
+
+    public Integer getProximaTroca() {
+        return proximaTroca;
+    }
+
+    public void setProximaTroca(Integer proximaTroca) {
+        this.proximaTroca = proximaTroca;
     }
 
     public Integer getIdTroca() {

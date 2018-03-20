@@ -5,23 +5,26 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.support.v4.app.NavUtils;
-import android.util.Log;
 
 import com.example.fernando.controlekm.DatabaseHelper;
 import com.example.fernando.controlekm.dominio.Km;
+import com.example.fernando.controlekm.dominio.Manutencao;
+import com.example.fernando.controlekm.dominio.TrocaOleo;
 import com.example.fernando.controlekm.dominio.Usuario;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static android.R.attr.start;
 import static com.example.fernando.controlekm.DatabaseHelper.DATABASE_TABLE;
+import static com.example.fernando.controlekm.DatabaseHelper.DATABASE_TABLE_MANUTENCAO;
+import static com.example.fernando.controlekm.DatabaseHelper.DATABASE_TABLE_TROCA_OLEO;
 import static com.example.fernando.controlekm.DatabaseHelper.DATABASE_TABLE_USERS;
+import static com.example.fernando.controlekm.DatabaseHelper.DATA_MANUTENCAO;
+import static com.example.fernando.controlekm.DatabaseHelper.DATA_TROCA_OLEO;
+import static com.example.fernando.controlekm.DatabaseHelper.DISTANCIA_MANUTENCAO;
+import static com.example.fernando.controlekm.DatabaseHelper.ID_MANUTENCAO;
+import static com.example.fernando.controlekm.DatabaseHelper.ID_TROCA_OLEO;
 import static com.example.fernando.controlekm.DatabaseHelper.KEY_DATA;
 import static com.example.fernando.controlekm.DatabaseHelper.KEY_FUNCAO;
 import static com.example.fernando.controlekm.DatabaseHelper.KEY_GERENCIA;
@@ -35,6 +38,11 @@ import static com.example.fernando.controlekm.DatabaseHelper.KEY_PLACA;
 import static com.example.fernando.controlekm.DatabaseHelper.KEY_QTD_CLIENTE;
 import static com.example.fernando.controlekm.DatabaseHelper.KEY_ROWID;
 import static com.example.fernando.controlekm.DatabaseHelper.KEY_UNIDADE;
+import static com.example.fernando.controlekm.DatabaseHelper.KM_MANUTENCAO;
+import static com.example.fernando.controlekm.DatabaseHelper.KM_PROXIMA_MANUTENCAO;
+import static com.example.fernando.controlekm.DatabaseHelper.KM_PROXIMA_TROCA;
+import static com.example.fernando.controlekm.DatabaseHelper.KM_TROCA_OLEO;
+import static com.example.fernando.controlekm.DatabaseHelper.VIDA_UTIL_OLEO;
 
 
 /**
@@ -96,11 +104,43 @@ public class DBAdapter {
         return open().insert(DatabaseHelper.DATABASE_TABLE_USERS, null, initialValues);
     }
 
+    //    inseindo dados na tabela troca de oleo
+    public long inserirTrocaOleo(TrocaOleo trocaOleo) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DatabaseHelper.KM_TROCA_OLEO, trocaOleo.getKmTroca());
+        contentValues.put(DatabaseHelper.DATA_TROCA_OLEO, trocaOleo.getDataTroca());
+        contentValues.put(DatabaseHelper.VIDA_UTIL_OLEO, trocaOleo.getVidaUtilOleo());
+        contentValues.put(DatabaseHelper.KM_PROXIMA_TROCA, trocaOleo.getProximaTroca());
+        return open().insert(DatabaseHelper.DATABASE_TABLE_TROCA_OLEO, null, contentValues);
+    }
+
+    //    inserindo dados na tabela de manutencoes
+    public long inserirManutencao(Manutencao manutencao) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DatabaseHelper.KM_MANUTENCAO, manutencao.getKmManutencao());
+        contentValues.put(DatabaseHelper.DATA_MANUTENCAO, manutencao.getDataManutencao());
+        contentValues.put(DatabaseHelper.DISTANCIA_MANUTENCAO, manutencao.getDistanciaManutencao());
+        contentValues.put(DatabaseHelper.KM_PROXIMA_MANUTENCAO, manutencao.getKmProximaManutencao());
+        return open().insert(DatabaseHelper.DATABASE_TABLE_MANUTENCAO, null, contentValues);
+    }
+
     // retornando todas as quiloemtragens
     public Cursor getAllKms() {
         return db.query(DATABASE_TABLE,
-                new String[]{KEY_ROWID, KEY_DATA, KEY_ITINERARIO, KEY_QTD_CLIENTE, KEY_KM_INICIAL, KEY_KM_FINAL}, null, null, null,
+                new String[]{KEY_ROWID, KEY_DATA, KEY_ITINERARIO, KEY_QTD_CLIENTE, KEY_KM_INICIAL, KEY_KM_FINAL, KEY_KM_TOTAL}, null, null, null,
                 null, null, null);
+    }
+
+    //    retornando todos as trcoas de oleo
+    public Cursor getTrocaOleo() {
+        return read().query(true, DATABASE_TABLE_TROCA_OLEO, new String[]{ID_TROCA_OLEO, KM_TROCA_OLEO, DATA_TROCA_OLEO, VIDA_UTIL_OLEO, KM_PROXIMA_TROCA},
+                null, null, null, null, null, null);
+    }
+
+    //    retorna todas as manutencoes
+    public Cursor getmanutencoes() {
+        return read().query(true, DATABASE_TABLE_MANUTENCAO, new String[]{ID_MANUTENCAO, KM_MANUTENCAO, DATA_MANUTENCAO, DISTANCIA_MANUTENCAO, KM_PROXIMA_MANUTENCAO},
+                null, null, null, null, null, null, null);
     }
 
     //    retornando todos os usuarios
