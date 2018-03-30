@@ -51,6 +51,7 @@
     <string name="ultima_manutencao">Ultima manutenção realizada</string>
     <string name="proxima_troca_oleo">Próxima troca de óleo</string>
     <string name="proxima_manutencao">Próxima manutenção</string>
+    <string name="distancia_percorrida">Distância percorrida</string>
 
 
     <string name="buscar">Buscar</string>

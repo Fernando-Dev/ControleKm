@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorTitle"
+    android:background="@color/colorFundo"
     android:gravity="center_horizontal"
     android:padding="@dimen/padding_padrao"
     tools:context="com.example.fernando.controlekm.CadastrarTrocaOleo">
@@ -24,7 +24,7 @@
             android:layout_alignParentStart="true"
             android:text="Km da troca de óleo:"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/colorTitle"
             android:textStyle="bold" />
 
         <EditText
@@ -49,7 +49,7 @@
             android:padding="@dimen/padding_5dp"
             android:text="Data da troca de óleo"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/colorTitle"
             android:textStyle="bold" />
 
 
@@ -62,7 +62,7 @@
             android:padding="@dimen/padding_5dp"
             android:inputType="date"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-            android:textColor="@android:color/holo_green_dark"
+            android:textColor="@android:color/black"
             android:textStyle="bold" />
 
         <TextView
@@ -74,7 +74,7 @@
             android:padding="@dimen/padding_5dp"
             android:text="Quantidade de km para para próxima troca de óleo? "
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/colorTitle"
             android:textStyle="bold" />
 
 

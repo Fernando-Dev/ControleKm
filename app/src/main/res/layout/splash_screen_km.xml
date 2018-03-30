@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorTitle"
+    android:background="@color/colorFundo"
     android:orientation="vertical"
     android:padding="2dp"
     android:weightSum="1">
@@ -12,14 +12,19 @@
         android:id="@+id/imageView2"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        app:srcCompat="@drawable/new_ic_controlekm"
+        app:srcCompat="@drawable/logo_splash_screen"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
-    <ImageView
+    <TextView
         android:layout_width="150dp"
         android:layout_height="50dp"
-        app:srcCompat="@drawable/nome_app_logo"
         android:id="@+id/imageView"
+        android:text="@string/app_name"
+        android:gravity="center_horizontal|center_vertical"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:fontFamily="sans-serif-smallcaps"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 

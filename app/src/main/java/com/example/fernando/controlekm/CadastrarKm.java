@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
 import android.view.View;
@@ -110,7 +111,10 @@ public class CadastrarKm extends AppCompatActivity {
 
     private void enviaNotificacao() {
         Intent notificationIntent = new Intent(CadastrarKm.this, Utilitario.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        TaskStackBuilder stackBuilder=TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(Utilitario.class);
+        stackBuilder.addNextIntent(notificationIntent);
+        PendingIntent contentIntent = stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
         notificationBuilder.setContentIntent(contentIntent);
         Notification notification = notificationBuilder.build();
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
@@ -121,7 +125,8 @@ public class CadastrarKm extends AppCompatActivity {
             notificationId = 0;
         notificationManager.notify(notificationId, notification);
     }
-    private void atribuirDadosNotificacao(){
+
+    private void atribuirDadosNotificacao() {
         notificationTitle = this.getString(R.string.app_name);
         notificationText = "Você precisa fazer a troca do óleo da sua moto!";
     }
@@ -135,6 +140,7 @@ public class CadastrarKm extends AppCompatActivity {
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(notificationText))
                 .setPriority(Notification.PRIORITY_MAX)
                 .setContentText(notificationText);
+
         enviaNotificacao();
     }
 

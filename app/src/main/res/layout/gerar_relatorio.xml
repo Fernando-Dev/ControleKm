@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorTitle"
+    android:background="@color/colorFundo"
     android:orientation="vertical"
     android:padding="10dp">
 
@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:text="@string/data_inicial"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/colorTitle"
             android:gravity="center_horizontal"
             android:textStyle="bold"
             android:layout_alignParentTop="true"
@@ -33,7 +33,7 @@
             android:text="@string/data_final"
             android:gravity="center_horizontal"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/colorTitle"
             android:textStyle="bold"
             android:layout_alignParentTop="true"
             android:layout_alignStart="@+id/btnDataPdf2"
@@ -83,7 +83,7 @@
             android:background="@drawable/textview_main"
             android:text="à"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@color/colorWhite" />
+            android:textColor="@color/colorTitle" />
 
         <TextView
             android:id="@+id/txtError1"
