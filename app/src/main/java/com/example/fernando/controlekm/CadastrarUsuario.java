@@ -52,8 +52,8 @@ public class CadastrarUsuario extends AppCompatActivity {
             new AlertDialog.Builder(this)
                     .setCancelable(false)
                     .setTitle("Atenção!")
-                    .setMessage("Não é permitido fazer cadastro de mais de um usuário!")
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    .setMessage("Já existe um usuário cadastrado! Para cadastrar um novo usuário, faça exclusão do usuário existente!")
+                    .setNeutralButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             finish();

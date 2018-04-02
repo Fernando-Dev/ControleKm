@@ -72,7 +72,7 @@
             android:layout_below="@+id/txtDatatroca"
             android:layout_marginTop="@dimen/padding_padrao"
             android:padding="@dimen/padding_5dp"
-            android:text="Quantidade de km para para próxima troca de óleo? "
+            android:text="Quantidade de km para próxima troca de óleo? "
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
             android:textColor="@color/colorTitle"
             android:textStyle="bold" />

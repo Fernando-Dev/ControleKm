@@ -90,11 +90,11 @@ public class GeradorPdf extends AppCompatActivity {
         txtError1 = (TextView) findViewById(R.id.txtError1);
         txtError2 = (TextView) findViewById(R.id.txtError2);
         if (db.listaUsuario().isEmpty() || db.getAllKm().isEmpty()) {
-            new AlertDialog.Builder(this)
+            new AlertDialog.Builder(GeradorPdf.this)
                     .setCancelable(false)
                     .setTitle("Atenção!")
                     .setMessage("Não há quilometragem ou usuário cadastrado para gerar o relatório")
-                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             finish();
@@ -505,7 +505,8 @@ public class GeradorPdf extends AppCompatActivity {
 
     private void previaPdf() {
         if (pdfFile.exists()) {
-            new AlertDialog.Builder(this)
+            new AlertDialog.Builder(GeradorPdf.this)
+                    .setTitle("Relatório Gerado!")
                     .setMessage("O RelatórioKm.pdf foi gerado e está salvo neste caminho " + docsFolder + ". Deseja abrir o relatório?")
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
@@ -527,9 +528,10 @@ public class GeradorPdf extends AppCompatActivity {
 
 
         } else {
-            new AlertDialog.Builder(this)
-                    .setMessage("O RelatórioKm está salvo em " + docsFolder + " e baixe um visualizador de PDF para ver o PDF gerado")
-                    .setPositiveButton("OK", null)
+            new AlertDialog.Builder(GeradorPdf.this)
+                    .setTitle("Relatório Gerado!")
+                    .setMessage("O RelatórioKm está salvo em " + docsFolder + " e baixe um visualizador de PDF para ver o relatório gerado")
+                    .setNeutralButton("OK", null)
                     .create()
                     .show();
 

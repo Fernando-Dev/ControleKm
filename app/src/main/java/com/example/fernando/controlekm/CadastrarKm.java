@@ -1,5 +1,6 @@
 package com.example.fernando.controlekm;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.Notification;
@@ -13,6 +14,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
@@ -111,11 +113,16 @@ public class CadastrarKm extends AppCompatActivity {
 
     private void enviaNotificacao() {
         Intent notificationIntent = new Intent(CadastrarKm.this, Utilitario.class);
-        TaskStackBuilder stackBuilder=TaskStackBuilder.create(this);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(Utilitario.class);
         stackBuilder.addNextIntent(notificationIntent);
-        PendingIntent contentIntent = stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         notificationBuilder.setContentIntent(contentIntent);
+//        long segundos = 1000;
+//        segundos = SystemClock.elapsedRealtime() + segundos;
+//        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,segundos,contentIntent);
         Notification notification = notificationBuilder.build();
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
         notification.defaults |= Notification.DEFAULT_SOUND;
@@ -124,6 +131,7 @@ public class CadastrarKm extends AppCompatActivity {
         if (notificationId == Integer.MAX_VALUE - 1)
             notificationId = 0;
         notificationManager.notify(notificationId, notification);
+
     }
 
     private void atribuirDadosNotificacao() {
@@ -140,7 +148,7 @@ public class CadastrarKm extends AppCompatActivity {
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(notificationText))
                 .setPriority(Notification.PRIORITY_MAX)
                 .setContentText(notificationText);
-
+//        return notificationBuilder.build();
         enviaNotificacao();
     }
 

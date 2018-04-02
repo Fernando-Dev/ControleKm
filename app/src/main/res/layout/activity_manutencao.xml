@@ -1,10 +1,161 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorFundo"
-    tools:context="com.example.fernando.controlekm.CadastrarManutencao">
+    android:gravity="center_horizontal"
+    android:padding="@dimen/padding_padrao"
+    tools:context="com.example.fernando.controlekm.CadastrarTrocaOleo">
 
-</android.support.constraint.ConstraintLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:padding="@dimen/padding_5dp">
+
+        <TextView
+            android:id="@+id/txtkmtroca"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/edtKmManutencao"
+            android:layout_alignBottom="@+id/edtKmManutencao"
+            android:layout_alignParentStart="true"
+            android:text="Km da manutenção:"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorTitle"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/edtKmManutencao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@+id/txtdateManutencao"
+            android:background="@drawable/edittext_border_radius"
+            android:hint="Ex.: 15241"
+            android:inputType="number"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorTitle"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtdateManutencao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtkmtroca"
+            android:layout_marginTop="@dimen/padding_padrao"
+            android:padding="@dimen/padding_5dp"
+            android:text="Data da manutenção"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorTitle"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:id="@+id/txtDataManutencao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtdateManutencao"
+            android:layout_marginTop="@dimen/padding_padrao"
+            android:inputType="date"
+            android:padding="@dimen/padding_5dp"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@android:color/black"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtquantKmManutencao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtDataManutencao"
+            android:layout_marginTop="@dimen/padding_padrao"
+            android:padding="@dimen/padding_5dp"
+            android:text="Quantidade de km para próxima manutenção? "
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorTitle"
+            android:textStyle="bold" />
+
+
+        <RadioGroup
+            android:id="@+id/radioManutencao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/edtKmManutencao"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/txtquantKmManutencao"
+            android:layout_marginTop="@dimen/padding_padrao"
+            android:layout_toEndOf="@+id/txtDataManutencao"
+            android:background="@drawable/edittext_border_radius"
+            android:gravity="center|center_horizontal"
+            android:orientation="vertical">
+
+            <!--<RelativeLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content">-->
+
+            <RadioButton
+                android:id="@+id/rbM1000"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:padding="@dimen/padding_padrao"
+                android:text="1.000 km"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textStyle="bold" />
+
+            <RadioButton
+                android:id="@+id/rbM2000"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_padrao"
+                android:text="2.000 km"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textStyle="bold" />
+
+            <RadioButton
+                android:id="@+id/rbM3000"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_padrao"
+                android:text="3.000 km"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textStyle="bold" />
+
+            <RadioButton
+                android:id="@+id/rbM4000"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_padrao"
+                android:text="4.000 km"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textStyle="bold" />
+            <!--</RelativeLayout>-->
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/btnSalvarManutencao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/radioManutencao"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/botao"
+            android:text="@string/salvar"
+            android:textColor="@color/colorWhite" />
+
+        <Button
+            android:id="@+id/btnVoltarManutencao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btnSalvarManutencao"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/botao"
+            android:text="@string/voltar"
+            android:textColor="@color/colorWhite" />
+
+
+    </RelativeLayout>
+
+</ScrollView>
+

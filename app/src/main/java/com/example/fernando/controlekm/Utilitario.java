@@ -3,6 +3,10 @@ package com.example.fernando.controlekm;
 
 import android.app.AlertDialog;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 
 import android.content.Intent;
@@ -31,12 +35,13 @@ import java.util.Date;
  */
 
 public class Utilitario extends AppCompatActivity {
-    private TextView ultimaTrocaOleo, ultimoKmTrocaOleo, proximaTrocaOleo, ultimaManutencao, proximaManutencao;
+    private TextView ultimaTrocaOleo, ultimoKmTrocaOleo, proximaTrocaOleo, ultimaManutencao, ultimoKmManutencao, proximaManutencao;
     private Button btnTrocaOleo, btnManutencao, btnVoltarUtils;
     private DBAdapter db;
     private SQLiteDatabase database;
     private Integer kmFinal = -1;
     private Integer kmTroca = 0;
+    private Integer kmManutencao = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,16 +49,17 @@ public class Utilitario extends AppCompatActivity {
         setContentView(R.layout.utilitario);
         db = new DBAdapter(this);
 
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(Utilitario.this)
                 .setCancelable(false)
                 .setTitle("Atenção!")
                 .setMessage("Por favor, para eficiência do controle de manutenção da moto, faça o cadastro de Km após toda viagem!")
-                .setPositiveButton("OK", null)
+                .setNeutralButton("OK", null)
                 .create()
                 .show();
 
         ultimaTrocaOleo = (TextView) findViewById(R.id.ultimaTrocaOleo);
         ultimoKmTrocaOleo = (TextView) findViewById(R.id.ultimoKmTrocaOleo);
+        ultimoKmManutencao = (TextView) findViewById(R.id.ultimoKmManutencao);
         proximaTrocaOleo = (TextView) findViewById(R.id.proximaTrocaOleo);
         ultimaManutencao = (TextView) findViewById(R.id.ultimaManutencao);
         proximaManutencao = (TextView) findViewById(R.id.kmProximaManutencao);
@@ -69,6 +75,13 @@ public class Utilitario extends AppCompatActivity {
             mostraUltimaTrocaOleo();
             mostraProximaTrocaOleo();
         }
+        if (db.getmanutencoes().getCount() == 0) {
+            ultimaManutencao.setText("");
+            ultimoKmManutencao.setText("");
+        } else {
+            mostraUltimaManutencao();
+            mostraProximaManutencao();
+        }
 
 
         btnVoltarUtils.setOnClickListener(new View.OnClickListener() {
@@ -80,11 +93,23 @@ public class Utilitario extends AppCompatActivity {
 
 
     }
+//    private static class RecebeDadosNotificacao extends BroadcastReceiver{
+//        public static String NOTIFICATION_ID = "notification-id";
+//        public static String NOTIFICATION = "notification";
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+//            Notification notification = intent.getParcelableExtra(NOTIFICATION);
+//            int id = intent.getIntExtra(NOTIFICATION_ID, 0);
+//            notificationManager.notify(id, notification);
+//        }
+//    }
 
     private void pegaKms() {
         database = db.read();
         Cursor c = database.rawQuery("SELECT * FROM kms", null);
         Cursor cc = database.rawQuery("SELECT * FROM trocasDeOleo", null);
+        Cursor ccc = database.rawQuery("SELECT * FROM manutencoes", null);
         c.moveToFirst();
         for (int i = 0; i < c.getCount(); i++) {
             c.getInt(0);
@@ -99,6 +124,13 @@ public class Utilitario extends AppCompatActivity {
             cc.moveToNext();
         }
         cc.close();
+        ccc.moveToFirst();
+        for (int i = 0; i < ccc.getCount(); i++) {
+            ccc.getInt(0);
+            kmManutencao = ccc.getInt(ccc.getColumnIndex(DatabaseHelper.KM_MANUTENCAO));
+            ccc.moveToNext();
+        }
+        ccc.close();
     }
 
     public void selecionarOpcao(View v) {
@@ -135,6 +167,27 @@ public class Utilitario extends AppCompatActivity {
         ultimoKmTrocaOleo.setText(kmTroca);
     }
 
+    private void mostraUltimaManutencao() {
+        String data = "";
+        String kmManutencao = "";
+        database = db.read();
+        Cursor cursor = database.rawQuery("SELECT * FROM manutencoes", null);
+        cursor.moveToFirst();
+        for (int i = 0; i < cursor.getCount(); i++) {
+            cursor.getInt(0);
+            data = cursor.getString(cursor.getColumnIndex(DatabaseHelper.DATA_MANUTENCAO));
+            kmManutencao = String.valueOf(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.KM_MANUTENCAO)));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        try {
+            ultimaManutencao.setText(inverteOrdemData(data));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        ultimoKmManutencao.setText(kmManutencao);
+    }
+
     private void mostraProximaTrocaOleo() {
         Integer kmProximaTroca = 0;
         database = db.read();
@@ -154,6 +207,27 @@ public class Utilitario extends AppCompatActivity {
             proximaTrocaOleo.setText(String.valueOf(kmProximaTroca));
         }
     }
+
+    private void mostraProximaManutencao() {
+        Integer kmProximaManutencao = 0;
+        database = db.read();
+        Cursor cursor = database.rawQuery("SELECT * FROM manutencoes", null);
+        cursor.moveToFirst();
+        for (int i = 0; i < cursor.getCount(); i++) {
+            cursor.getInt(0);
+            kmProximaManutencao = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.KM_PROXIMA_MANUTENCAO));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        pegaKms();
+        if (kmFinal > kmManutencao || kmFinal.equals(kmManutencao)) {
+            proximaManutencao.setTextColor(Color.RED);
+            proximaManutencao.setText(String.valueOf(kmProximaManutencao));
+        } else {
+            proximaManutencao.setText(String.valueOf(kmProximaManutencao));
+        }
+    }
+
 
     private static String inverteOrdemData(String data) throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");

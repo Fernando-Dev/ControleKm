@@ -60,9 +60,10 @@ public class RecyclerViewUsuario extends AppCompatActivity implements SearchView
         db = new DBAdapter(this);
         if (db.listaUsuario().isEmpty()) {
             new AlertDialog.Builder(this)
+                    .setCancelable(false)
                     .setTitle("Atenção")
                     .setMessage("Lista vazia! Por favor cadastre um usuário.")
-                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             finish();
