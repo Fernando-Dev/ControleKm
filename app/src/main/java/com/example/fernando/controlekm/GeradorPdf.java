@@ -11,6 +11,8 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -24,9 +26,11 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -76,6 +80,7 @@ public class GeradorPdf extends AppCompatActivity {
     private Button btnPrimeiraData, btnSegundaData;
     private String data1, data2, _maxData, _minData;
     private TextView txtError1, txtError2, textoInfo;
+    private Spinner mesesAno;
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -89,6 +94,9 @@ public class GeradorPdf extends AppCompatActivity {
         btnSegundaData = (Button) findViewById(R.id.btnDataPdf2);
         txtError1 = (TextView) findViewById(R.id.txtError1);
         txtError2 = (TextView) findViewById(R.id.txtError2);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.meses_ano, R.layout.spinner_meses_ano);
+        mesesAno = (Spinner) findViewById(R.id.mesesAno);
+        mesesAno.setAdapter(adapter);
         if (db.listaUsuario().isEmpty() || db.getAllKm().isEmpty()) {
             new AlertDialog.Builder(GeradorPdf.this)
                     .setCancelable(false)
@@ -139,21 +147,32 @@ public class GeradorPdf extends AppCompatActivity {
                     txtError1.setText("");
                     txtError2.setText("");
                     new AlertDialog.Builder(GeradorPdf.this)
+                            .setCancelable(false)
                             .setMessage("O relatório não pode ser gerado, pois as datas são iguais.")
-                            .setPositiveButton("OK", null)
+                            .setNeutralButton("OK", null)
                             .create()
                             .show();
                 } else if (btnPrimeiraData.getText().toString().compareTo(btnSegundaData.getText().toString()) > 0) {
                     txtError1.setText("");
                     txtError2.setText("");
                     new AlertDialog.Builder(GeradorPdf.this)
+                            .setCancelable(false)
                             .setMessage("A data inicial é maior que a data final.")
-                            .setPositiveButton("OK", null)
+                            .setNeutralButton("OK", null)
+                            .create()
+                            .show();
+                } else if (mesesAno.getSelectedItem().toString().equals("Selecione")) {
+                    mesesAno.setBackgroundColor(Color.RED);
+                    new AlertDialog.Builder(GeradorPdf.this)
+                            .setCancelable(false)
+                            .setMessage("O relatório não pode ser gerado, pois necessita do mês de competência!")
+                            .setNeutralButton("OK", null)
                             .create()
                             .show();
                 } else if (btnPrimeiraData.getText().toString().compareTo(btnSegundaData.getText().toString()) < 0) {
                     txtError1.setText("");
                     txtError2.setText("");
+                    mesesAno.setBackgroundResource(R.drawable.spinner_background);
                     chamaPdf();
                 }
             }
@@ -349,6 +368,8 @@ public class GeradorPdf extends AppCompatActivity {
 
         FileOutputStream output = new FileOutputStream(pdfFile);
         Document documento = new Document(PageSize.A4.rotate());
+        Calendar calendar = Calendar.getInstance();
+        String ano = String.valueOf(calendar.get(Calendar.YEAR));
 
         PdfWriter writer = PdfWriter.getInstance(documento, output);
         PageOrientation event = new PageOrientation();
@@ -366,12 +387,13 @@ public class GeradorPdf extends AppCompatActivity {
             String funcao = cursor.getString(3);
             String placa = cursor.getString(4);
             String gerencia = cursor.getString(5);
+            String competencia = mesesAno.getSelectedItem().toString();
             table1.addCell(createCell("Nome: " + nome, 1, 1, Element.ALIGN_LEFT));
             table1.addCell(createCell("Unidade: " + unidade, 1, 1, Element.ALIGN_LEFT));
             table1.addCell(createCell("Função: " + funcao, 1, 1, Element.ALIGN_LEFT));
             table1.addCell(createCell("Placa: " + placa, 1, 1, Element.ALIGN_LEFT));
             table1.addCell(createCell("Gerência: " + gerencia, 1, 1, Element.ALIGN_LEFT));
-            table1.addCell(createCell("Mês de Competência: ", 1, 1, Element.ALIGN_LEFT));
+            table1.addCell(createCell("Mês de Competência: " + competencia.toUpperCase() + "/" + ano, 1, 1, Element.ALIGN_LEFT));
 
             cursor.moveToNext();
         }
@@ -506,6 +528,7 @@ public class GeradorPdf extends AppCompatActivity {
     private void previaPdf() {
         if (pdfFile.exists()) {
             new AlertDialog.Builder(GeradorPdf.this)
+                    .setCancelable(false)
                     .setTitle("Relatório Gerado!")
                     .setMessage("O RelatórioKm.pdf foi gerado e está salvo neste caminho " + docsFolder + ". Deseja abrir o relatório?")
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -516,6 +539,7 @@ public class GeradorPdf extends AppCompatActivity {
                             new File(path, "RelatórioKm.pdf");
                             intent.setDataAndType(Uri.fromFile(pdfFile), "application/pdf");
                             startActivity(intent);
+                            finish();
                         }
                     }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                 @Override
@@ -529,6 +553,7 @@ public class GeradorPdf extends AppCompatActivity {
 
         } else {
             new AlertDialog.Builder(GeradorPdf.this)
+                    .setCancelable(false)
                     .setTitle("Relatório Gerado!")
                     .setMessage("O RelatórioKm está salvo em " + docsFolder + " e baixe um visualizador de PDF para ver o relatório gerado")
                     .setNeutralButton("OK", null)

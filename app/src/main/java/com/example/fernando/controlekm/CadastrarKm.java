@@ -218,6 +218,7 @@ public class CadastrarKm extends AppCompatActivity {
                     Toast.makeText(getBaseContext(), "Salvo com sucesso!", Toast.LENGTH_LONG).show();
                     finish();
                 } else {
+                    limparTodasNotificacoes();
                     Toast.makeText(getBaseContext(), "Salvo com sucesso!", Toast.LENGTH_LONG).show();
                     finish();
                 }
