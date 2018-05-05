@@ -3,21 +3,16 @@ package com.example.fernando.controlekm;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.NotificationCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -26,15 +21,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.example.fernando.controlekm.BD.DatabaseHelper;
 import com.example.fernando.controlekm.DAO.DBAdapter;
+import com.example.fernando.controlekm.Receiver.AlarmReceiverManutencao;
+import com.example.fernando.controlekm.Receiver.AlarmReceiverTrocaOleo;
 import com.example.fernando.controlekm.dominio.Km;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 
 /**
@@ -51,13 +47,17 @@ public class CadastrarKm extends AppCompatActivity {
     private DBAdapter db;
     private NotificationManager notificationManager;
     private android.support.v4.app.NotificationCompat.Builder notificationBuilder;
-    private Bitmap icon;
     private int currentNotificationID = 0;
     private String notificationTitle;
     private String notificationText;
     private SQLiteDatabase database;
     private Integer kmFinal = -1;
     private Integer kmTroca = 0;
+    private Integer kmManutencao = 0;
+    public static int ALARM_TYPE = 101;
+    public static int ALARM_TYPE_2 = 102;
+    public AlarmManager alarmManager;
+    public PendingIntent broadcast;
 
 
     @Override
@@ -83,8 +83,6 @@ public class CadastrarKm extends AppCompatActivity {
         txvKmTotal = (TextView) findViewById(R.id.txvKmTotal);
         btnSalvarKm = (Button) findViewById(R.id.btnSalvarKm);
         btnVoltarKm = (Button) findViewById(R.id.btnVoltarKm);
-        notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-        icon = BitmapFactory.decodeResource(this.getResources(), R.mipmap.new_ic_controlekm);
 
         btnVoltarKm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,58 +109,44 @@ public class CadastrarKm extends AppCompatActivity {
 
     }
 
-    private void enviaNotificacao() {
-        Intent notificationIntent = new Intent(CadastrarKm.this, Utilitario.class);
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addParentStack(Utilitario.class);
-        stackBuilder.addNextIntent(notificationIntent);
-        PendingIntent contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        notificationBuilder.setContentIntent(contentIntent);
-//        long segundos = 1000;
-//        segundos = SystemClock.elapsedRealtime() + segundos;
-//        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-//        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,segundos,contentIntent);
-        Notification notification = notificationBuilder.build();
-        notification.flags |= Notification.FLAG_AUTO_CANCEL;
-        notification.defaults |= Notification.DEFAULT_SOUND;
-        currentNotificationID++;
-        int notificationId = currentNotificationID;
-        if (notificationId == Integer.MAX_VALUE - 1)
-            notificationId = 0;
-        notificationManager.notify(notificationId, notification);
+    private void enviaNotificacaoTrocaOleo() {
+        alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent notificationIntent = new Intent(CadastrarKm.this, AlarmReceiverTrocaOleo.class);
+        broadcast = PendingIntent.getBroadcast(this, ALARM_TYPE, notificationIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        Calendar cal = Calendar.getInstance();
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
+                AlarmManager.INTERVAL_HOUR + AlarmManager.INTERVAL_HOUR, broadcast);
+
+    }
+    private void enviaNotificacaoManutencao(){
+        alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent notificationIntent = new Intent(CadastrarKm.this, AlarmReceiverManutencao.class);
+        broadcast = PendingIntent.getBroadcast(this, ALARM_TYPE_2, notificationIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        Calendar cal = Calendar.getInstance();
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
+                AlarmManager.INTERVAL_HOUR + AlarmManager.INTERVAL_HOUR, broadcast);
 
     }
 
-    private void atribuirDadosNotificacao() {
-        notificationTitle = this.getString(R.string.app_name);
-        notificationText = "Você precisa fazer a troca do óleo da sua moto!";
+    public static  void enableBootReceiver(Context context){
+        ComponentName receiver = new ComponentName(context, AlarmReceiverTrocaOleo.class);
+        PackageManager pm = context.getPackageManager();
+        pm.setComponentEnabledSetting(receiver,
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                PackageManager.DONT_KILL_APP);
     }
 
-    private void atribuirNotificacaoAltaPrioridade() {
-        notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.new_ic_controlekm)
-                .setLargeIcon(icon)
-                .setAutoCancel(false)
-                .setContentTitle(notificationTitle)
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(notificationText))
-                .setPriority(Notification.PRIORITY_MAX)
-                .setContentText(notificationText);
-//        return notificationBuilder.build();
-        enviaNotificacao();
-    }
-
-    private void limparTodasNotificacoes() {
-        if (notificationManager != null) {
-            currentNotificationID = 0;
-            notificationManager.cancelAll();
-        }
+    private void cancelaTodasNotificacoes() {
+        alarmManager.cancel(broadcast);
     }
 
     private void chamaNotificacao() {
         database = db.read();
         Cursor c = database.rawQuery("SELECT * FROM kms", null);
         Cursor cc = database.rawQuery("SELECT * FROM trocasDeOleo", null);
+        Cursor ccc = database.rawQuery("SELECT * FROM manutencoes", null);
         c.moveToFirst();
         for (int i = 0; i < c.getCount(); i++) {
             c.getInt(0);
@@ -177,6 +161,13 @@ public class CadastrarKm extends AppCompatActivity {
             cc.moveToNext();
         }
         cc.close();
+        ccc.moveToFirst();
+        for (int i = 0; i < ccc.getCount(); i++) {
+            ccc.getInt(0);
+            kmManutencao = ccc.getInt(ccc.getColumnIndex(DatabaseHelper.KM_PROXIMA_MANUTENCAO));
+            ccc.moveToNext();
+        }
+        ccc.close();
     }
 
     public void cadastrarKm() {
@@ -209,16 +200,20 @@ public class CadastrarKm extends AppCompatActivity {
                 km.setKmTotal(txvKmTotal.getText().toString());
                 db.inserirKm(km);
                 chamaNotificacao();
-                if (kmFinal.equals(-1) || kmTroca.equals(0)) {
+                if ((kmFinal.equals(-1) || kmTroca.equals(0)) || (kmFinal.equals(-1) || kmManutencao.equals(0))) {
                     Toast.makeText(getBaseContext(), "Salvo com sucesso!", Toast.LENGTH_LONG).show();
                     finish();
                 } else if (kmFinal > kmTroca || kmFinal.equals(kmTroca)) {
-                    atribuirDadosNotificacao();
-                    atribuirNotificacaoAltaPrioridade();
+                    enviaNotificacaoTrocaOleo();
+                    Toast.makeText(getBaseContext(), "Salvo com sucesso!", Toast.LENGTH_LONG).show();
+                    finish();
+                } else if (kmFinal > kmManutencao || kmFinal.equals(kmManutencao)) {
+                    /*chama notificacao da manutencao*/
+                    enviaNotificacaoManutencao();
                     Toast.makeText(getBaseContext(), "Salvo com sucesso!", Toast.LENGTH_LONG).show();
                     finish();
                 } else {
-                    limparTodasNotificacoes();
+                    cancelaTodasNotificacoes();
                     Toast.makeText(getBaseContext(), "Salvo com sucesso!", Toast.LENGTH_LONG).show();
                     finish();
                 }

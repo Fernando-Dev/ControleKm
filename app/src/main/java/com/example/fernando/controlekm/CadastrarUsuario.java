@@ -1,25 +1,18 @@
 package com.example.fernando.controlekm;
 
-import android.content.Context;
 import android.content.DialogInterface;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioGroup;
-import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.fernando.controlekm.BD.DatabaseHelper;
 import com.example.fernando.controlekm.DAO.DBAdapter;
-import com.example.fernando.controlekm.dominio.Km;
 import com.example.fernando.controlekm.dominio.Usuario;
-
-import java.util.Date;
 
 /**
  * Created by Flavia on 27/12/2017.

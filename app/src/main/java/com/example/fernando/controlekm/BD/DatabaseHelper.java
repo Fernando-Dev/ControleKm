@@ -1,4 +1,4 @@
-package com.example.fernando.controlekm;
+package com.example.fernando.controlekm.BD;
 
 import android.content.Context;
 import android.database.SQLException;
