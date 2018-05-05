@@ -54,6 +54,8 @@ public class CadastrarTrocaOleo extends AppCompatActivity {
         btnVoltarTrocaOleo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(CadastrarTrocaOleo.this,Utilitario.class);
+                startActivity(intent);
                 finish();
             }
         });
@@ -89,6 +91,8 @@ public class CadastrarTrocaOleo extends AppCompatActivity {
             trocaOleo.setProximaTroca(resultado);
             db.inserirTrocaOleo(trocaOleo);
             Toast.makeText(getBaseContext(), "Salvo com sucesso!", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(CadastrarTrocaOleo.this,Utilitario.class);
+            startActivity(intent);
             finish();
         } catch (Exception e) {
             Toast.makeText(getBaseContext(), "Erro ao salvar!", Toast.LENGTH_SHORT).show();

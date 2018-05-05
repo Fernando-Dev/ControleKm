@@ -86,6 +86,8 @@ public class AlterarKm extends AppCompatActivity {
         btnVoltarKm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(AlterarKm.this,RecyclerViewKm.class);
+                startActivity(intent);
                 finish();
             }
         });
@@ -118,6 +120,8 @@ public class AlterarKm extends AppCompatActivity {
                 km.setKmTotal(txvKmTotal.getText().toString());
                 db.updateKm(km);
                 Toast.makeText(getBaseContext(), "Alterado com sucesso!", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(AlterarKm.this,RecyclerViewKm.class);
+                startActivity(intent);
                 finish();
             }
         } catch (Exception ex) {

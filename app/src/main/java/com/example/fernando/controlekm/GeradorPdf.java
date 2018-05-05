@@ -8,9 +8,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -29,6 +32,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -40,11 +44,19 @@ import com.itextpdf.awt.geom.CubicCurve2D;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Header;
+import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.ColumnText;
+import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfCopy;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfPTableFooter;
 import com.itextpdf.text.pdf.PdfPage;
 import com.itextpdf.text.pdf.PdfWriter;
 
@@ -52,6 +64,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -81,6 +95,7 @@ public class GeradorPdf extends AppCompatActivity {
     private String data1, data2, _maxData, _minData;
     private TextView txtError1, txtError2, textoInfo;
     private Spinner mesesAno;
+    private Image image;
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -359,13 +374,23 @@ public class GeradorPdf extends AppCompatActivity {
 
         docsFolder = new File(Environment.getExternalStorageDirectory() + "/Documents");
         docsFolder.mkdir();
-
+        /*
+        * tentar fazer um select para duas tabelas kms e usuario
+         * exemplo
+         * select * from kms
+         * inner join usuarios
+         * on (kms.data = usuarios.nome)
+         * where kms.data
+         * between 'data1' and 'data2'
+         * oder by kms.data
+        * */
 
         pdfFile = new File(docsFolder.getAbsolutePath(), "RelatórioKm.pdf");
         c = database.rawQuery("SELECT * FROM kms WHERE data BETWEEN '" + data1 + "' AND '" + data2 + "' ORDER BY data", null);
         cc = database.rawQuery("SELECT * FROM kms WHERE data BETWEEN '" + data1 + "' AND '" + data2 + "' ORDER BY data", null);
         cursor = database.rawQuery("SELECT * FROM usuarios", null);
-
+//        c = database.rawQuery("SELECT * FROM kms INNER JOIN usuarios ON (kms.data = usuarios.nome) WHERE kms.data BETWEEN '" + data1 + "' AND '" + data2 + "' ORDER BY kms.data", null);
+//        deu errado
         FileOutputStream output = new FileOutputStream(pdfFile);
         Document documento = new Document(PageSize.A4.rotate());
         Calendar calendar = Calendar.getInstance();
@@ -373,20 +398,45 @@ public class GeradorPdf extends AppCompatActivity {
 
         PdfWriter writer = PdfWriter.getInstance(documento, output);
         PageOrientation event = new PageOrientation();
+
         writer.setPageEvent(event);
         documento.open();
 
         PdfPTable table0 = new PdfPTable(1);
         table0.setWidthPercentage(100f);
 
+        PdfPTable table5 = new PdfPTable(2);
+        table5.setWidths(new int[]{1, 9});
+        try {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            Bitmap bitmap = BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.new_ic_controlekm_4);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 50, stream);
+            image = Image.getInstance(stream.toByteArray());
+            image.setAlignment(Image.MIDDLE);
+            table5.addCell(new PdfPCell(image, true));
+            Font font = new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD);
+            String frase = "Relatório de Quilometragens";
+            Paragraph titulo = new Paragraph(frase, font);
+            titulo.setLeading(0, 1);
+            titulo.setAlignment(Element.ALIGN_CENTER);
+            PdfPCell cell = new PdfPCell();
+            cell.setMinimumHeight(50);
+            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell.addElement(titulo);
+            table5.addCell(cell);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        table0.addCell(new PdfPCell(table5));
+
         PdfPTable table1 = new PdfPTable(3);
         cursor.moveToFirst();
         for (int b = 0; b < cursor.getCount(); b++) {
-            String nome = cursor.getString(1);
-            String unidade = cursor.getString(2);
-            String funcao = cursor.getString(3);
-            String placa = cursor.getString(4);
-            String gerencia = cursor.getString(5);
+            String nome = cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_NOME));
+            String unidade = cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_UNIDADE));
+            String funcao = cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_FUNCAO));
+            String placa = cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_PLACA));
+            String gerencia = cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_GERENCIA));
             String competencia = mesesAno.getSelectedItem().toString();
             table1.addCell(createCell("Nome: " + nome, 1, 1, Element.ALIGN_LEFT));
             table1.addCell(createCell("Unidade: " + unidade, 1, 1, Element.ALIGN_LEFT));
@@ -495,9 +545,23 @@ public class GeradorPdf extends AppCompatActivity {
         table3.addCell(createCell("DESPESA POR CLIENTE: ", 1, 1, Element.ALIGN_CENTER));
         table3.addCell(createCell(sDespesa, 1, 1, Element.ALIGN_CENTER));
 
+
+        PdfPTable footer = new PdfPTable(1);
+        footer.setWidthPercentage(100);
+        footer.getDefaultCell().setFixedHeight(40);
+        footer.getDefaultCell().setBorder(Rectangle.TOP);
+        footer.setHorizontalAlignment(Element.ALIGN_CENTER);
+        footer.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+        footer.getDefaultCell().setPaddingTop(10);
+        Font font = new Font(Font.FontFamily.UNDEFINED,5,Font.ITALIC);
+        Paragraph frase = new Paragraph("Create by ControleKm",font);
+        frase.setAlignment(Element.ALIGN_CENTER);
+        footer.addCell(frase);
+
         event.setRotation(PdfPage.LANDSCAPE);
         documento.add(table0);
         documento.add(table3);
+        documento.add(footer);
         documento.addCreationDate();
         documento.close();
 

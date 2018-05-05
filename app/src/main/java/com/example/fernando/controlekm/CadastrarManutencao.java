@@ -1,5 +1,6 @@
 package com.example.fernando.controlekm;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
@@ -52,6 +53,8 @@ public class CadastrarManutencao extends AppCompatActivity {
         btnVoltarManutencao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(CadastrarManutencao.this,Utilitario.class);
+                startActivity(intent);
                 finish();
             }
         });
@@ -91,6 +94,8 @@ public class CadastrarManutencao extends AppCompatActivity {
             manutencao.setKmProximaManutencao(resultado);
             db.inserirManutencao(manutencao);
             Toast.makeText(getBaseContext(), "Salvo com sucesso!", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(CadastrarManutencao.this,Utilitario.class);
+            startActivity(intent);
             finish();
         } catch (Exception e) {
             Toast.makeText(getBaseContext(), "Erro ao salvar!", Toast.LENGTH_SHORT).show();

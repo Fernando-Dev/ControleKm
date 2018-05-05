@@ -1,5 +1,6 @@
 package com.example.fernando.controlekm;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +28,7 @@ public class AlterarUser extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.alterar_user);
+
 
 
         altNome = (EditText) findViewById(R.id.altNome);
@@ -63,6 +65,8 @@ public class AlterarUser extends AppCompatActivity {
         btnVoltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(AlterarUser.this,RecyclerViewUsuario.class);
+                startActivity(intent);
                 finish();
             }
         });
@@ -93,6 +97,8 @@ public class AlterarUser extends AppCompatActivity {
             db.updateUser(usuario);
 
             Toast.makeText(getBaseContext(), "Alterado com sucesso!", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(AlterarUser.this,RecyclerViewUsuario.class);
+            startActivity(intent);
             finish();
         } catch (Exception e) {
             Toast.makeText(getBaseContext(), "Erro ao alterar", Toast.LENGTH_LONG).show();
