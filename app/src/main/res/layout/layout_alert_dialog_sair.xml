@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_alert_dialog_sair"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorAlert">
+
+    <ImageView
+        android:id="@+id/imgSair"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_5dp"
+        android:src="@drawable/ic_action_exit" />
+
+    <TextView
+        android:id="@+id/tituloalertDialogSair"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imgSair"
+        android:layout_toEndOf="@+id/imgSair"
+        android:padding="@dimen/padding_5dp"
+        android:text="@string/sair"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+        android:textColor="@color/colorTitle"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/mensagemAlertDialogSair"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imgSair"
+        android:padding="@dimen/padding_padrao"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+        android:textColor="@color/colorTitle" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mensagemAlertDialogSair"
+        android:gravity="center_horizontal"
+        android:padding="@dimen/padding_padrao">
+
+        <Button
+            android:id="@+id/btnAlertDialogSairSim"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding_padrao"
+            android:layout_toEndOf="@+id/btnAlertDialogSairNao"
+            android:background="@drawable/btn_data"
+            android:text="@string/sim" />
+
+        <Button
+            android:id="@+id/btnAlertDialogSairNao"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/padding_padrao"
+            android:background="@drawable/btn_data"
+            android:text="@string/nao" />
+    </RelativeLayout>
+</RelativeLayout>

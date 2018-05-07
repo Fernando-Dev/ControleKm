@@ -75,7 +75,6 @@ public class CadastrarKm extends AppCompatActivity {
         AtualizarData();
         edtDataKm = new Date();
 
-
         edtKmInicial = (EditText) findViewById(R.id.edtKmInicial);
         edtKmFinal = (EditText) findViewById(R.id.edtKmFinal);
         edtItinerario = (EditText) findViewById(R.id.edtItinerario);
@@ -119,7 +118,8 @@ public class CadastrarKm extends AppCompatActivity {
                 AlarmManager.INTERVAL_HOUR + AlarmManager.INTERVAL_HOUR, broadcast);
 
     }
-    private void enviaNotificacaoManutencao(){
+
+    private void enviaNotificacaoManutencao() {
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent notificationIntent = new Intent(CadastrarKm.this, AlarmReceiverManutencao.class);
         broadcast = PendingIntent.getBroadcast(this, ALARM_TYPE_2, notificationIntent,
@@ -128,18 +128,15 @@ public class CadastrarKm extends AppCompatActivity {
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
                 AlarmManager.INTERVAL_HOUR + AlarmManager.INTERVAL_HOUR, broadcast);
 
+
     }
 
-    public static  void enableBootReceiver(Context context){
+    public static void enableBootReceiver(Context context) {
         ComponentName receiver = new ComponentName(context, AlarmReceiverTrocaOleo.class);
         PackageManager pm = context.getPackageManager();
         pm.setComponentEnabledSetting(receiver,
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                 PackageManager.DONT_KILL_APP);
-    }
-
-    private void cancelaTodasNotificacoes() {
-        alarmManager.cancel(broadcast);
     }
 
     private void chamaNotificacao() {
@@ -172,25 +169,39 @@ public class CadastrarKm extends AppCompatActivity {
 
     public void cadastrarKm() {
         try {
-            DatabaseHelper helper = new DatabaseHelper(this);
-            db.open();
-            String kmIni = edtKmInicial.getText().toString();
-            int _kmIni = Integer.parseInt(kmIni);
-            String kmFim = edtKmFinal.getText().toString();
-            int _kmFim = Integer.parseInt(kmFim);
-            boolean result = (_kmIni > _kmFim);
-            if (result) {
+
+            int _kmIni = Integer.parseInt(edtKmInicial.getText().toString());
+            int _kmFim = Integer.parseInt(edtKmFinal.getText().toString());
+            try {
+                data = inverteOrdemData(btnData.getText().toString());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            boolean dataChecada = false;
+            database = db.read();
+            Cursor cursor = database.rawQuery("SELECT * FROM kms WHERE data LIKE '" + data + "'", null);
+            cursor.moveToFirst();
+            for (int i = 0; i < cursor.getCount(); i++) {
+                cursor.getInt(0);
+                String dataQuery = cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_DATA));
+                if (dataQuery.compareTo(data) == 0) {
+                    dataChecada = true;
+                }
+                cursor.moveToNext();
+            }
+            cursor.close();
+            if (dataChecada) {
+                Toast.makeText(getBaseContext(), "A data já existe no banco de dados!", Toast.LENGTH_LONG).show();
+            } else if (_kmIni > _kmFim) {
                 Toast.makeText(getBaseContext(), "Km inicial maior!", Toast.LENGTH_LONG).show();
+            } else if (_kmIni == _kmFim) {
+                Toast.makeText(getBaseContext(), "Km inicial é igual Km final!", Toast.LENGTH_LONG).show();
             } else {
                 Integer diferenca = (_kmFim - _kmIni);
                 String resultado = String.valueOf(diferenca);
                 txvKmTotal.setText(resultado);
+                db.open();
                 Km km = new Km();
-                try {
-                    data = inverteOrdemData(btnData.getText().toString());
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
                 km.setData(data);
                 km.setItinerario(edtItinerario.getText().toString());
                 int cliente = Integer.parseInt(qtdCliente.getText().toString());
@@ -212,8 +223,7 @@ public class CadastrarKm extends AppCompatActivity {
                     enviaNotificacaoManutencao();
                     Toast.makeText(getBaseContext(), "Salvo com sucesso!", Toast.LENGTH_LONG).show();
                     finish();
-                } else {
-                    cancelaTodasNotificacoes();
+                } else{
                     Toast.makeText(getBaseContext(), "Salvo com sucesso!", Toast.LENGTH_LONG).show();
                     finish();
                 }

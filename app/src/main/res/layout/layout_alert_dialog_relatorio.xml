@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_alert_dialog_relatorio"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorAlert">
+
+    <ImageView
+        android:id="@+id/imgRelatorio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_5dp"
+        android:src="@drawable/ic_action_generat" />
+
+    <TextView
+        android:id="@+id/tituloalertDialogRelatorio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imgRelatorio"
+        android:layout_toEndOf="@+id/imgRelatorio"
+        android:padding="@dimen/padding_5dp"
+        android:text="@string/relatorio_gerado"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+        android:textColor="@color/colorTitle"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/mensagemAlertDialogRelatorio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imgRelatorio"
+        android:padding="@dimen/padding_padrao"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+        android:textColor="@color/colorTitle" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mensagemAlertDialogRelatorio"
+        android:gravity="center_horizontal"
+        android:padding="@dimen/padding_padrao">
+
+        <Button
+            android:id="@+id/btnAlertDialogRelatorioOK"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/btnAlertDialogRelatorioCancelar"
+            android:background="@drawable/btn_data"
+            android:layout_marginStart="@dimen/padding_padrao"
+            android:text="@string/ok" />
+
+        <Button
+            android:id="@+id/btnAlertDialogRelatorioCancelar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_data"
+            android:layout_marginEnd="@dimen/padding_padrao"
+            android:text="@string/cancelar" />
+    </RelativeLayout>
+</RelativeLayout>

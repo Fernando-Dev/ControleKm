@@ -23,6 +23,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -94,18 +95,20 @@ public class GeradorPdf extends AppCompatActivity {
         mesesAno = (Spinner) findViewById(R.id.mesesAno);
         mesesAno.setAdapter(adapter);
         if (db.listaUsuario().isEmpty() || db.getAllKm().isEmpty()) {
-            new AlertDialog.Builder(GeradorPdf.this)
-                    .setCancelable(false)
-                    .setTitle("Atenção!")
-                    .setMessage("Não há quilometragem ou usuário cadastrado para gerar o relatório")
-                    .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            finish();
-                        }
-                    })
-                    .create()
-                    .show();
+            final Dialog dialog = new Dialog(this, R.style.DialogoSemTitulo);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.layout_alert_dialog_aviso);
+            dialog.setCancelable(false);
+            TextView txtMsgm = dialog.findViewById(R.id.mensagemAlertDialogAviso);
+            txtMsgm.setText(R.string.aviso_relatorio);
+            Button btnOK = dialog.findViewById(R.id.btnAlertDialogAvisoOK);
+            btnOK.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    finish();
+                }
+            });
+            dialog.show();
         } else {
             btnSegundaData.setText(lastData());
             btnPrimeiraData.setText(firstData());
@@ -142,30 +145,54 @@ public class GeradorPdf extends AppCompatActivity {
                 } else if (btnPrimeiraData.getText().toString().equals(btnSegundaData.getText().toString())) {
                     txtError1.setText("");
                     txtError2.setText("");
-                    new AlertDialog.Builder(GeradorPdf.this)
-                            .setCancelable(false)
-                            .setMessage("O relatório não pode ser gerado, pois as datas são iguais.")
-                            .setNeutralButton("OK", null)
-                            .create()
-                            .show();
-                } else if (btnPrimeiraData.getText().toString().compareTo(btnSegundaData.getText().toString()) > 0) {
+                    final Dialog dialog = new Dialog(GeradorPdf.this, R.style.DialogoSemTitulo);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setContentView(R.layout.layout_alert_dialog_erro);
+                    dialog.setCancelable(false);
+                    TextView txtMsgem = dialog.findViewById(R.id.mensagemAlertDialogErro);
+                    txtMsgem.setText(R.string.erro_relatorio_data_igual);
+                    Button btnOK = dialog.findViewById(R.id.btnAlertDialogErroOK);
+                    btnOK.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.show();
+                } else if (btnPrimeiraData.getText().toString().compareTo(btnSegundaData.getText().toString()) == 1) {
                     txtError1.setText("");
                     txtError2.setText("");
-                    new AlertDialog.Builder(GeradorPdf.this)
-                            .setCancelable(false)
-                            .setMessage("A data inicial é maior que a data final.")
-                            .setNeutralButton("OK", null)
-                            .create()
-                            .show();
+                    final Dialog dialog = new Dialog(GeradorPdf.this, R.style.DialogoSemTitulo);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setContentView(R.layout.layout_alert_dialog_erro);
+                    dialog.setCancelable(false);
+                    TextView txtMsgem = dialog.findViewById(R.id.mensagemAlertDialogErro);
+                    txtMsgem.setText(R.string.erro_relatorio_inicial_maior);
+                    Button btnOK = dialog.findViewById(R.id.btnAlertDialogErroOK);
+                    btnOK.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.show();
                 } else if (mesesAno.getSelectedItem().toString().equals("Selecione")) {
-                    mesesAno.setBackgroundColor(Color.RED);
-                    new AlertDialog.Builder(GeradorPdf.this)
-                            .setCancelable(false)
-                            .setMessage("O relatório não pode ser gerado, pois necessita do mês de competência!")
-                            .setNeutralButton("OK", null)
-                            .create()
-                            .show();
-                } else if (btnPrimeiraData.getText().toString().compareTo(btnSegundaData.getText().toString()) < 0) {
+                    mesesAno.setBackgroundResource(R.drawable.spinner_background_erro);
+                    final Dialog dialog = new Dialog(GeradorPdf.this, R.style.DialogoSemTitulo);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setContentView(R.layout.layout_alert_dialog_erro);
+                    dialog.setCancelable(false);
+                    TextView txtMsgem = dialog.findViewById(R.id.mensagemAlertDialogErro);
+                    txtMsgem.setText(R.string.erro_relatorio_mes_competencia);
+                    Button btnOK = dialog.findViewById(R.id.btnAlertDialogErroOK);
+                    btnOK.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.show();
+                } else {
                     txtError1.setText("");
                     txtError2.setText("");
                     mesesAno.setBackgroundResource(R.drawable.spinner_background);
@@ -370,8 +397,7 @@ public class GeradorPdf extends AppCompatActivity {
         c = database.rawQuery("SELECT * FROM kms WHERE data BETWEEN '" + data1 + "' AND '" + data2 + "' ORDER BY data", null);
         cc = database.rawQuery("SELECT * FROM kms WHERE data BETWEEN '" + data1 + "' AND '" + data2 + "' ORDER BY data", null);
         cursor = database.rawQuery("SELECT * FROM usuarios", null);
-//        c = database.rawQuery("SELECT * FROM kms INNER JOIN usuarios ON (kms.data = usuarios.nome) WHERE kms.data BETWEEN '" + data1 + "' AND '" + data2 + "' ORDER BY kms.data", null);
-//        deu errado
+
         FileOutputStream output = new FileOutputStream(pdfFile);
         Document documento = new Document(PageSize.A4.rotate());
         Calendar calendar = Calendar.getInstance();
@@ -534,8 +560,8 @@ public class GeradorPdf extends AppCompatActivity {
         footer.setHorizontalAlignment(Element.ALIGN_CENTER);
         footer.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
         footer.getDefaultCell().setPaddingTop(10);
-        Font font = new Font(Font.FontFamily.UNDEFINED,5,Font.ITALIC);
-        Paragraph frase = new Paragraph("Create by ControleKm",font);
+        Font font = new Font(Font.FontFamily.UNDEFINED, 5, Font.ITALIC);
+        Paragraph frase = new Paragraph("Create by ControleKm", font);
         frase.setAlignment(Element.ALIGN_CENTER);
         footer.addCell(frase);
 
@@ -572,39 +598,47 @@ public class GeradorPdf extends AppCompatActivity {
 
     private void previaPdf() {
         if (pdfFile.exists()) {
-            new AlertDialog.Builder(GeradorPdf.this)
-                    .setCancelable(false)
-                    .setTitle("Relatório Gerado!")
-                    .setMessage("O RelatórioKm.pdf foi gerado e está salvo neste caminho " + docsFolder + ". Deseja abrir o relatório?")
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            Intent intent = new Intent(Intent.ACTION_VIEW);
-                            String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/PDF";
-                            new File(path, "RelatórioKm.pdf");
-                            intent.setDataAndType(Uri.fromFile(pdfFile), "application/pdf");
-                            startActivity(intent);
-                            finish();
-                        }
-                    }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            final Dialog dialog = new Dialog(GeradorPdf.this, R.style.DialogoSemTitulo);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.layout_alert_dialog_relatorio);
+            dialog.setCancelable(false);
+            TextView txtMsgem = dialog.findViewById(R.id.mensagemAlertDialogRelatorio);
+            txtMsgem.setText("O RelatórioKm.pdf foi gerado e está salvo neste caminho " + docsFolder + ". Deseja abrir o relatório?");
+            Button btnOK = dialog.findViewById(R.id.btnAlertDialogRelatorioOK);
+            Button btnCancelar = dialog.findViewById(R.id.btnAlertDialogRelatorioCancelar);
+            btnOK.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
+                public void onClick(View view) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/PDF";
+                    new File(path, "RelatórioKm.pdf");
+                    intent.setDataAndType(Uri.fromFile(pdfFile), "application/pdf");
+                    startActivity(intent);
                     finish();
                 }
-            })
-                    .create()
-                    .show();
-
-
+            });
+            btnCancelar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
         } else {
-            new AlertDialog.Builder(GeradorPdf.this)
-                    .setCancelable(false)
-                    .setTitle("Relatório Gerado!")
-                    .setMessage("O RelatórioKm está salvo em " + docsFolder + " e baixe um visualizador de PDF para ver o relatório gerado")
-                    .setNeutralButton("OK", null)
-                    .create()
-                    .show();
-
+            final Dialog dialog = new Dialog(GeradorPdf.this, R.style.DialogoSemTitulo);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.layout_alert_dialog_aviso);
+            dialog.setCancelable(false);
+            TextView txtMsgem = dialog.findViewById(R.id.mensagemAlertDialogAviso);
+            txtMsgem.setText("O RelatórioKm está salvo em " + docsFolder + " e baixe um visualizador de PDF para ver o relatório gerado.");
+            Button btnOK = dialog.findViewById(R.id.btnAlertDialogAvisoOK);
+            btnOK.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    finish();
+                }
+            });
+            dialog.show();
         }
     }
 

@@ -2,11 +2,14 @@ package com.example.fernando.controlekm;
 
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.Environment;
 import android.support.v4.view.MenuItemCompat;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -21,12 +24,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.fernando.controlekm.BD.DatabaseHelper;
 import com.example.fernando.controlekm.DAO.DBAdapter;
 import com.example.fernando.controlekm.dominio.Km;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -49,18 +55,20 @@ public class RecyclerViewKm extends AppCompatActivity implements SearchView.OnQu
         setContentView(R.layout.activity_recycler_view_km);
         db = new DBAdapter(this);
         if (db.getAllKm().isEmpty()) {
-            new AlertDialog.Builder(this)
-                    .setCancelable(false)
-                    .setTitle("Atenção")
-                    .setMessage("Lista vazia! Por favor cadastre um km.")
-                    .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            finish();
-                        }
-                    })
-                    .create()
-                    .show();
+            final Dialog dialog = new Dialog(this, R.style.DialogoSemTitulo);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.layout_alert_dialog_aviso);
+            dialog.setCancelable(false);
+            TextView txtMsgem = dialog.findViewById(R.id.mensagemAlertDialogAviso);
+            txtMsgem.setText(R.string.lista_vazia_km);
+            Button btnOK = dialog.findViewById(R.id.btnAlertDialogAvisoOK);
+            btnOK.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    finish();
+                }
+            });
+            dialog.show();
         }
 
         rv = (RecyclerView) findViewById(R.id.rv);
@@ -267,24 +275,35 @@ public class RecyclerViewKm extends AppCompatActivity implements SearchView.OnQu
                                     finish();
                                     break;
                                 case R.id.Remover:
-                                    new AlertDialog.Builder(RecyclerViewKm.this).setTitle("Deletando Km").
-                                            setMessage(R.string.confirmacao_exclusao_km).
-                                            setPositiveButton(R.string.sim, new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialogInterface, int i) {
-                                                    Integer id = (kmList.get(position).getId());
-                                                    kmList.remove(position);
-                                                    rv.invalidate();
-                                                    data = "";
-                                                    db.deleteKm(id);
-                                                    notifyDataSetChanged();
-                                                }
-                                            })
-                                            .setNegativeButton(R.string.nao, null)
-                                            .show();
-                                    break;
-                                default:
-                                    break;
+                                    final Dialog dialog = new Dialog(RecyclerViewKm.this, R.style.DialogoSemTitulo);
+                                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    dialog.setContentView(R.layout.layout_alert_dialog_menu_delete);
+                                    dialog.setCancelable(false);
+                                    TextView txtTitulo = dialog.findViewById(R.id.tituloalertDialogDelete);
+                                    txtTitulo.setText(R.string.deletar_km);
+                                    TextView txtMsgem = dialog.findViewById(R.id.mensagemAlertDialogDelete);
+                                    txtMsgem.setText(R.string.confirmacao_exclusao_km);
+                                    Button btnSim = dialog.findViewById(R.id.btnAlertDialogDeleteSim);
+                                    Button btnNao = dialog.findViewById(R.id.btnAlertDialogDeleteNao);
+                                    btnSim.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            Integer id = (kmList.get(position).getId());
+                                            kmList.remove(position);
+                                            rv.invalidate();
+                                            data = "";
+                                            db.deleteKm(id);
+                                            notifyDataSetChanged();
+                                            dialog.dismiss();
+                                        }
+                                    });
+                                    btnNao.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                                    dialog.show();
                             }
                             return false;
                         }

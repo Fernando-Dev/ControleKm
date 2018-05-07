@@ -53,6 +53,26 @@
     <string name="proxima_manutencao">Próxima manutenção</string>
     <string name="distancia_percorrida">Distância percorrida</string>
     <string name="mes_competencia">Mês/Competência</string>
+    <string name="titulo_erro">Erro</string>
+    <string name="titulo_aviso">Aviso</string>
+    <string name="ok">OK</string>
+    <string name="cancelar">CANCELAR</string>
+    <string name="mensagem_usuario">Já existe um usuário cadastrado! Para cadastrar um novo usuário, faça exclusão do usuário existente!</string>
+    <string name="aviso_relatorio">Não há quilometragem ou usuário cadastrado para gerar o relatório</string>
+    <string name="erro_relatorio_data_igual">O relatório não pode ser gerado, pois as datas são iguais.</string>
+    <string name="erro_relatorio_inicial_maior">A data inicial é maior que a data final.</string>
+    <string name="erro_relatorio_mes_competencia">O relatório não pode ser gerado, pois necessita do mês de competência!</string>
+    <string name="relatorio_gerado">Relatório Gerado!</string>
+    <string name="sair_main">Você deseja sair? </string>
+    <string name="lista_vazia_km">Lista vazia! Por favor cadastre um km.</string>
+    <string name="lista_vazia_usuario">Lista vazia! Por favor cadastre um usuário.</string>
+    <string name="deletar_km">Deletar Km</string>
+    <string name="deletar_usuario">Deletar Usuário</string>
+    <string name="aviso_utilitario">Por favor, para eficiência do controle de manutenção da moto, faça o cadastro de Km após toda viagem!</string>
+    <string name="registrar_troca_oleo">REGISTRAR TROCA DE ÓLEO</string>
+    <string name="registrar_manutencao">REGISTRAR MANUTENÇÃO</string>
+    <string name="outro_voltar">VOLTAR</string>
+
 
 
     <string name="buscar">Buscar</string>

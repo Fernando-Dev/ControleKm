@@ -15,16 +15,14 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/padding_5dp">
 
-        <Button
-            android:id="@+id/btnTrocaOleo"
-            android:layout_width="wrap_content"
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/botao"
-            android:onClick="selecionarOpcao"
+            android:background="@drawable/textview_main"
+            android:gravity="center_horizontal"
             android:text="@string/troca_oleo"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-            android:textColor="@color/colorWhite" />
-
+            android:textColor="@color/colorBotaoSelecionado" />
 
         <TextView
             android:id="@+id/lvUltimaTrocaOleo"
@@ -100,15 +98,29 @@
 
 
         <Button
-            android:id="@+id/btnManutencao"
+            android:id="@+id/btnTrocaOleo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_padrao"
             android:background="@drawable/botao"
             android:onClick="selecionarOpcao"
+            android:text="@string/registrar_troca_oleo"
+            android:textColor="@color/colorWhite" />
+
+
+        <View style="@style/Divisor"
+            android:layout_marginTop="@dimen/padding_padrao"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/textview_main"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="@dimen/padding_padrao"
             android:text="@string/manutencao"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-            android:textColor="@color/colorWhite" />
+            android:textColor="@color/colorBotaoSelecionado" />
+
 
         <TextView
             android:id="@+id/lvUltimaManutencao"
@@ -183,14 +195,26 @@
         </TableRow>
 
         <Button
+            android:id="@+id/btnManutencao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_padrao"
+            android:background="@drawable/botao"
+            android:onClick="selecionarOpcao"
+            android:text="@string/registrar_manutencao"
+            android:textColor="@color/colorWhite" />
+
+        <View style="@style/Divisor"
+            android:layout_marginTop="@dimen/padding_padrao"/>
+
+        <Button
             android:id="@+id/btnVoltarUtils"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_padrao"
             android:background="@drawable/botao"
             android:onClick="selecionarOpcao"
-            android:text="@string/voltar"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:text="@string/outro_voltar"
             android:textColor="@color/colorWhite" />
 
     </TableLayout>

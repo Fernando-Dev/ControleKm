@@ -1,6 +1,7 @@
 package com.example.fernando.controlekm;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -21,6 +22,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.fernando.controlekm.BD.DatabaseHelper;
@@ -47,18 +50,20 @@ public class RecyclerViewUsuario extends AppCompatActivity implements SearchView
         setContentView(R.layout.activity_recyclerview_usuario);
         db = new DBAdapter(this);
         if (db.listaUsuario().isEmpty()) {
-            new AlertDialog.Builder(this)
-                    .setCancelable(false)
-                    .setTitle("Atenção")
-                    .setMessage("Lista vazia! Por favor cadastre um usuário.")
-                    .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            finish();
-                        }
-                    })
-                    .create()
-                    .show();
+            final Dialog dialog = new Dialog(this, R.style.DialogoSemTitulo);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.layout_alert_dialog_aviso);
+            dialog.setCancelable(false);
+            TextView txtMsgem = dialog.findViewById(R.id.mensagemAlertDialogAviso);
+            txtMsgem.setText(R.string.lista_vazia_usuario);
+            Button btnOK = dialog.findViewById(R.id.btnAlertDialogAvisoOK);
+            btnOK.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    finish();
+                }
+            });
+            dialog.show();
         }
 
         rv = (RecyclerView) findViewById(R.id.rv);
@@ -240,24 +245,35 @@ public class RecyclerViewUsuario extends AppCompatActivity implements SearchView
                                     finish();
                                     break;
                                 case R.id.mnRemover:
-                                    new AlertDialog.Builder(RecyclerViewUsuario.this).setTitle("Deletando Usuário").
-                                            setMessage(R.string.confirmacao_exclusao_usuario).
-                                            setPositiveButton(R.string.sim, new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialogInterface, int i) {
-                                                    Integer id = (usuarioList.get(position).getId());
-                                                    usuarioList.remove(position);
-                                                    rv.invalidate();
-                                                    data = "";
-                                                    db.deleteUser(id);
-                                                    notifyDataSetChanged();
-                                                }
-                                            })
-                                            .setNegativeButton(R.string.nao, null)
-                                            .show();
-                                    break;
-                                default:
-                                    break;
+                                    final Dialog dialog = new Dialog(RecyclerViewUsuario.this, R.style.DialogoSemTitulo);
+                                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    dialog.setContentView(R.layout.layout_alert_dialog_menu_delete);
+                                    dialog.setCancelable(false);
+                                    TextView txtTitulo = dialog.findViewById(R.id.tituloalertDialogDelete);
+                                    txtTitulo.setText(R.string.deletar_usuario);
+                                    TextView txtMsgem = dialog.findViewById(R.id.mensagemAlertDialogDelete);
+                                    txtMsgem.setText(R.string.confirmacao_exclusao_usuario);
+                                    Button btnSim = dialog.findViewById(R.id.btnAlertDialogDeleteSim);
+                                    Button btnNao = dialog.findViewById(R.id.btnAlertDialogDeleteNao);
+                                    btnSim.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            Integer id = (usuarioList.get(position).getId());
+                                            usuarioList.remove(position);
+                                            rv.invalidate();
+                                            data = "";
+                                            db.deleteUser(id);
+                                            notifyDataSetChanged();
+                                            dialog.dismiss();
+                                        }
+                                    });
+                                    btnNao.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                                    dialog.show();
                             }
                             return false;
                         }

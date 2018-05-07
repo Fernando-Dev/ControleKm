@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_alert_dialog_erro"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorAlert"
+    android:orientation="vertical">
+
+<ImageView
+    android:id="@+id/imgErro"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:src="@drawable/ic_action_error"
+    android:padding="@dimen/padding_5dp"/>
+
+    <TextView
+        android:id="@+id/tituloAlertDialogErro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+        android:textColor="@color/colorTitle"
+        android:padding="@dimen/padding_5dp"
+        android:layout_toEndOf="@+id/imgErro"
+        android:layout_alignBottom="@+id/imgErro"
+        android:text="@string/titulo_erro"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/mensagemAlertDialogErro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imgErro"
+        android:padding="@dimen/padding_padrao"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+        android:textColor="@color/colorTitle" />
+
+    <Button
+        android:id="@+id/btnAlertDialogErroOK"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_padrao"
+        android:background="@drawable/btn_data"
+        android:layout_below="@+id/mensagemAlertDialogErro"
+        android:text="@string/ok"
+        />
+
+
+
+</RelativeLayout>

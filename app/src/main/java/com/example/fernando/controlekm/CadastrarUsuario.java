@@ -1,18 +1,28 @@
 package com.example.fernando.controlekm;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fernando.controlekm.BD.DatabaseHelper;
 import com.example.fernando.controlekm.DAO.DBAdapter;
 import com.example.fernando.controlekm.dominio.Usuario;
+
+import org.w3c.dom.Text;
 
 /**
  * Created by Flavia on 27/12/2017.
@@ -42,18 +52,18 @@ public class CadastrarUsuario extends AppCompatActivity {
         db = new DBAdapter(CadastrarUsuario.this);
 
         if (db.listaUsuario().size() == 1) {
-            new AlertDialog.Builder(this)
-                    .setCancelable(false)
-                    .setTitle("Atenção!")
-                    .setMessage("Já existe um usuário cadastrado! Para cadastrar um novo usuário, faça exclusão do usuário existente!")
-                    .setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            finish();
-                        }
-                    })
-                    .create()
-                    .show();
+            final Dialog dialog = new Dialog(this, R.style.DialogoSemTitulo);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.layout_alert_dialog_aviso);
+            dialog.setCancelable(false);
+            Button btnOK = dialog.findViewById(R.id.btnAlertDialogAvisoOK);
+            btnOK.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    finish();
+                }
+            });
+            dialog.show();
         }
 
         btnSalvar.setOnClickListener(new View.OnClickListener() {
@@ -82,7 +92,6 @@ public class CadastrarUsuario extends AppCompatActivity {
         });
 
     }
-
 
     public void addUsuario() {
         try {

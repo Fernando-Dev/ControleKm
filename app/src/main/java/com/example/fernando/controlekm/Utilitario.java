@@ -3,6 +3,7 @@ package com.example.fernando.controlekm;
 
 import android.app.AlertDialog;
 
+import android.app.Dialog;
 import android.content.Intent;
 
 import android.database.Cursor;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 
 
@@ -44,13 +46,19 @@ public class Utilitario extends AppCompatActivity {
         setContentView(R.layout.utilitario);
         db = new DBAdapter(this);
 
-        new AlertDialog.Builder(Utilitario.this)
-                .setCancelable(false)
-                .setTitle("Atenção!")
-                .setMessage("Por favor, para eficiência do controle de manutenção da moto, faça o cadastro de Km após toda viagem!")
-                .setNeutralButton("OK", null)
-                .create()
-                .show();
+        final Dialog dialog = new Dialog(this, R.style.DialogoSemTitulo);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.layout_alert_dialog_aviso);
+        TextView txtMsgem = dialog.findViewById(R.id.mensagemAlertDialogAviso);
+        txtMsgem.setText(R.string.aviso_utilitario);
+        Button btnOK = dialog.findViewById(R.id.btnAlertDialogAvisoOK);
+        btnOK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
 
         ultimaTrocaOleo = (TextView) findViewById(R.id.ultimaTrocaOleo);
         ultimoKmTrocaOleo = (TextView) findViewById(R.id.ultimoKmTrocaOleo);
@@ -111,7 +119,7 @@ public class Utilitario extends AppCompatActivity {
         ccc.moveToFirst();
         for (int i = 0; i < ccc.getCount(); i++) {
             ccc.getInt(0);
-            kmManutencao = ccc.getInt(ccc.getColumnIndex(DatabaseHelper.KM_MANUTENCAO));
+            kmManutencao = ccc.getInt(ccc.getColumnIndex(DatabaseHelper.KM_PROXIMA_MANUTENCAO));
             ccc.moveToNext();
         }
         ccc.close();

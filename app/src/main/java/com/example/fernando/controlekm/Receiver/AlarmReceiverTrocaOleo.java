@@ -15,7 +15,8 @@ import com.example.fernando.controlekm.R;
 import com.example.fernando.controlekm.Utilitario;
 
 public class AlarmReceiverTrocaOleo extends BroadcastReceiver {
-
+    private NotificationManager notificationManager;
+    private Notification notification;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -27,7 +28,7 @@ public class AlarmReceiverTrocaOleo extends BroadcastReceiver {
             PendingIntent pendingIntent = stackBuilder.getPendingIntent(CadastrarKm.ALARM_TYPE,
                     PendingIntent.FLAG_UPDATE_CURRENT);
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-            Notification notification = builder.setContentTitle(context.getString(R.string.app_name))
+            notification = builder.setContentTitle(context.getString(R.string.app_name))
                     .setContentText("Você precisa fazer a troca do óleo da sua moto!")
                     .setTicker(context.getString(R.string.app_name))
                     .setSmallIcon(R.mipmap.new_ic_controlekm)
@@ -36,8 +37,10 @@ public class AlarmReceiverTrocaOleo extends BroadcastReceiver {
                     .setContentIntent(pendingIntent).build();
             notification.defaults |= notification.DEFAULT_SOUND;
             notification.defaults |= notification.DEFAULT_VIBRATE;
-            NotificationManager notificationManager = (NotificationManager)
+            notificationManager = (NotificationManager)
                     context.getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.notify(CadastrarKm.ALARM_TYPE, notification);
         }
+
+
 }

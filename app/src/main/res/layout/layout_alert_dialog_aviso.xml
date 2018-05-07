@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_alert_dialog_aviso"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorAlert"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/imgAviso"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_action_warning"
+        android:padding="@dimen/padding_5dp"/>
+
+    <TextView
+        android:id="@+id/tituloalertDialogAviso"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_5dp"
+        android:text="@string/titulo_aviso"
+        android:layout_toEndOf="@+id/imgAviso"
+        android:layout_alignBottom="@+id/imgAviso"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+        android:textColor="@color/colorTitle"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/mensagemAlertDialogAviso"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imgAviso"
+        android:padding="@dimen/padding_padrao"
+        android:text="@string/mensagem_usuario"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+        android:textColor="@color/colorTitle" />
+
+    <Button
+        android:id="@+id/btnAlertDialogAvisoOK"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_padrao"
+        android:background="@drawable/btn_data"
+        android:layout_below="@+id/mensagemAlertDialogAviso"
+        android:text="@string/ok"/>
+
+
+
+</RelativeLayout>
