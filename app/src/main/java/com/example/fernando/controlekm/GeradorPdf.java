@@ -416,7 +416,7 @@ public class GeradorPdf extends AppCompatActivity {
         table5.setWidths(new int[]{1, 9});
         try {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            Bitmap bitmap = BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.new_ic_controlekm_4);
+            Bitmap bitmap = BitmapFactory.decodeResource(getBaseContext().getResources(), R.mipmap.new_ic_controlekm);
             bitmap.compress(Bitmap.CompressFormat.PNG, 50, stream);
             image = Image.getInstance(stream.toByteArray());
             image.setAlignment(Image.MIDDLE);
