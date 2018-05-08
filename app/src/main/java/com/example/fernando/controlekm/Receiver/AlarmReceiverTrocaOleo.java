@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.NotificationCompat;
 
@@ -14,18 +15,24 @@ import com.example.fernando.controlekm.CadastrarKm;
 import com.example.fernando.controlekm.R;
 import com.example.fernando.controlekm.Utilitario;
 
+
 public class AlarmReceiverTrocaOleo extends BroadcastReceiver {
     private NotificationManager notificationManager;
     private Notification notification;
+    private PendingIntent pendingIntent;
+
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Bundle extra = intent.getExtras();
+        int alarmId = extra.getInt("ALARM_TROCA_OLEO");
+        if (alarmId == 0) {
             CadastrarKm.enableBootReceiver(context);
             Intent notificationIntent = new Intent(context, Utilitario.class);
             TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
             stackBuilder.addParentStack(Utilitario.class);
             stackBuilder.addNextIntent(notificationIntent);
-            PendingIntent pendingIntent = stackBuilder.getPendingIntent(CadastrarKm.ALARM_TYPE,
+            pendingIntent = stackBuilder.getPendingIntent(CadastrarKm.ALARM_TROCA_OLEO,
                     PendingIntent.FLAG_UPDATE_CURRENT);
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
             notification = builder.setContentTitle(context.getString(R.string.app_name))
@@ -39,8 +46,12 @@ public class AlarmReceiverTrocaOleo extends BroadcastReceiver {
             notification.defaults |= notification.DEFAULT_VIBRATE;
             notificationManager = (NotificationManager)
                     context.getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.notify(CadastrarKm.ALARM_TYPE, notification);
+            notificationManager.notify(CadastrarKm.ALARM_TROCA_OLEO, notification);
+        } else {
+            notificationManager.cancel(CadastrarKm.ALARM_TROCA_OLEO);
         }
-
-
+    }
 }
+
+
+

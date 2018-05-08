@@ -110,8 +110,6 @@ public class GeradorPdf extends AppCompatActivity {
             });
             dialog.show();
         } else {
-            btnSegundaData.setText(lastData());
-            btnPrimeiraData.setText(firstData());
             try {
                 ano2 = pegaAno(lastData());
                 mes2 = pegaMes(lastData());

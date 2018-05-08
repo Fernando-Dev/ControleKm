@@ -51,11 +51,12 @@ public class CadastrarKm extends AppCompatActivity {
     private String notificationTitle;
     private String notificationText;
     private SQLiteDatabase database;
+    private Integer kmInicial;
     private Integer kmFinal = -1;
     private Integer kmTroca = 0;
     private Integer kmManutencao = 0;
-    public static int ALARM_TYPE = 101;
-    public static int ALARM_TYPE_2 = 102;
+    public static int ALARM_TROCA_OLEO = 101;
+    public static int ALARM_MANUTENCAO = 102;
     public AlarmManager alarmManager;
     public PendingIntent broadcast;
 
@@ -108,27 +109,55 @@ public class CadastrarKm extends AppCompatActivity {
 
     }
 
-    private void enviaNotificacaoTrocaOleo() {
-        alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent notificationIntent = new Intent(CadastrarKm.this, AlarmReceiverTrocaOleo.class);
-        broadcast = PendingIntent.getBroadcast(this, ALARM_TYPE, notificationIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-        Calendar cal = Calendar.getInstance();
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
-                AlarmManager.INTERVAL_HOUR + AlarmManager.INTERVAL_HOUR, broadcast);
+    public boolean enviaNotificacaoTrocaOleo(boolean confirma) {
+        if (confirma) {
+            alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            Intent notificationIntent = new Intent(CadastrarKm.this, AlarmReceiverTrocaOleo.class);
+            broadcast = PendingIntent.getBroadcast(this, ALARM_TROCA_OLEO, notificationIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+            Calendar cal = Calendar.getInstance();
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
+                    AlarmManager.INTERVAL_HOUR + AlarmManager.INTERVAL_HOUR, broadcast);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean enviaNotificacaoManutencao(boolean confirma) {
+        if (confirma) {
+            alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            Intent notificationIntent = new Intent(CadastrarKm.this, AlarmReceiverManutencao.class);
+            broadcast = PendingIntent.getBroadcast(this, ALARM_MANUTENCAO, notificationIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+            Calendar cal = Calendar.getInstance();
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
+                    AlarmManager.INTERVAL_HOUR + AlarmManager.INTERVAL_HOUR, broadcast);
+            return true;
+        } else {
+            return false;
+        }
 
     }
 
-    private void enviaNotificacaoManutencao() {
+    public boolean cancelarNotificacaoTrocaOleo() {
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent notificationIntent = new Intent(CadastrarKm.this, AlarmReceiverManutencao.class);
-        broadcast = PendingIntent.getBroadcast(this, ALARM_TYPE_2, notificationIntent,
+        Intent intent = new Intent(CadastrarKm.this, AlarmReceiverTrocaOleo.class);
+        intent.putExtra("ALARM_TROCA_OLEO", ALARM_TROCA_OLEO);
+        broadcast = PendingIntent.getBroadcast(this, ALARM_TROCA_OLEO, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
-        Calendar cal = Calendar.getInstance();
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
-                AlarmManager.INTERVAL_HOUR + AlarmManager.INTERVAL_HOUR, broadcast);
+        alarmManager.cancel(broadcast);
+        return true;
+    }
 
-
+    public boolean cancelarNotificacaoManutencao() {
+        alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(CadastrarKm.this, AlarmReceiverManutencao.class);
+        intent.putExtra("ALARM_MANUTENCAO", ALARM_MANUTENCAO);
+        broadcast = PendingIntent.getBroadcast(this, ALARM_MANUTENCAO, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.cancel(broadcast);
+        return true;
     }
 
     public static void enableBootReceiver(Context context) {
@@ -139,7 +168,7 @@ public class CadastrarKm extends AppCompatActivity {
                 PackageManager.DONT_KILL_APP);
     }
 
-    private void chamaNotificacao() {
+    private void consultaKms() {
         database = db.read();
         Cursor c = database.rawQuery("SELECT * FROM kms", null);
         Cursor cc = database.rawQuery("SELECT * FROM trocasDeOleo", null);
@@ -147,6 +176,7 @@ public class CadastrarKm extends AppCompatActivity {
         c.moveToFirst();
         for (int i = 0; i < c.getCount(); i++) {
             c.getInt(0);
+            kmInicial = Integer.valueOf(c.getString(c.getColumnIndex(DatabaseHelper.KEY_KM_INICIAL)));
             kmFinal = Integer.valueOf(c.getString(c.getColumnIndex(DatabaseHelper.KEY_KM_FINAL)));
             c.moveToNext();
         }
@@ -190,12 +220,17 @@ public class CadastrarKm extends AppCompatActivity {
                 cursor.moveToNext();
             }
             cursor.close();
+            consultaKms();
             if (dataChecada) {
                 Toast.makeText(getBaseContext(), "A data já existe no banco de dados!", Toast.LENGTH_LONG).show();
+            } else if (_kmIni < kmInicial) {
+                Toast.makeText(getBaseContext(), "Km inicial digitado é menor que o ultimo Km inicial do banco de dados!", Toast.LENGTH_LONG).show();
+            } else if (_kmFim < kmFinal) {
+                Toast.makeText(getBaseContext(), "Km final digitado é menor que o ultimo Km final do banco de dados!", Toast.LENGTH_LONG).show();
             } else if (_kmIni > _kmFim) {
                 Toast.makeText(getBaseContext(), "Km inicial maior!", Toast.LENGTH_LONG).show();
             } else if (_kmIni == _kmFim) {
-                Toast.makeText(getBaseContext(), "Km inicial é igual Km final!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(), "Km inicial é igual ao Km final!", Toast.LENGTH_LONG).show();
             } else {
                 Integer diferenca = (_kmFim - _kmIni);
                 String resultado = String.valueOf(diferenca);
@@ -210,20 +245,44 @@ public class CadastrarKm extends AppCompatActivity {
                 km.setKmFinal(edtKmFinal.getText().toString());
                 km.setKmTotal(txvKmTotal.getText().toString());
                 db.inserirKm(km);
-                chamaNotificacao();
+                consultaKms();
                 if ((kmFinal.equals(-1) || kmTroca.equals(0)) || (kmFinal.equals(-1) || kmManutencao.equals(0))) {
                     Toast.makeText(getBaseContext(), "Salvo com sucesso!", Toast.LENGTH_LONG).show();
                     finish();
+                } else if (kmFinal > kmTroca & kmFinal > kmManutencao) {
+                    enviaNotificacaoTrocaOleo(true);
+                    enviaNotificacaoManutencao(true);
+                    Toast.makeText(getBaseContext(), "Salvo com sucesso!", Toast.LENGTH_LONG).show();
+                    finish();
+                } else if (kmFinal.equals(kmTroca) & kmFinal.equals(kmManutencao)) {
+                    enviaNotificacaoTrocaOleo(true);
+                    enviaNotificacaoManutencao(true);
+                    Toast.makeText(getBaseContext(), "Salvo com sucesso!", Toast.LENGTH_LONG).show();
+                    finish();
+                } else if (kmFinal > kmTroca & kmFinal.equals(kmManutencao)) {
+                    enviaNotificacaoTrocaOleo(true);
+                    enviaNotificacaoManutencao(true);
+                    Toast.makeText(getBaseContext(), "Salvo com sucesso!", Toast.LENGTH_LONG).show();
+                    finish();
+                } else if (kmFinal > kmManutencao & kmFinal.equals(kmTroca)) {
+                    enviaNotificacaoTrocaOleo(true);
+                    enviaNotificacaoManutencao(true);
+                    Toast.makeText(getBaseContext(), "Salvo com sucesso!", Toast.LENGTH_LONG).show();
+                    finish();
                 } else if (kmFinal > kmTroca || kmFinal.equals(kmTroca)) {
-                    enviaNotificacaoTrocaOleo();
+                    enviaNotificacaoTrocaOleo(true);
                     Toast.makeText(getBaseContext(), "Salvo com sucesso!", Toast.LENGTH_LONG).show();
                     finish();
                 } else if (kmFinal > kmManutencao || kmFinal.equals(kmManutencao)) {
                     /*chama notificacao da manutencao*/
-                    enviaNotificacaoManutencao();
+                    enviaNotificacaoManutencao(true);
                     Toast.makeText(getBaseContext(), "Salvo com sucesso!", Toast.LENGTH_LONG).show();
                     finish();
-                } else{
+                } else {
+                    enviaNotificacaoTrocaOleo(false);
+                    enviaNotificacaoManutencao(false);
+                    cancelarNotificacaoTrocaOleo();
+                    cancelarNotificacaoManutencao();
                     Toast.makeText(getBaseContext(), "Salvo com sucesso!", Toast.LENGTH_LONG).show();
                     finish();
                 }
