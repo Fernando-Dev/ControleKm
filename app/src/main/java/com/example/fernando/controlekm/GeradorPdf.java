@@ -408,6 +408,7 @@ public class GeradorPdf extends AppCompatActivity {
         documento.open();
 
         PdfPTable table0 = new PdfPTable(1);
+        table0.setSplitLate(false);
         table0.setWidthPercentage(100f);
 
         PdfPTable table5 = new PdfPTable(2);
@@ -435,6 +436,7 @@ public class GeradorPdf extends AppCompatActivity {
         table0.addCell(new PdfPCell(table5));
 
         PdfPTable table1 = new PdfPTable(3);
+
         cursor.moveToFirst();
         for (int b = 0; b < cursor.getCount(); b++) {
             String nome = cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_NOME));
@@ -459,6 +461,7 @@ public class GeradorPdf extends AppCompatActivity {
 
         PdfPTable table = new PdfPTable(8);
 
+        table.setHeaderRows(1);
         table.setWidths(new int[]{1, 2, 10, 2, 2, 2, 2, 2});
         table.addCell(createCell("Id", 2, 1, Element.ALIGN_CENTER));
         table.addCell(createCell("Data", 2, 1, Element.ALIGN_CENTER));
