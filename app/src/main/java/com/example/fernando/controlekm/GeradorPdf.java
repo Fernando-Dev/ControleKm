@@ -78,6 +78,8 @@ public class GeradorPdf extends AppCompatActivity {
     private TextView txtError1, txtError2, textoInfo;
     private Spinner mesesAno;
     private Image image;
+    private String ano, competencia;
+    private Calendar calendar;
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -371,6 +373,9 @@ public class GeradorPdf extends AppCompatActivity {
 
     private void criarPdf() throws FileNotFoundException, DocumentException {
         database = db.read();
+        competencia = mesesAno.getSelectedItem().toString();
+        calendar = Calendar.getInstance();
+        ano = String.valueOf(calendar.get(Calendar.YEAR));
         try {
             data1 = desenverterData(btnPrimeiraData.getText().toString());
             data2 = desenverterData(btnSegundaData.getText().toString());
@@ -391,15 +396,14 @@ public class GeradorPdf extends AppCompatActivity {
          * oder by kms.data
         * */
 
-        pdfFile = new File(docsFolder.getAbsolutePath(), "RelatórioKm.pdf");
+        pdfFile = new File(docsFolder.getAbsolutePath(), "RelatórioKm " + competencia + ano + ".pdf");
         c = database.rawQuery("SELECT * FROM kms WHERE data BETWEEN '" + data1 + "' AND '" + data2 + "' ORDER BY data", null);
         cc = database.rawQuery("SELECT * FROM kms WHERE data BETWEEN '" + data1 + "' AND '" + data2 + "' ORDER BY data", null);
         cursor = database.rawQuery("SELECT * FROM usuarios", null);
 
         FileOutputStream output = new FileOutputStream(pdfFile);
         Document documento = new Document(PageSize.A4.rotate());
-        Calendar calendar = Calendar.getInstance();
-        String ano = String.valueOf(calendar.get(Calendar.YEAR));
+
 
         PdfWriter writer = PdfWriter.getInstance(documento, output);
         PageOrientation event = new PageOrientation();
@@ -444,7 +448,7 @@ public class GeradorPdf extends AppCompatActivity {
             String funcao = cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_FUNCAO));
             String placa = cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_PLACA));
             String gerencia = cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_GERENCIA));
-            String competencia = mesesAno.getSelectedItem().toString();
+
             table1.addCell(createCell("Nome: " + nome, 1, 1, Element.ALIGN_LEFT));
             table1.addCell(createCell("Unidade: " + unidade, 1, 1, Element.ALIGN_LEFT));
             table1.addCell(createCell("Função: " + funcao, 1, 1, Element.ALIGN_LEFT));
@@ -604,7 +608,7 @@ public class GeradorPdf extends AppCompatActivity {
             dialog.setContentView(R.layout.layout_alert_dialog_relatorio);
             dialog.setCancelable(false);
             TextView txtMsgem = dialog.findViewById(R.id.mensagemAlertDialogRelatorio);
-            txtMsgem.setText("O RelatórioKm.pdf foi gerado e está salvo neste caminho " + docsFolder + ". Deseja abrir o relatório?");
+            txtMsgem.setText("O RelatórioKm " + competencia + ano + ".pdf foi gerado e está salvo neste caminho " + docsFolder + ". Deseja abrir o relatório?");
             Button btnOK = dialog.findViewById(R.id.btnAlertDialogRelatorioOK);
             Button btnCancelar = dialog.findViewById(R.id.btnAlertDialogRelatorioCancelar);
             btnOK.setOnClickListener(new View.OnClickListener() {
@@ -612,7 +616,7 @@ public class GeradorPdf extends AppCompatActivity {
                 public void onClick(View view) {
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/PDF";
-                    new File(path, "RelatórioKm.pdf");
+                    new File(path, "RelatórioKm " + competencia + ano + ".pdf");
                     intent.setDataAndType(Uri.fromFile(pdfFile), "application/pdf");
                     startActivity(intent);
                     finish();
@@ -631,7 +635,7 @@ public class GeradorPdf extends AppCompatActivity {
             dialog.setContentView(R.layout.layout_alert_dialog_aviso);
             dialog.setCancelable(false);
             TextView txtMsgem = dialog.findViewById(R.id.mensagemAlertDialogAviso);
-            txtMsgem.setText("O RelatórioKm está salvo em " + docsFolder + " e baixe um visualizador de PDF para ver o relatório gerado.");
+            txtMsgem.setText("O RelatórioKm " + competencia + ano + " está salvo em " + docsFolder + " e baixe um visualizador de PDF para ver o relatório gerado.");
             Button btnOK = dialog.findViewById(R.id.btnAlertDialogAvisoOK);
             btnOK.setOnClickListener(new View.OnClickListener() {
                 @Override
