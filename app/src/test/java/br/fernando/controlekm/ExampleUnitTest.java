@@ -1,4 +1,4 @@
-package com.example.fernando.controlekm;
+package br.fernando.controlekm;
 
 import org.junit.Test;
 
