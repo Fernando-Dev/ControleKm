@@ -1,5 +1,8 @@
 package com.example.fernando.controlekm;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -13,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fernando.controlekm.DAO.DBAdapter;
+import com.example.fernando.controlekm.Receiver.AlarmReceiverManutencao;
 import com.example.fernando.controlekm.dominio.Manutencao;
 import com.example.fernando.controlekm.dominio.TrocaOleo;
 
@@ -32,6 +36,9 @@ public class CadastrarManutencao extends AppCompatActivity {
     private ArrayList<TrocaOleo> listManutencao;
     private Integer parametroTrocaOleo, kmFinal;
     private DBAdapter db;
+    public AlarmManager alarmManager;
+    public static int ALARM_MANUTENCAO = 102;
+    public PendingIntent broadcast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +100,7 @@ public class CadastrarManutencao extends AppCompatActivity {
             resultado = manutencao.getKmManutencao() + manutencao.getDistanciaManutencao();
             manutencao.setKmProximaManutencao(resultado);
             db.inserirManutencao(manutencao);
+            cancelarNotificacaoManutencao();
             Toast.makeText(getBaseContext(), "Salvo com sucesso!", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(CadastrarManutencao.this,Utilitario.class);
             startActivity(intent);
@@ -101,6 +109,16 @@ public class CadastrarManutencao extends AppCompatActivity {
             Toast.makeText(getBaseContext(), "Erro ao salvar!", Toast.LENGTH_SHORT).show();
         }
     }
+    public boolean cancelarNotificacaoManutencao() {
+        alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(CadastrarManutencao.this, AlarmReceiverManutencao.class);
+        intent.putExtra("ALARM_MANUTENCAO", ALARM_MANUTENCAO);
+        broadcast = PendingIntent.getBroadcast(this, ALARM_MANUTENCAO, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.cancel(broadcast);
+        return true;
+    }
+
 
     private static String inverteOrdemData(String data) throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");

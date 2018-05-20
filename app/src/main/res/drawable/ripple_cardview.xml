@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:color="@color/colorBotaoSelecionado"
-    tools:targetApi="lollipop">
-    <!--<item>-->
-        <!--<shape ars android:radius="5dp"/>-->
-        <!--</shape>ndroid:shape="rectangle">-->
-        <!--<solid android:color="@color/colorPrimary"/>-->
-        <!--<corne-->
-    <!--</item>-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <shape android:shape="oval">
+            <solid android:color="@android:color/darker_gray" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@android:color/white" />
+        </shape>
+    </item>
 
-</ripple>
+</selector>

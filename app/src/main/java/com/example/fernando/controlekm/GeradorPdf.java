@@ -72,13 +72,13 @@ public class GeradorPdf extends AppCompatActivity {
     private DBAdapter db;
     private SQLiteDatabase database;
     private int ano1, ano2, mes1, mes2, dia1, dia2;
-    private Date dataPdf1, dataPdf2;
+    private Date dataPdf1, dataPdf2, btnDate1, btnDate2, queryData1, queryData2;
     private Button btnPrimeiraData, btnSegundaData;
     private String data1, data2, _maxData, _minData;
     private TextView txtError1, txtError2, textoInfo;
     private Spinner mesesAno;
     private Image image;
-    private String ano, competencia;
+    private String ano, competencia, dataInvertida1,dataInvertida2;
     private Calendar calendar;
 
 
@@ -119,6 +119,7 @@ public class GeradorPdf extends AppCompatActivity {
                 ano1 = pegaAno(firstData());
                 mes1 = pegaMes(firstData());
                 dia1 = pegaDia(firstData());
+
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -137,20 +138,29 @@ public class GeradorPdf extends AppCompatActivity {
         gerarRelatorio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                try {
+                    btnDate1 = parseStringDate(btnPrimeiraData.getText().toString());
+                    btnDate2 = parseStringDate(btnSegundaData.getText().toString());
+                    queryData1 = parseStringDate(firstData());
+                    queryData2 = parseStringDate(lastData());
+                    dataInvertida1 = desenverterData(btnPrimeiraData.getText().toString());
+                    dataInvertida2 = desenverterData(btnSegundaData.getText().toString());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
                 if (btnPrimeiraData.getText().toString().isEmpty()) {
                     txtError1.setText(R.string.campo_vazio);
                 } else if (btnSegundaData.getText().toString().isEmpty()) {
                     txtError1.setText("");
                     txtError2.setText(R.string.campo_vazio);
-                } else if (btnPrimeiraData.getText().toString().equals(btnSegundaData.getText().toString())) {
-                    txtError1.setText("");
-                    txtError2.setText("");
+                } else if (!queryData(dataInvertida1)) {
                     final Dialog dialog = new Dialog(GeradorPdf.this, R.style.DialogoSemTitulo);
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     dialog.setContentView(R.layout.layout_alert_dialog_erro);
                     dialog.setCancelable(false);
                     TextView txtMsgem = dialog.findViewById(R.id.mensagemAlertDialogErro);
-                    txtMsgem.setText(R.string.erro_relatorio_data_igual);
+                    txtMsgem.setText(R.string.data_inicial_inexistente);
                     Button btnOK = dialog.findViewById(R.id.btnAlertDialogErroOK);
                     btnOK.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -159,7 +169,22 @@ public class GeradorPdf extends AppCompatActivity {
                         }
                     });
                     dialog.show();
-                } else if (btnPrimeiraData.getText().toString().compareTo(btnSegundaData.getText().toString()) == 1) {
+                }else if (!queryData(dataInvertida2)){
+                    final Dialog dialog = new Dialog(GeradorPdf.this, R.style.DialogoSemTitulo);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setContentView(R.layout.layout_alert_dialog_erro);
+                    dialog.setCancelable(false);
+                    TextView txtMsgem = dialog.findViewById(R.id.mensagemAlertDialogErro);
+                    txtMsgem.setText(R.string.data_final_inexitente);
+                    Button btnOK = dialog.findViewById(R.id.btnAlertDialogErroOK);
+                    btnOK.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.show();
+                } else if (btnDate1.compareTo(btnDate2) > 0) {
                     txtError1.setText("");
                     txtError2.setText("");
                     final Dialog dialog = new Dialog(GeradorPdf.this, R.style.DialogoSemTitulo);
@@ -305,6 +330,29 @@ public class GeradorPdf extends AppCompatActivity {
                 .setNegativeButton("Cancel", null)
                 .create()
                 .show();
+    }
+
+    private boolean queryData(String data) {
+        boolean dataChecada = false;
+        SQLiteDatabase database = db.read();
+        Cursor cursor = database.rawQuery("SELECT * FROM kms WHERE data LIKE '" + data + "'", null);
+        cursor.moveToFirst();
+        for (int i = 0; i < cursor.getCount(); i++) {
+            cursor.getInt(0);
+            String dataQuery = cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_DATA));
+            if (dataQuery.compareTo(data) == 0) {
+                dataChecada = true;
+            }
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return dataChecada;
+    }
+
+    private static Date parseStringDate(String data) throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = format.parse(data);
+        return date;
     }
 
     private static Integer pegaDia(String data) throws ParseException {

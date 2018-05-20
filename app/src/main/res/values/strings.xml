@@ -72,7 +72,14 @@
     <string name="registrar_troca_oleo">REGISTRAR TROCA DE ÓLEO</string>
     <string name="registrar_manutencao">REGISTRAR MANUTENÇÃO</string>
     <string name="outro_voltar">VOLTAR</string>
-
+    <string name="data_inicial_inexistente">A data inicial não existe no banco de dados!</string>
+    <string name="data_final_inexitente">A data final não existe no banco de dados!</string>
+    <string name="sobre">Sobre</string>
+    <string name="versao_app">Versão 1.0</string>
+    <string name="texto_sobre_1">O aplicativo ControleKm é uma ferramenta que facilita o controle de quilometragem e manutenção da motocicleta, constrói relatório de forma precisa de acordo com a necessidade e envia alertas de forma oportuna ao usuário. </string>
+    <string name="texto_sobre_2">Encontrou um problema, quer deixar um comentário ou sugestão? Envie um e-amil para: fernando_dev@outlook.com.br. </string>
+    <string name="nome_desenvolvedor">Desenvolvido por Fernando Nascimento</string>
+    <string name="ano_desenvolvimento">2018</string>
 
 
     <string name="buscar">Buscar</string>

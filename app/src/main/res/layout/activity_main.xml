@@ -66,6 +66,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|center_vertical"
                         android:layout_margin="5dp"
+                        android:background="@drawable/ripple_cardview"
                         android:orientation="vertical">
 
                         <ImageView
@@ -113,6 +114,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|center_vertical"
                         android:layout_margin="5dp"
+                        android:background="@drawable/ripple_cardview"
                         android:orientation="vertical">
 
                         <ImageView
@@ -181,6 +183,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|center_vertical"
                         android:layout_margin="5dp"
+                        android:background="@drawable/ripple_cardview"
                         android:orientation="vertical">
 
                         <ImageView
@@ -230,6 +233,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|center_vertical"
                         android:layout_margin="5dp"
+                        android:background="@drawable/ripple_cardview"
                         android:orientation="vertical">
 
                         <ImageView
@@ -294,6 +298,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|center_vertical"
+                        android:background="@drawable/ripple_cardview"
                         android:layout_margin="5dp">
 
                         <ImageView
@@ -343,6 +348,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|center_vertical"
                         android:layout_margin="5dp"
+                        android:background="@drawable/ripple_cardview"
                         android:orientation="vertical">
 
                         <ImageView

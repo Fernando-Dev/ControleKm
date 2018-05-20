@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorFundo"
+    android:padding="@dimen/padding_padrao"
+    tools:context="com.example.fernando.controlekm.Sobre">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+
+
+        <ImageView
+            android:id="@+id/logoApp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:padding="@dimen/padding_5dp"
+            android:src="@drawable/logo_splash_screen" />
+
+        <TextView
+            android:id="@+id/nomeApp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/versaoApp"
+            android:layout_toEndOf="@+id/logoApp"
+            android:padding="@dimen/padding_5dp"
+            android:text="@string/app_name"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+            android:textColor="@color/colorTitle"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/versaoApp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/textoSobre1"
+            android:layout_alignEnd="@+id/nomeApp"
+            android:layout_marginBottom="22dp"
+            android:layout_marginEnd="23dp"
+            android:padding="@dimen/padding_5dp"
+            android:text="@string/versao_app"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+            android:textColor="@color/colorTitle" />
+
+        <me.biubiubiu.justifytext.library.JustifyTextView
+            android:id="@+id/textoSobre1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/logoApp"
+            android:layout_marginTop="17dp"
+            android:text="@string/texto_sobre_1"
+            android:textAlignment="center"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+            android:textColor="@color/colorTitle" />
+
+        <me.biubiubiu.justifytext.library.JustifyTextView
+            android:id="@+id/textoSobre2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textoSobre1"
+            android:layout_marginTop="@dimen/padding_padrao"
+            android:text="@string/texto_sobre_2"
+            android:textColor="@color/colorTitle" />
+
+        <me.biubiubiu.justifytext.library.JustifyTextView
+            android:id="@+id/textoDesenvolvedor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textoSobre2"
+            android:layout_marginTop="@dimen/padding_padrao"
+            android:text="@string/nome_desenvolvedor"
+            android:textAlignment="center"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+            android:textColor="@color/colorTitle" />
+
+        <TextView
+            android:id="@+id/anoSobre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ano_desenvolvimento"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+            android:textColor="@color/colorTitle"
+            android:layout_below="@+id/textoDesenvolvedor"
+            android:layout_centerHorizontal="true" />
+        <Button
+            android:id="@+id/btnVoltarSobre"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/anoSobre"
+            android:background="@drawable/botao"
+            android:text="@string/voltar"
+            android:textColor="@color/colorWhite"
+            android:layout_marginTop="@dimen/padding_padrao"/>
+    </RelativeLayout>
+
+</ScrollView>

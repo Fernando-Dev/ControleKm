@@ -131,6 +131,7 @@ public class CadastrarKm extends AppCompatActivity {
             broadcast = PendingIntent.getBroadcast(this, ALARM_MANUTENCAO, notificationIntent,
                     PendingIntent.FLAG_UPDATE_CURRENT);
             Calendar cal = Calendar.getInstance();
+
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
                     AlarmManager.INTERVAL_HOUR + AlarmManager.INTERVAL_HOUR, broadcast);
             return true;

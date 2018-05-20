@@ -127,7 +127,10 @@
         <receiver
             android:name=".Receiver.AlarmReceiverManutencao"
             android:enabled="true"
-            android:exported="true"/>
+            android:exported="true" />
+
+        <activity android:name=".Sobre"
+            android:label="@string/sobre"/>
     </application>
 
 </manifest>
