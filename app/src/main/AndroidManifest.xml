@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.fernando.controlekm">
+    package="br.fernando.controlekm">
 
     <supports-screens
         android:largeScreens="true"
@@ -70,7 +70,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".SplashScreenKM"
+            android:name="br.fernando.controlekm.SplashScreenKM"
             android:theme="@style/AppCompat.TelaCheia">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -79,57 +79,57 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Main"
+            android:name="br.fernando.controlekm.Main"
             android:theme="@style/AppCompat.TelaCheia" />
         <activity
-            android:name=".CadastrarKm"
+            android:name="br.fernando.controlekm.CadastrarKm"
             android:label="@string/cadastrar" />
         <activity
-            android:name=".CadastrarUsuario"
+            android:name="br.fernando.controlekm.CadastrarUsuario"
             android:label="@string/cadastrar" />
         <activity
-            android:name=".ListUser"
+            android:name="br.fernando.controlekm.ListUser"
             android:label="@string/lista_usuario"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".GeradorPdf"
+            android:name="br.fernando.controlekm.GeradorPdf"
             android:label="@string/realatorio" />
         <activity
-            android:name=".AlterarKm"
+            android:name="br.fernando.controlekm.AlterarKm"
             android:label="@string/alterar" />
         <activity
-            android:name=".Utilitario"
+            android:name="br.fernando.controlekm.Utilitario"
             android:label="Utilitários" />
         <activity
-            android:name=".AlterarUser"
+            android:name="br.fernando.controlekm.AlterarUser"
             android:label="@string/alterar" />
         <activity
-            android:name=".ListarKm"
+            android:name="br.fernando.controlekm.ListarKm"
             android:label="@string/listar_km"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".RecyclerViewKm"
+            android:name="br.fernando.controlekm.RecyclerViewKm"
             android:label="@string/listar_km" />
         <activity
-            android:name=".RecyclerViewUsuario"
+            android:name="br.fernando.controlekm.RecyclerViewUsuario"
             android:label="@string/listar_usuario" />
         <activity
-            android:name=".CadastrarTrocaOleo"
+            android:name="br.fernando.controlekm.CadastrarTrocaOleo"
             android:label="@string/troca_oleo" />
         <activity
-            android:name=".CadastrarManutencao"
+            android:name="br.fernando.controlekm.CadastrarManutencao"
             android:label="@string/manutencao" />
 
         <receiver
-            android:name=".Receiver.AlarmReceiverTrocaOleo"
+            android:name="br.fernando.controlekm.Receiver.AlarmReceiverTrocaOleo"
             android:enabled="true"
             android:exported="true" />
         <receiver
-            android:name=".Receiver.AlarmReceiverManutencao"
+            android:name="br.fernando.controlekm.Receiver.AlarmReceiverManutencao"
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".Sobre"
+        <activity android:name="br.fernando.controlekm.Sobre"
             android:label="@string/sobre"/>
     </application>
 

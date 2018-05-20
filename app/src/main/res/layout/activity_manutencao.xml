@@ -7,7 +7,7 @@
     android:background="@color/colorFundo"
     android:gravity="center_horizontal"
     android:padding="@dimen/padding_padrao"
-    tools:context="com.example.fernando.controlekm.CadastrarTrocaOleo">
+    tools:context="com.example.fernando.controlekm.br.fernando.controlekm.CadastrarTrocaOleo">
 
     <RelativeLayout
         android:layout_width="match_parent"

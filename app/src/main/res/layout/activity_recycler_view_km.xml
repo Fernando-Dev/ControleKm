@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorFundo"
-    tools:context="com.example.fernando.controlekm.RecyclerViewKm">
+    tools:context="com.example.fernando.controlekm.br.fernando.controlekm.RecyclerViewKm">
 
 
     <android.support.v7.widget.RecyclerView

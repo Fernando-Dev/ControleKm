@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorFundo"
     android:orientation="vertical"
-    tools:context="com.example.fernando.controlekm.AlterarUser">
+    tools:context="com.example.fernando.controlekm.br.fernando.controlekm.AlterarUser">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

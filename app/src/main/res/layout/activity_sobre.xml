@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorFundo"
     android:padding="@dimen/padding_padrao"
-    tools:context="com.example.fernando.controlekm.Sobre">
+    tools:context="com.example.fernando.controlekm.br.fernando.controlekm.Sobre">
 
     <RelativeLayout
         android:layout_width="wrap_content"
