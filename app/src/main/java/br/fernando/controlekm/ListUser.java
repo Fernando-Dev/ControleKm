@@ -22,7 +22,7 @@ import android.widget.Toast;
 
 import br.fernando.controlekm.DAO.DBAdapter;
 
-import com.example.fernando.controlekm.R;
+import br.fernando.controlekm.R;
 
 import br.fernando.controlekm.dominio.Usuario;
 

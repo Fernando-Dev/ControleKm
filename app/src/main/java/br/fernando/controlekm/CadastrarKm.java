@@ -24,7 +24,7 @@ import android.widget.Toast;
 import br.fernando.controlekm.BD.DatabaseHelper;
 import br.fernando.controlekm.DAO.DBAdapter;
 
-import com.example.fernando.controlekm.R;
+import br.fernando.controlekm.R;
 
 import br.fernando.controlekm.Receiver.AlarmReceiverManutencao;
 import br.fernando.controlekm.Receiver.AlarmReceiverTrocaOleo;

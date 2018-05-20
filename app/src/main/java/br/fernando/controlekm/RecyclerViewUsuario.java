@@ -27,7 +27,7 @@ import android.widget.TextView;
 import br.fernando.controlekm.BD.DatabaseHelper;
 import br.fernando.controlekm.DAO.DBAdapter;
 
-import com.example.fernando.controlekm.R;
+import br.fernando.controlekm.R;
 
 import br.fernando.controlekm.dominio.Usuario;
 

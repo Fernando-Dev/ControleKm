@@ -13,7 +13,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.fernando.controlekm.R;
+import br.fernando.controlekm.R;
 
 public class Main extends AppCompatActivity {
 

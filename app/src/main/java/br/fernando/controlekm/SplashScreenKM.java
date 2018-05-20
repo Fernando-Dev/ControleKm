@@ -6,7 +6,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-import com.example.fernando.controlekm.R;
+import br.fernando.controlekm.R;
 
 /**
  * Created by Flavia on 02/12/2017.

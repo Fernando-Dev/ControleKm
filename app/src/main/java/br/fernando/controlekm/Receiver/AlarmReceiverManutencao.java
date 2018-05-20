@@ -11,7 +11,7 @@ import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.NotificationCompat;
 
 import br.fernando.controlekm.CadastrarKm;
-import com.example.fernando.controlekm.R;
+import br.fernando.controlekm.R;
 import br.fernando.controlekm.Utilitario;
 
 public class AlarmReceiverManutencao extends BroadcastReceiver {
