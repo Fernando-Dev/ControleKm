@@ -54,7 +54,7 @@ public class CadastrarKm extends AppCompatActivity {
     private String notificationTitle;
     private String notificationText;
     private SQLiteDatabase database;
-    private Integer kmInicial;
+    private Integer kmInicial = 0;
     private Integer kmFinal = -1;
     private Integer kmTroca = 0;
     private Integer kmManutencao = 0;
@@ -225,12 +225,14 @@ public class CadastrarKm extends AppCompatActivity {
             }
             cursor.close();
             consultaKms();
-            if (dataChecada) {
-                Toast.makeText(getBaseContext(), "A data já existe no banco de dados!", Toast.LENGTH_LONG).show();
+            if (kmInicial == null & kmFinal == null) {
+                consultaKms();
             } else if (_kmIni < kmInicial) {
                 Toast.makeText(getBaseContext(), "Km inicial digitado é menor que o ultimo Km inicial do banco de dados!", Toast.LENGTH_LONG).show();
             } else if (_kmFim < kmFinal) {
                 Toast.makeText(getBaseContext(), "Km final digitado é menor que o ultimo Km final do banco de dados!", Toast.LENGTH_LONG).show();
+            } else if (dataChecada) {
+                Toast.makeText(getBaseContext(), "A data já existe no banco de dados!", Toast.LENGTH_LONG).show();
             } else if (_kmIni > _kmFim) {
                 Toast.makeText(getBaseContext(), "Km inicial maior!", Toast.LENGTH_LONG).show();
             } else if (_kmIni == _kmFim) {
@@ -250,7 +252,7 @@ public class CadastrarKm extends AppCompatActivity {
                 km.setKmTotal(txvKmTotal.getText().toString());
                 db.inserirKm(km);
                 consultaKms();
-                if ((kmFinal.equals(-1) || kmTroca.equals(0)) || (kmFinal.equals(-1) || kmManutencao.equals(0))) {
+                if ((kmFinal.equals(-1) || kmTroca.equals(0)) & (kmFinal.equals(-1) || kmManutencao.equals(0))) {
                     Toast.makeText(getBaseContext(), "Salvo com sucesso!", Toast.LENGTH_LONG).show();
                     finish();
                 } else if (kmFinal > kmTroca & kmFinal > kmManutencao) {
