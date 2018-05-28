@@ -229,8 +229,12 @@ public class CadastrarKm extends AppCompatActivity {
                 consultaKms();
             } else if (_kmIni < kmInicial) {
                 Toast.makeText(getBaseContext(), "Km inicial digitado é menor que o ultimo Km inicial do banco de dados!", Toast.LENGTH_LONG).show();
+            }else if (_kmIni == kmInicial){
+                Toast.makeText(getBaseContext(), "Km inicial digitado é igual ao ultimo Km inicial do banco de dados!", Toast.LENGTH_LONG).show();
             } else if (_kmFim < kmFinal) {
                 Toast.makeText(getBaseContext(), "Km final digitado é menor que o ultimo Km final do banco de dados!", Toast.LENGTH_LONG).show();
+            }else if(_kmFim == kmFinal){
+                Toast.makeText(getBaseContext(), "Km final digitado é igual ao ultimo Km final do banco de dados!", Toast.LENGTH_LONG).show();
             } else if (dataChecada) {
                 Toast.makeText(getBaseContext(), "A data já existe no banco de dados!", Toast.LENGTH_LONG).show();
             } else if (_kmIni > _kmFim) {
