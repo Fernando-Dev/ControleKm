@@ -1,6 +1,7 @@
 package br.fernando.controlekm;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -16,9 +17,11 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -34,6 +37,7 @@ import br.fernando.controlekm.BD.DatabaseHelper;
 import br.fernando.controlekm.DAO.DBAdapter;
 
 import br.fernando.controlekm.R;
+
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
@@ -68,6 +72,7 @@ public class GeradorPdf extends AppCompatActivity {
     private Cursor c, cc, cursor;
     private static final String TAG = "PdfCreatorActivity";
     private File pdfFile, docsFolder;
+    private static final int REQUEST_TAKE_FILE = 1;
     final private int REQUEST_CODE_ASK_PERMISSIONS = 111;
     private SimpleDateFormat dateFormat;
     private DBAdapter db;
@@ -79,7 +84,7 @@ public class GeradorPdf extends AppCompatActivity {
     private TextView txtError1, txtError2, textoInfo;
     private Spinner mesesAno;
     private Image image;
-    private String ano, competencia, dataInvertida1,dataInvertida2;
+    private String ano, competencia, dataInvertida1, dataInvertida2;
     private Calendar calendar;
 
 
@@ -125,7 +130,13 @@ public class GeradorPdf extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-
+        try {
+            PdfWrapper();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        }
 
         Button gerarRelatorio = (Button) findViewById(R.id.btnGerarPdf);
         Button voltarPdf = (Button) findViewById(R.id.btnVoltarPdf);
@@ -170,7 +181,7 @@ public class GeradorPdf extends AppCompatActivity {
                         }
                     });
                     dialog.show();
-                }else if (!queryData(dataInvertida2)){
+                } else if (!queryData(dataInvertida2)) {
                     final Dialog dialog = new Dialog(GeradorPdf.this, R.style.DialogoSemTitulo);
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     dialog.setContentView(R.layout.layout_alert_dialog_erro);
@@ -239,6 +250,7 @@ public class GeradorPdf extends AppCompatActivity {
     private class ProgressData extends AsyncTask<Void, Integer, Void> {
         private ProgressDialog p;
 
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -248,13 +260,13 @@ public class GeradorPdf extends AppCompatActivity {
             p.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             p.setCancelable(false);
             p.show();
+
         }
 
         @Override
         protected Void doInBackground(Void... integers) {
 
             try {
-                PdfWrapper();
                 criarPdf();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -274,25 +286,19 @@ public class GeradorPdf extends AppCompatActivity {
     }
 
 
+
     private void PdfWrapper() throws FileNotFoundException, DocumentException {
         int hasWriteStoragePermission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (hasWriteStoragePermission != PackageManager.PERMISSION_GRANTED) {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (!shouldShowRequestPermissionRationale(Manifest.permission.WRITE_CONTACTS)) {
-                    showMessageOKCancel("Você precisa permitir o acesso ao Armazenamento",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                                                REQUEST_CODE_ASK_PERMISSIONS);
-                                    }
-                                }
-                            });
+                if (!shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                REQUEST_CODE_ASK_PERMISSIONS);
+                    }
                     return;
                 }
-
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         REQUEST_CODE_ASK_PERMISSIONS);
             }
@@ -300,8 +306,10 @@ public class GeradorPdf extends AppCompatActivity {
         }
     }
 
+
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_CODE_ASK_PERMISSIONS:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -322,15 +330,6 @@ public class GeradorPdf extends AppCompatActivity {
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
-    }
-
-    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
-        new AlertDialog.Builder(this)
-                .setMessage(message)
-                .setPositiveButton("OK", okListener)
-                .setNegativeButton("Cancel", null)
-                .create()
-                .show();
     }
 
     private boolean queryData(String data) {
@@ -432,7 +431,7 @@ public class GeradorPdf extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        docsFolder = new File(Environment.getExternalStorageDirectory() + "/Documents");
+        docsFolder = new File(Environment.getExternalStorageDirectory(), "/Documents");
         docsFolder.mkdir();
         /*
         * tentar fazer um select para duas tabelas kms e usuario
@@ -664,9 +663,15 @@ public class GeradorPdf extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(Intent.ACTION_VIEW);
-                    String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/PDF";
-                    new File(path, "RelatórioKm " + competencia + ano + ".pdf");
-                    intent.setDataAndType(Uri.fromFile(pdfFile), "application/pdf");
+                    String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Documents";
+                    File newFile = new File(path, "RelatórioKm " + competencia + ano + ".pdf");
+                    Uri fileUri = FileProvider.getUriForFile(GeradorPdf.this,
+                            BuildConfig.APPLICATION_ID + ".provider", newFile);
+                    intent.setType("application/pdf");
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+                    intent.setDataAndType(fileUri, "application/pdf");
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     startActivity(intent);
                     finish();
                 }
