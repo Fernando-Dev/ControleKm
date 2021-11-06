@@ -89,6 +89,8 @@
     <string name="results_not_found">
     Results not found: <b>%s</b>
     </string>
+    <string name="valor_do_km">Valor do Km</string>
+    <string name="hint_moeda_real">R$ 0,00</string>
 
     <string-array name="meses_ano">
         <item>Selecione</item>

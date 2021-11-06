@@ -71,7 +71,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="br.fernando.controlekm.SplashScreenKM"
+            android:name="br.fernando.controlekm.ui.SplashScreenKM"
             android:theme="@style/AppCompat.TelaCheia">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -80,59 +80,56 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="br.fernando.controlekm.Main"
+            android:name="br.fernando.controlekm.ui.Main"
             android:theme="@style/AppCompat.TelaCheia" />
         <activity
-            android:name="br.fernando.controlekm.CadastrarKm"
+            android:name="br.fernando.controlekm.ui.CadastrarKm"
             android:label="@string/cadastrar" />
         <activity
-            android:name="br.fernando.controlekm.CadastrarUsuario"
+            android:name="br.fernando.controlekm.ui.CadastrarUsuario"
             android:label="@string/cadastrar" />
+
         <activity
-            android:name="br.fernando.controlekm.ListUser"
-            android:label="@string/lista_usuario"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name="br.fernando.controlekm.GeradorPdf"
+            android:name="br.fernando.controlekm.ui.GeradorPdf"
             android:label="@string/realatorio" />
         <activity
-            android:name="br.fernando.controlekm.AlterarKm"
+            android:name="br.fernando.controlekm.ui.AlterarKm"
             android:label="@string/alterar" />
         <activity
-            android:name="br.fernando.controlekm.Utilitario"
+            android:name="br.fernando.controlekm.ui.Utilitario"
             android:label="Utilitários" />
         <activity
-            android:name="br.fernando.controlekm.AlterarUser"
+            android:name="br.fernando.controlekm.ui.AlterarUser"
             android:label="@string/alterar" />
         <activity
-            android:name="br.fernando.controlekm.ListarKm"
+            android:name="br.fernando.controlekm.ui.ListarKm"
             android:label="@string/listar_km"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="br.fernando.controlekm.RecyclerViewKm"
+            android:name="br.fernando.controlekm.ui.RecyclerViewKm"
             android:label="@string/listar_km" />
         <activity
-            android:name="br.fernando.controlekm.RecyclerViewUsuario"
+            android:name="br.fernando.controlekm.ui.RecyclerViewUsuario"
             android:label="@string/listar_usuario" />
         <activity
-            android:name="br.fernando.controlekm.CadastrarTrocaOleo"
+            android:name="br.fernando.controlekm.ui.CadastrarTrocaOleo"
             android:label="@string/troca_oleo" />
         <activity
-            android:name="br.fernando.controlekm.CadastrarManutencao"
+            android:name="br.fernando.controlekm.ui.CadastrarManutencao"
             android:label="@string/manutencao" />
-        <activity android:name="br.fernando.controlekm.Sobre"
+        <activity android:name="br.fernando.controlekm.ui.Sobre"
                   android:label="@string/sobre"/>
         <receiver
-            android:name="br.fernando.controlekm.Receiver.AlarmReceiverTrocaOleo"
+            android:name="br.fernando.controlekm.receiver.AlarmReceiverTrocaOleo"
             android:enabled="true"
             android:exported="true" />
         <receiver
-            android:name="br.fernando.controlekm.Receiver.AlarmReceiverManutencao"
+            android:name="br.fernando.controlekm.receiver.AlarmReceiverManutencao"
             android:enabled="true"
             android:exported="true" />
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="${applicationId}.provider"
+            android:authorities="br.fernando.controlekm.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

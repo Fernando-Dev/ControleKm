@@ -17,9 +17,9 @@
             android:id="@+id/txtDataInicial"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/btnDataPdf1"
             android:layout_alignEnd="@+id/btnDataPdf1"
             android:layout_alignParentTop="true"
-            android:layout_alignStart="@+id/btnDataPdf1"
             android:gravity="center_horizontal"
             android:text="@string/data_inicial"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -30,9 +30,9 @@
             android:id="@+id/txtDataFinal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/btnDataPdf2"
             android:layout_alignEnd="@+id/btnDataPdf2"
             android:layout_alignParentTop="true"
-            android:layout_alignStart="@+id/btnDataPdf2"
             android:gravity="center_horizontal"
             android:text="@string/data_final"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -62,8 +62,8 @@
             android:layout_height="50dp"
             android:layout_alignParentTop="true"
             android:layout_gravity="center_horizontal"
-            android:layout_marginEnd="26dp"
             android:layout_marginTop="30dp"
+            android:layout_marginEnd="26dp"
             android:layout_toStartOf="@+id/textView10"
             android:background="@drawable/btn_data"
             android:hint="@string/selecione"
@@ -89,9 +89,9 @@
             android:id="@+id/txtError1"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/btnDataPdf1"
-            android:layout_alignStart="@+id/btnDataPdf1"
             android:layout_below="@+id/btnDataPdf1"
+            android:layout_alignStart="@+id/btnDataPdf1"
+            android:layout_alignEnd="@+id/btnDataPdf1"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textColor="@color/colorError" />
 
@@ -99,38 +99,77 @@
             android:id="@+id/txtError2"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/btnDataPdf2"
-            android:layout_alignStart="@+id/btnDataPdf2"
             android:layout_below="@+id/btnDataPdf2"
+            android:layout_alignStart="@+id/btnDataPdf2"
+            android:layout_alignEnd="@+id/btnDataPdf2"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textColor="@color/colorError" />
+
+
+        <TextView
+            android:id="@+id/txtValorKm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/edtValorKm"
+            android:layout_alignStart="@+id/btnDataPdf1"
+            android:layout_toStartOf="@+id/textView10"
+            android:layout_below="@+id/txtError1"
+            android:layout_marginTop="@dimen/padding_padrao"
+            android:text="@string/valor_do_km"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorTitle"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/edtValorKm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtError2"
+            android:layout_toEndOf="@+id/textView10"
+            android:layout_alignEnd="@+id/btnDataPdf2"
+            android:background="@drawable/edittext_border_radius"
+            android:hint="@string/hint_moeda_real"
+            android:layout_marginTop="@dimen/padding_padrao"
+            android:inputType="number"
+            android:padding="@dimen/padding_padrao"
+            android:textColorHint="@color/colorTitle" />
+
+        <TextView
+            android:id="@+id/txtError3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/edtValorKm"
+            android:layout_alignStart="@+id/edtValorKm"
+            android:layout_alignEnd="@+id/edtValorKm"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@color/colorError" />
+
 
         <TextView
             android:id="@+id/txtMesCompetencia"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/txtError1"
-            android:layout_below="@+id/txtError1"
-            android:layout_marginTop="@dimen/padding_padrao"
-            android:layout_alignBottom="@+id/mesesAno"
+            android:layout_below="@+id/txtValorKm"
             android:layout_alignBaseline="@+id/mesesAno"
+            android:layout_alignStart="@+id/txtValorKm"
+            android:layout_alignBottom="@+id/mesesAno"
+            android:layout_marginTop="10dp"
+            android:layout_toStartOf="@+id/textView10"
             android:text="@string/mes_competencia"
-            android:gravity="center_horizontal|center_vertical"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
             android:textColor="@color/colorTitle"
-            android:textStyle="bold"
-            android:layout_toStartOf="@+id/textView10" />
+            android:textStyle="bold" />
 
         <Spinner
             android:id="@+id/mesesAno"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/txtError2"
-            android:layout_below="@+id/txtError2"
-            android:gravity="center_horizontal|center_vertical"
-            android:layout_marginTop="@dimen/padding_padrao"
+            android:layout_below="@+id/txtError3"
+            android:layout_alignEnd="@+id/edtValorKm"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@+id/textView10"
             android:background="@drawable/spinner_background"
-            android:layout_toEndOf="@+id/textView10">
+            android:gravity="center_horizontal|center_vertical">
 
         </Spinner>
 
@@ -138,7 +177,7 @@
             android:id="@+id/btnGerarPdf"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/txtError1"
+            android:layout_below="@+id/txtMesCompetencia"
             android:layout_marginTop="70dp"
             android:background="@drawable/botao"
             android:text="@string/gerar_pdf"
