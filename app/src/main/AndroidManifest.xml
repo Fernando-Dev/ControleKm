@@ -1,6 +1,6 @@
 <?xml version="1.1" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="br.fernando.controlekm">
+    package="br.fernando.controlekm0">
 
     <supports-screens
         android:largeScreens="true"
@@ -71,7 +71,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="br.fernando.controlekm.ui.SplashScreenKM"
+            android:name="br.fernando.controlekm0.ui.SplashScreenKM"
             android:theme="@style/AppCompat.TelaCheia">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -80,56 +80,56 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="br.fernando.controlekm.ui.Main"
+            android:name="br.fernando.controlekm0.ui.Main"
             android:theme="@style/AppCompat.TelaCheia" />
         <activity
-            android:name="br.fernando.controlekm.ui.CadastrarKm"
+            android:name="br.fernando.controlekm0.ui.CadastrarKm"
             android:label="@string/cadastrar" />
         <activity
-            android:name="br.fernando.controlekm.ui.CadastrarUsuario"
+            android:name="br.fernando.controlekm0.ui.CadastrarUsuario"
             android:label="@string/cadastrar" />
 
         <activity
-            android:name="br.fernando.controlekm.ui.GeradorPdf"
+            android:name="br.fernando.controlekm0.ui.GeradorPdf"
             android:label="@string/realatorio" />
         <activity
-            android:name="br.fernando.controlekm.ui.AlterarKm"
+            android:name="br.fernando.controlekm0.ui.AlterarKm"
             android:label="@string/alterar" />
         <activity
-            android:name="br.fernando.controlekm.ui.Utilitario"
+            android:name="br.fernando.controlekm0.ui.Utilitario"
             android:label="Utilitários" />
         <activity
-            android:name="br.fernando.controlekm.ui.AlterarUser"
+            android:name="br.fernando.controlekm0.ui.AlterarUser"
             android:label="@string/alterar" />
         <activity
-            android:name="br.fernando.controlekm.ui.ListarKm"
+            android:name="br.fernando.controlekm0.ui.ListarKm"
             android:label="@string/listar_km"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="br.fernando.controlekm.ui.RecyclerViewKm"
+            android:name="br.fernando.controlekm0.ui.RecyclerViewKm"
             android:label="@string/listar_km" />
         <activity
-            android:name="br.fernando.controlekm.ui.RecyclerViewUsuario"
+            android:name="br.fernando.controlekm0.ui.RecyclerViewUsuario"
             android:label="@string/listar_usuario" />
         <activity
-            android:name="br.fernando.controlekm.ui.CadastrarTrocaOleo"
+            android:name="br.fernando.controlekm0.ui.CadastrarTrocaOleo"
             android:label="@string/troca_oleo" />
         <activity
-            android:name="br.fernando.controlekm.ui.CadastrarManutencao"
+            android:name="br.fernando.controlekm0.ui.CadastrarManutencao"
             android:label="@string/manutencao" />
-        <activity android:name="br.fernando.controlekm.ui.Sobre"
+        <activity android:name="br.fernando.controlekm0.ui.Sobre"
                   android:label="@string/sobre"/>
         <receiver
-            android:name="br.fernando.controlekm.receiver.AlarmReceiverTrocaOleo"
+            android:name="br.fernando.controlekm0.receiver.AlarmReceiverTrocaOleo"
             android:enabled="true"
             android:exported="true" />
         <receiver
-            android:name="br.fernando.controlekm.receiver.AlarmReceiverManutencao"
+            android:name="br.fernando.controlekm0.receiver.AlarmReceiverManutencao"
             android:enabled="true"
             android:exported="true" />
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="br.fernando.controlekm.provider"
+            android:authorities="br.fernando.controlekm0.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
