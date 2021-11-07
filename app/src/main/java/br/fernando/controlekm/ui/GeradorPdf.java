@@ -65,6 +65,8 @@ import java.util.Date;
 import java.util.Locale;
 
 import static android.os.Environment.getExternalStorageDirectory;
+import static android.os.Environment.getStorageDirectory;
+import static android.os.Environment.getStorageState;
 import static android.support.v4.content.FileProvider.getUriForFile;
 import static br.fernando.controlekm.utils.MascaraUtilitario.formatPriceSave;
 
@@ -85,7 +87,7 @@ public class GeradorPdf extends AppCompatActivity {
     private Date dataPdf1, dataPdf2, btnDate1, btnDate2, queryData1, queryData2;
     private Button btnPrimeiraData, btnSegundaData;
     private String data1, data2, _maxData, _minData;
-    private TextView txtError1, txtError2, txtError3,textoInfo;
+    private TextView txtError1, txtError2, txtError3, textoInfo;
     private EditText valorKM;
     private Spinner mesesAno;
     private Image image;
@@ -93,6 +95,7 @@ public class GeradorPdf extends AppCompatActivity {
     private Calendar calendar;
     private Locale locale;
     private Double mValorKm;
+    private Dialog dialogPreviaPdf;
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -108,7 +111,7 @@ public class GeradorPdf extends AppCompatActivity {
         txtError2 = (TextView) findViewById(R.id.txtError2);
         txtError3 = findViewById(R.id.txtError3);
         valorKM = findViewById(R.id.edtValorKm);
-        locale = new Locale("pt","BR");
+        locale = new Locale("pt", "BR");
         valorKM.addTextChangedListener(new MascaraUtilitario(valorKM, locale));
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.meses_ano, R.layout.spinner_meses_ano);
         mesesAno = (Spinner) findViewById(R.id.mesesAno);
@@ -177,7 +180,7 @@ public class GeradorPdf extends AppCompatActivity {
                 } else if (btnSegundaData.getText().toString().isEmpty()) {
                     txtError1.setText("");
                     txtError2.setText(R.string.campo_vazio);
-                }else if (valorKM.getText().toString().isEmpty()){
+                } else if (valorKM.getText().toString().isEmpty()) {
                     txtError1.setText("");
                     txtError2.setText("");
                     txtError3.setText(R.string.campo_vazio);
@@ -300,7 +303,6 @@ public class GeradorPdf extends AppCompatActivity {
         }
 
     }
-
 
 
     private void PdfWrapper() throws FileNotFoundException, DocumentException {
@@ -447,10 +449,13 @@ public class GeradorPdf extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        docsFolder = new File(getExternalStorageDirectory(), "/Documents");
-        docsFolder.mkdir();
+        docsFolder = new File(getFilesDir(), "/Documents");
+        if (!docsFolder.exists()) {
+            docsFolder.mkdir();
+        }
+
         /*
-        * tentar fazer um select para duas tabelas kms e usuario
+         * tentar fazer um select para duas tabelas kms e usuario
          * exemplo
          * select * from kms
          * inner join usuarios
@@ -458,9 +463,9 @@ public class GeradorPdf extends AppCompatActivity {
          * where kms.data
          * between 'data1' and 'data2'
          * oder by kms.data
-        * */
+         * */
 
-        pdfFile = new File(docsFolder.getAbsolutePath(), "RelatórioKm " + competencia + ano + ".pdf");
+        pdfFile = new File(docsFolder, "RelatórioKm " + competencia + ano + ".pdf");
         c = database.rawQuery("SELECT * FROM kms WHERE data BETWEEN '" + data1 + "' AND '" + data2 + "' ORDER BY data", null);
         cc = database.rawQuery("SELECT * FROM kms WHERE data BETWEEN '" + data1 + "' AND '" + data2 + "' ORDER BY data", null);
         cursor = database.rawQuery("SELECT * FROM usuarios", null);
@@ -559,7 +564,7 @@ public class GeradorPdf extends AppCompatActivity {
             String kmPercorrido = String.valueOf(c.getInt(c.getColumnIndex(DatabaseHelper.KEY_KM_TOTAL)));
             String kmTotal = String.valueOf(c.getInt(c.getColumnIndex(DatabaseHelper.KEY_KM_TOTAL)));
             Double _kmTotal = Double.parseDouble(kmTotal);
-            mValorKm =  Double.parseDouble(formatPriceSave(valorKM.getText().toString()));
+            mValorKm = Double.parseDouble(formatPriceSave(valorKM.getText().toString()));
             _kmTotal = _kmTotal * mValorKm;
             kmTotal = formatoMoeda(_kmTotal);
             table.addCell(createCell(id, 1, 1, Element.ALIGN_CENTER));
@@ -668,19 +673,19 @@ public class GeradorPdf extends AppCompatActivity {
 
     private void previaPdf() {
         if (pdfFile.exists()) {
-            final Dialog dialog = new Dialog(GeradorPdf.this, R.style.DialogoSemTitulo);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.layout_alert_dialog_relatorio);
-            dialog.setCancelable(false);
-            TextView txtMsgem = dialog.findViewById(R.id.mensagemAlertDialogRelatorio);
+            dialogPreviaPdf = new Dialog(GeradorPdf.this, R.style.DialogoSemTitulo);
+            dialogPreviaPdf.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialogPreviaPdf.setContentView(R.layout.layout_alert_dialog_relatorio);
+            dialogPreviaPdf.setCancelable(false);
+            TextView txtMsgem = dialogPreviaPdf.findViewById(R.id.mensagemAlertDialogRelatorio);
             txtMsgem.setText("O RelatórioKm " + competencia + ano + ".pdf foi gerado e está salvo neste caminho " + docsFolder + ". Deseja abrir o relatório?");
-            Button btnOK = dialog.findViewById(R.id.btnAlertDialogRelatorioOK);
-            Button btnCancelar = dialog.findViewById(R.id.btnAlertDialogRelatorioCancelar);
+            Button btnOK = dialogPreviaPdf.findViewById(R.id.btnAlertDialogRelatorioOK);
+            Button btnCancelar = dialogPreviaPdf.findViewById(R.id.btnAlertDialogRelatorioCancelar);
             btnOK.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(Intent.ACTION_VIEW);
-                    String path = getExternalStorageDirectory() + "/Documents";
+                    String path = getFilesDir().getAbsolutePath() + "/Documents";
                     File newFile = new File(path, "RelatórioKm " + competencia + ano + ".pdf");
                     Uri fileUri = getUriForFile(getApplicationContext(),
                             BuildConfig.APPLICATION_ID + ".provider", newFile);
@@ -691,16 +696,15 @@ public class GeradorPdf extends AppCompatActivity {
                     intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                     startActivity(intent);
-                    finish();
                 }
             });
             btnCancelar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    dialog.dismiss();
+                    dialogPreviaPdf.dismiss();
                 }
             });
-            dialog.show();
+            dialogPreviaPdf.show();
         } else {
             final Dialog dialog = new Dialog(GeradorPdf.this, R.style.DialogoSemTitulo);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -717,6 +721,14 @@ public class GeradorPdf extends AppCompatActivity {
             });
             dialog.show();
         }
+    }
+
+    @Override
+    protected void onStop() {
+        if (dialogPreviaPdf != null) {
+            dialogPreviaPdf.dismiss();
+        }
+        super.onStop();
     }
 
     public PdfPCell createCell(String content, float borderWidth, int colspan, int alignment) {
